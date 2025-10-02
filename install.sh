@@ -90,21 +90,6 @@ sudo apt-get install -y \
     libusb-1.0-0-dev \
     cmake
 
-# Optional: Install dump1090-fa for flight tracking
-read -p "Install dump1090-fa for flight tracking? (y/n) " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo "Installing dump1090-fa..."
-    wget -O - https://www.flightaware.com/adsb/piaware/files/flightaware.gpg.key | sudo apt-key add -
-    sudo sh -c 'echo "deb https://www.flightaware.com/adsb/piaware/repository bookworm piaware" > /etc/apt/sources.list.d/piaware.list'
-    sudo apt-get update
-    sudo apt-get install -y dump1090-fa
-
-    # Disable auto-start (let user control it)
-    sudo systemctl disable dump1090-fa
-    echo "✅ dump1090-fa installed (disabled by default)"
-fi
-
 echo ""
 echo "🔧 Configuring hardware interfaces..."
 echo ""
@@ -180,22 +165,6 @@ sudo systemctl enable piflip.service
 
 echo "✅ Service installed and enabled"
 
-echo ""
-echo "🔧 Configuring sudoers for mode switching..."
-echo ""
-
-# Allow user to control dump1090 without password (for mode switching)
-if [ -f /usr/bin/systemctl ]; then
-    sudo tee /etc/sudoers.d/piflip > /dev/null <<EOF
-# Allow $USER to control dump1090-fa for PiFlip mode switching
-$USER ALL=(ALL) NOPASSWD: /bin/systemctl start dump1090-fa
-$USER ALL=(ALL) NOPASSWD: /bin/systemctl stop dump1090-fa
-$USER ALL=(ALL) NOPASSWD: /bin/systemctl restart dump1090-fa
-$USER ALL=(ALL) NOPASSWD: /bin/systemctl status dump1090-fa
-EOF
-    sudo chmod 0440 /etc/sudoers.d/piflip
-    echo "✅ Sudoers configured for mode switching"
-fi
 
 echo ""
 echo "📁 Creating data directories..."

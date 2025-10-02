@@ -217,7 +217,7 @@ def scan433():
     if 'usb_claim_interface error -6' in result.stderr or 'usb_claim_interface error -6' in result.stdout:
         return jsonify({
             'error': 'RTL-SDR is in use',
-            'message': 'RTL-SDR is currently being used by another program (likely dump1090-fa or GQRX). Please close the other program first, or click "Switch Mode" at the top of the page.',
+            'message': 'RTL-SDR is currently being used by another program. Please close the other program first.',
             'devices': [],
             'count': 0,
             'raw_output': result.stderr
@@ -350,34 +350,6 @@ def delete_capture(name):
         'status': 'deleted',
         'files': deleted
     })
-
-@app.route('/api/flights')
-def flights():
-    """Get flight data from dump1090"""
-    try:
-        response = requests.get('http://localhost:8080/data/aircraft.json', timeout=2)
-        return jsonify(response.json())
-    except Exception as e:
-        return jsonify({'error': str(e), 'aircraft': []}), 500
-
-@app.route('/api/flights/stats')
-def flight_stats():
-    """Get flight tracking statistics"""
-    try:
-        response = requests.get('http://localhost:8080/data/aircraft.json', timeout=2)
-        data = response.json()
-        aircraft = data.get('aircraft', [])
-
-        stats = {
-            'total_aircraft': len(aircraft),
-            'with_position': len([a for a in aircraft if 'lat' in a and 'lon' in a]),
-            'with_altitude': len([a for a in aircraft if 'altitude' in a]),
-            'messages': data.get('messages', 0),
-            'timestamp': data.get('now', 0)
-        }
-        return jsonify(stats)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/nfc')
 def nfc():
@@ -670,45 +642,6 @@ print("Transmitted test burst on {freq/1e6:.2f} MHz")
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
-@app.route('/api/rtlsdr/mode')
-def rtlsdr_mode():
-    """Check current RTL-SDR mode (flights vs scanning)"""
-    result = subprocess.run(['systemctl', 'is-active', 'dump1090-fa'],
-                          capture_output=True, text=True)
-    is_active = result.stdout.strip() == 'active'
-
-    return jsonify({
-        'mode': 'flights' if is_active else 'scanning',
-        'dump1090_active': is_active,
-        'message': 'Flight tracking enabled' if is_active else 'RTL-SDR available for 433MHz/TPMS/Weather scanning'
-    })
-
-@app.route('/api/rtlsdr/toggle', methods=['POST'])
-def rtlsdr_toggle():
-    """Toggle RTL-SDR between flight mode and scanning mode"""
-    # Check current state
-    result = subprocess.run(['systemctl', 'is-active', 'dump1090-fa'],
-                          capture_output=True, text=True)
-    is_active = result.stdout.strip() == 'active'
-
-    if is_active:
-        # Stop dump1090 to free RTL-SDR for scanning
-        subprocess.run(['sudo', 'systemctl', 'stop', 'dump1090-fa'])
-        return jsonify({
-            'mode': 'scanning',
-            'message': 'Switched to SCANNING mode. You can now use 433MHz, TPMS, and Weather scanning.',
-            'dump1090_active': False
-        })
-    else:
-        # Start dump1090 for flight tracking
-        subprocess.run(['sudo', 'systemctl', 'start', 'dump1090-fa'])
-        time.sleep(2)  # Give it time to start
-        return jsonify({
-            'mode': 'flights',
-            'message': 'Switched to FLIGHT TRACKING mode. 433MHz/TPMS/Weather scanning disabled.',
-            'dump1090_active': True
-        })
 
 # --- CC1101 Enhanced API Routes ---
 
@@ -1099,5 +1032,4 @@ if __name__ == '__main__':
     initialize_pn532()
     # Note: CC1101 initialization postponed until needed (requires SPI wiring)
     print("[*] Web interface available at http://0.0.0.0:5000")
-    print("[*] Flight map available at http://0.0.0.0:8080")
     app.run(host='0.0.0.0', port=5000, debug=True)

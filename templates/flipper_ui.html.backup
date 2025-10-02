@@ -272,7 +272,15 @@
             color: #FF6600;
         }
 
-
+        /* Mode toggle */
+        .mode-toggle {
+            background: #1a1a1a;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #FF6600;
+        }
 
         .toggle-label {
             font-size: 14px;
@@ -347,6 +355,14 @@
             <span><span class="status-dot active" id="cc1101-dot"></span> CC1101</span>
         </div>
         <div id="battery-indicator">🔋 100%</div>
+    </div>
+
+    <!-- Mode Toggle -->
+    <div class="mode-toggle" onclick="toggleMode()">
+        <span class="toggle-label" id="mode-label">📡 Scanning Mode</span>
+        <div class="toggle-switch" id="mode-switch">
+            <div class="toggle-slider"></div>
+        </div>
     </div>
 
     <!-- Breadcrumb -->
@@ -597,7 +613,16 @@
             <div id="library-items"></div>
         </div>
 
-
+        <!-- Flight Tracking -->
+        <div id="tracking" class="menu-view hidden">
+            <div class="menu-item" onclick="openFlightMap()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">🗺️</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Open Map</span>
+                        <span class="menu-subtitle">Port 8080</span>
+                    </div>
+                </div>
             </div>
 
             <div class="menu-item" onclick="showFlightStats()">
@@ -656,7 +681,7 @@
                 'rf-tools': 'RF Tools',
                 'nfc-menu': 'NFC Tools',
                 'library': 'Signal Library',
-                
+                'tracking': 'Flight Tracking',
                 'settings': 'Settings'
             };
 
@@ -928,6 +953,27 @@
             document.getElementById('output').classList.remove('active');
         }
 
+        // Mode toggle
+        async function toggleMode() {
+            const modeSwitch = document.getElementById('mode-switch');
+            const modeLabel = document.getElementById('mode-label');
+
+            showOutput('⏳ Switching modes...');
+
+            try {
+                const response = await fetch('/api/rtlsdr/toggle', { method: 'POST' });
+                const data = await response.json();
+
+                showOutput(data.message);
+
+                // Update UI
+                if (data.new_mode === 'flight') {
+                    modeSwitch.classList.add('active');
+                    modeLabel.textContent = '✈️ Flight Mode';
+                } else {
+                    modeSwitch.classList.remove('active');
+                    modeLabel.textContent = '📡 Scanning Mode';
+                }
             } catch (error) {
                 showOutput('❌ Error: ' + error.message);
             }
@@ -1320,6 +1366,21 @@
             }
         }
 
+        // Flight Tracking
+        function openFlightMap() {
+            window.open('http://192.168.86.141:8080', '_blank');
+            showOutput('✈️ Opening flight map in new tab...');
+        }
+
+        async function showFlightStats() {
+            showOutput('📊 Loading flight statistics...');
+            try {
+                const response = await fetch('/api/flights/stats');
+                const data = await response.json();
+                showOutput(JSON.stringify(data, null, 2));
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
         }
 
         // ==========================================
@@ -2331,7 +2392,8 @@
                 output += `NFC (PN532): ${data.pn532 === 'initialized' ? '✅' : '❌'}\n`;
                 output += `RTL-SDR: ${data.rtl_sdr === 'detected' ? '✅' : '❌'}\n`;
                 output += `CC1101: ${data.cc1101 === 'initialized' ? '✅' : '⚠️'}\n`;
-                
+                output += `dump1090: ${data.dump1090 === 'active' ? '✈️ Running' : '📡 Stopped'}\n`;
+
                 showOutput(output);
             } catch (error) {
                 showOutput('❌ Error: ' + error.message);
@@ -2371,7 +2433,14 @@
                 const modeSwitch = document.getElementById('mode-switch');
                 const modeLabel = document.getElementById('mode-label');
 
-                            } catch (error) {
+                if (data.mode === 'flight') {
+                    modeSwitch.classList.add('active');
+                    modeLabel.textContent = '✈️ Flight Mode';
+                } else {
+                    modeSwitch.classList.remove('active');
+                    modeLabel.textContent = '📡 Scanning Mode';
+                }
+            } catch (error) {
                 console.error('Mode check failed:', error);
             }
         };
