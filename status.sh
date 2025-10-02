@@ -1,0 +1,11 @@
+#!/bin/bash
+echo "=== PiFlip System Status ==="
+echo "I2C: $(ls /dev/i2c* 2>/dev/null || echo 'Not found')"
+echo "SPI: $(ls /dev/spidev* 2>/dev/null || echo 'Not found')"
+echo "RTL-SDR: $(which rtl_test 2>/dev/null || echo 'Not installed')"
+echo "RTL_433: $(which rtl_433 2>/dev/null || echo 'Not installed')"
+echo "NFC: $(which nfc-list 2>/dev/null || echo 'Not installed')"
+echo "Python: $(python3 --version)"
+echo "GPIO: $(gpio -v 2>/dev/null | head -1 || echo 'Not installed')"
+echo ""
+echo "Web Interface will be at: http://$(hostname -I | cut -d' ' -f1):5000"

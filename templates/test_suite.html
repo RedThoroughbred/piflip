@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PiFlip Test Suite</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            color: #0f0;
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { text-align: center; color: #0f0; margin-bottom: 30px; }
+        .test-section {
+            background: #1a1a1a;
+            border: 1px solid #0f0;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .test-section h2 {
+            color: #ff6600;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+        .test-item {
+            padding: 10px;
+            margin: 10px 0;
+            background: #0a0a0a;
+            border-radius: 3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+        .btn:hover { background: #0c0; }
+        .btn:active { transform: translateY(1px); }
+        .status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 3px;
+            margin-left: 10px;
+            font-size: 12px;
+        }
+        .status.pass { background: #0f0; color: #000; }
+        .status.fail { background: #f00; color: #fff; }
+        .status.testing { background: #ff0; color: #000; }
+        .status.pending { background: #666; color: #fff; }
+        .output {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            min-height: 100px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-size: 12px;
+            border: 1px solid #0f0;
+        }
+        .summary {
+            background: #1a1a1a;
+            border: 2px solid #ff6600;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 5px;
+        }
+        .summary h2 { color: #ff6600; }
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #000;
+            border: 1px solid #0f0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0f0, #0c0);
+            width: 0%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 PiFlip Web Interface Test Suite</h1>
+
+        <!-- Hardware Tests -->
+        <div class="test-section">
+            <h2>🔧 Hardware Tests</h2>
+            <div class="test-item">
+                <span>1. Hardware Status Check</span>
+                <div>
+                    <span id="test1-status" class="status pending">PENDING</span>
+                    <button class="btn" onclick="testHardwareStatus()">TEST</button>
+                </div>
+            </div>
+            <div class="test-item">
+                <span>2. NFC Card Scan</span>
+                <div>
+                    <span id="test2-status" class="status pending">PENDING</span>
+                    <button class="btn" onclick="testNFC()">TEST</button>
+                </div>
+            </div>
+            <div class="test-item">
+                <span>3. RTL-SDR Mode Check</span>
+                <div>
+                    <span id="test3-status" class="status pending">PENDING</span>
+                    <button class="btn" onclick="testMode()">TEST</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- RF Tests -->
+        <div class="test-section">
+            <h2>📡 RF Scanning Tests</h2>
+            <div class="test-item">
+                <span>4. 433MHz Scan (30s) - Press device!</span>
+                <div>
+                    <span id="test4-status" class="status pending">PENDING</span>
+                    <button class="btn" onclick="test433Scan()">TEST</button>
+                </div>
+            </div>
+            <div class="test-item">
+                <span>5. Signal Capture (5s) - Press device!</span>
+                <div>
+                    <span id="test5-status" class="status pending">PENDING</span>
+                    <button class="btn" onclick="testCapture()">TEST</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Library Tests -->
+        <div class="test-section">
+            <h2>📚 Signal Library Tests</h2>
+            <div class="test-item">
+                <span>6. List Captures</span>
+                <div>
+                    <span id="test6-status" class="status pending">PENDING</span>
+                    <button class="btn" onclick="testListCaptures()">TEST</button>
+                </div>
+            </div>
+            <div class="test-item">
+                <span>7. Analyze Signal</span>
+                <div>
+                    <span id="test7-status" class="status pending">PENDING</span>
+                    <button class="btn" onclick="testAnalyze()">TEST</button>
+                </div>
+            </div>
+            <div class="test-item">
+                <span>8. Replay Signal (Transmits!)</span>
+                <div>
+                    <span id="test8-status" class="status pending">PENDING</span>
+                    <button class="btn" onclick="testReplay()">TEST</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mode Switching -->
+        <div class="test-section">
+            <h2>🔄 Mode Switching Tests</h2>
+            <div class="test-item">
+                <span>9. Toggle Mode</span>
+                <div>
+                    <span id="test9-status" class="status pending">PENDING</span>
+                    <button class="btn" onclick="testToggleMode()">TEST</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Test All -->
+        <div class="test-section">
+            <h2>⚡ Automated Testing</h2>
+            <button class="btn" style="width: 100%; padding: 15px;" onclick="runAllTests()">
+                🚀 RUN ALL TESTS (Hardware Only)
+            </button>
+        </div>
+
+        <!-- Output -->
+        <div class="test-section">
+            <h2>📋 Test Output</h2>
+            <div class="output" id="output">Ready to test...</div>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary">
+            <h2>📊 Test Results</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress">0%</div>
+            </div>
+            <p>Passed: <span id="passed-count">0</span></p>
+            <p>Failed: <span id="failed-count">0</span></p>
+            <p>Pending: <span id="pending-count">9</span></p>
+        </div>
+    </div>
+
+    <script>
+        let testResults = {
+            passed: 0,
+            failed: 0,
+            pending: 9,
+            total: 9
+        };
+
+        function updateSummary() {
+            document.getElementById('passed-count').textContent = testResults.passed;
+            document.getElementById('failed-count').textContent = testResults.failed;
+            document.getElementById('pending-count').textContent = testResults.pending;
+
+            const progress = ((testResults.passed + testResults.failed) / testResults.total) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+            document.getElementById('progress').textContent = Math.round(progress) + '%';
+        }
+
+        function setTestStatus(testNum, status, message) {
+            const statusEl = document.getElementById(`test${testNum}-status`);
+            statusEl.className = `status ${status}`;
+            statusEl.textContent = status.toUpperCase();
+
+            if (status === 'pass' || status === 'fail') {
+                if (statusEl.textContent !== 'PENDING') testResults.pending--;
+                if (status === 'pass') testResults.passed++;
+                if (status === 'fail') testResults.failed++;
+                updateSummary();
+            }
+
+            if (message) {
+                log(`[Test ${testNum}] ${message}`);
+            }
+        }
+
+        function log(message) {
+            const output = document.getElementById('output');
+            const timestamp = new Date().toLocaleTimeString();
+            output.textContent += `\n[${timestamp}] ${message}`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Test 1: Hardware Status
+        async function testHardwareStatus() {
+            setTestStatus(1, 'testing');
+            log('Testing hardware status...');
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+                log('Hardware Status: ' + JSON.stringify(data, null, 2));
+
+                if (data.pn532 === 'initialized') {
+                    setTestStatus(1, 'pass', '✅ Hardware status OK');
+                } else {
+                    setTestStatus(1, 'fail', '❌ PN532 not initialized');
+                }
+            } catch (error) {
+                setTestStatus(1, 'fail', '❌ ' + error.message);
+            }
+        }
+
+        // Test 2: NFC Scan
+        async function testNFC() {
+            setTestStatus(2, 'testing');
+            log('Testing NFC scan... Place card on reader!');
+            try {
+                const response = await fetch('/api/nfc');
+                const data = await response.json();
+                log('NFC Result: ' + JSON.stringify(data, null, 2));
+
+                if (data.status === 'Card found!') {
+                    setTestStatus(2, 'pass', `✅ Card detected: ${data.readable}`);
+                } else {
+                    setTestStatus(2, 'fail', '❌ No card found');
+                }
+            } catch (error) {
+                setTestStatus(2, 'fail', '❌ ' + error.message);
+            }
+        }
+
+        // Test 3: Mode Check
+        async function testMode() {
+            setTestStatus(3, 'testing');
+            log('Checking RTL-SDR mode...');
+            try {
+                const response = await fetch('/api/rtlsdr/mode');
+                const data = await response.json();
+                log('Mode: ' + JSON.stringify(data, null, 2));
+                setTestStatus(3, 'pass', `✅ Mode: ${data.mode}`);
+            } catch (error) {
+                setTestStatus(3, 'fail', '❌ ' + error.message);
+            }
+        }
+
+        // Test 4: 433MHz Scan
+        async function test433Scan() {
+            setTestStatus(4, 'testing');
+            log('Starting 433MHz scan (30 seconds)... PRESS A DEVICE NOW!');
+            try {
+                const response = await fetch('/api/scan433');
+                const data = await response.json();
+                log('Scan Result: ' + JSON.stringify(data, null, 2));
+
+                if (data.error) {
+                    setTestStatus(4, 'fail', '❌ ' + data.message);
+                } else if (data.count > 0) {
+                    setTestStatus(4, 'pass', `✅ Found ${data.count} device(s)`);
+                } else {
+                    setTestStatus(4, 'pass', '✅ Scan completed (no devices found)');
+                }
+            } catch (error) {
+                setTestStatus(4, 'fail', '❌ ' + error.message);
+            }
+        }
+
+        // Test 5: Signal Capture
+        async function testCapture() {
+            setTestStatus(5, 'testing');
+            const name = 'test_' + Date.now();
+            log(`Capturing signal "${name}" for 5 seconds... PRESS DEVICE NOW!`);
+            try {
+                const response = await fetch('/api/capture', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: name,
+                        frequency: 433920000,
+                        duration: 5,
+                        sample_rate: 2048000
+                    })
+                });
+                const data = await response.json();
+                log('Capture Result: ' + JSON.stringify(data, null, 2));
+
+                if (data.status === 'success') {
+                    setTestStatus(5, 'pass', `✅ Captured ${(data.metadata.file_size/1024/1024).toFixed(1)}MB`);
+                } else {
+                    setTestStatus(5, 'fail', '❌ ' + (data.message || 'Capture failed'));
+                }
+            } catch (error) {
+                setTestStatus(5, 'fail', '❌ ' + error.message);
+            }
+        }
+
+        // Test 6: List Captures
+        async function testListCaptures() {
+            setTestStatus(6, 'testing');
+            log('Listing signal captures...');
+            try {
+                const response = await fetch('/api/captures');
+                const data = await response.json();
+                log('Library: ' + JSON.stringify(data, null, 2));
+                setTestStatus(6, 'pass', `✅ Found ${data.count} capture(s)`);
+            } catch (error) {
+                setTestStatus(6, 'fail', '❌ ' + error.message);
+            }
+        }
+
+        // Test 7: Analyze
+        async function testAnalyze() {
+            setTestStatus(7, 'testing');
+            log('Getting first capture for analysis...');
+            try {
+                const listResponse = await fetch('/api/captures');
+                const listData = await listResponse.json();
+
+                if (listData.count === 0) {
+                    setTestStatus(7, 'fail', '❌ No captures to analyze');
+                    return;
+                }
+
+                const captureName = listData.captures[0].name;
+                log(`Analyzing: ${captureName}`);
+
+                const response = await fetch(`/api/analyze/${captureName}`);
+                const data = await response.json();
+                log('Analysis Result: ' + JSON.stringify(data, null, 2));
+
+                if (data.error) {
+                    setTestStatus(7, 'fail', '❌ ' + data.error);
+                } else {
+                    setTestStatus(7, 'pass', '✅ Analysis completed');
+                }
+            } catch (error) {
+                setTestStatus(7, 'fail', '❌ ' + error.message);
+            }
+        }
+
+        // Test 8: Replay
+        async function testReplay() {
+            if (!confirm('⚠️ WARNING: This will transmit RF signal!\n\nOnly test this in a safe environment.\n\nContinue?')) {
+                return;
+            }
+
+            setTestStatus(8, 'testing');
+            log('Getting first capture for replay...');
+            try {
+                const listResponse = await fetch('/api/captures');
+                const listData = await listResponse.json();
+
+                if (listData.count === 0) {
+                    setTestStatus(8, 'fail', '❌ No captures to replay');
+                    return;
+                }
+
+                const captureName = listData.captures[0].name;
+                log(`Replaying: ${captureName}`);
+
+                const response = await fetch(`/api/replay/${captureName}`, { method: 'POST' });
+                const data = await response.json();
+                log('Replay Result: ' + JSON.stringify(data, null, 2));
+
+                if (data.error) {
+                    setTestStatus(8, 'fail', '❌ ' + data.error);
+                } else {
+                    setTestStatus(8, 'pass', '✅ Replay transmitted');
+                }
+            } catch (error) {
+                setTestStatus(8, 'fail', '❌ ' + error.message);
+            }
+        }
+
+        // Test 9: Toggle Mode
+        async function testToggleMode() {
+            if (!confirm('This will toggle the RTL-SDR mode and reload the page. Continue?')) {
+                return;
+            }
+
+            setTestStatus(9, 'testing');
+            log('Toggling mode...');
+            try {
+                const response = await fetch('/api/rtlsdr/toggle', { method: 'POST' });
+                const data = await response.json();
+                log('Toggle Result: ' + JSON.stringify(data, null, 2));
+                setTestStatus(9, 'pass', `✅ Switched to ${data.mode} mode`);
+
+                setTimeout(() => {
+                    alert('Mode switched! Page will reload...');
+                    location.reload();
+                }, 2000);
+            } catch (error) {
+                setTestStatus(9, 'fail', '❌ ' + error.message);
+            }
+        }
+
+        // Run All Tests (Hardware only, no long scans)
+        async function runAllTests() {
+            log('=== STARTING AUTOMATED TEST SUITE ===');
+            await testHardwareStatus();
+            await new Promise(r => setTimeout(r, 1000));
+            await testNFC();
+            await new Promise(r => setTimeout(r, 1000));
+            await testMode();
+            await new Promise(r => setTimeout(r, 1000));
+            await testListCaptures();
+            await new Promise(r => setTimeout(r, 1000));
+            log('=== AUTOMATED TESTS COMPLETE ===');
+            log('Run long tests manually: 433MHz Scan, Capture, Replay');
+        }
+
+        // Initialize
+        log('🧪 PiFlip Test Suite Ready');
+        log('Click individual TEST buttons or RUN ALL TESTS');
+        log('');
+    </script>
+</body>
+</html>

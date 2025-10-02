@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PiFlip Control Center</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Courier New', monospace; 
+            background-color: #0a0a0a;
+            background-image: repeating-linear-gradient(0deg, rgba(0, 255, 0, 0.08), rgba(0, 255, 0, 0.08) 1px, transparent 1px, transparent 2px);
+            color: #00ff00;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 {
+            color: #00ff00;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 0 7px #00ff00, 0 0 10px #00ff00;
+            animation: flicker 2s infinite alternate;
+        }
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 4px #00ff00, 0 0 8px #00ff00, 0 0 12px #00ff00; }
+            20%, 24%, 55% { text-shadow: none; }
+        }
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            padding-top: 15px;
+        }
+        .btn {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 5px rgba(0, 255, 0, 0.4), inset 0 0 5px rgba(0, 255, 0, 0.2);
+            text-align: center;
+        }
+        .btn:hover {
+            background: rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.7), inset 0 0 10px rgba(0, 255, 0, 0.4);
+        }
+        .btn:active { transform: translateY(1px); }
+        .btn-icon { font-size: 24px; display: block; margin-bottom: 5px; }
+        #output {
+            background: rgba(0,0,0,0.8);
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 5px;
+            min-height: 300px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            border: 1px solid #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            margin-top: 20px;
+        }
+        .status {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .pulse {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #00ff00;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0,255,0,0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0,255,0,0); }
+            100% { box-shadow: 0 0 0 0 rgba(0,255,0,0); }
+        }
+        .accordion {
+            background-color: rgba(0, 255, 0, 0.1);
+            color: #00ff00;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: 1px solid #00ff00;
+            text-align: left;
+            outline: none;
+            font-size: 18px;
+            transition: 0.4s;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .accordion:hover { background-color: rgba(0, 255, 0, 0.2); }
+        .accordion:after {
+            content: '[+]';
+            font-size: 18px;
+            color: #00ff00;
+            float: right;
+            margin-left: 5px;
+        }
+        .accordion.active:after { content: "[-]"; }
+        .panel {
+            padding: 0 18px;
+            background-color: transparent;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔓 PiFlip Terminus</h1>
+        <div class="status"><span class="pulse"></span> System Online | <span id="hw-status">Checking hardware...</span> | v{{ cache_bust }}</div>
+        <div class="status" style="margin-top: 10px;">
+            <strong>RTL-SDR Mode:</strong> <span id="rtlsdr-mode">Checking...</span>
+            <button class="btn" style="display: inline-block; padding: 5px 15px; margin-left: 10px; font-size: 12px;" onclick="toggleRTLSDR()">
+                🔄 Switch Mode
+            </button>
+        </div>
+        <div id="main-controls">
+            <div class="control-grid">
+                <button class="btn" onclick="scan433()"><span class="btn-icon">📡</span>Scan 433MHz</button>
+                <button class="btn" onclick="showCaptureMenu()"><span class="btn-icon">📻</span>Capture Signal</button>
+                <button class="btn" onclick="showSignalLibrary()"><span class="btn-icon">📚</span>Signal Library</button>
+                <button class="btn" onclick="showNfcMenu()"><span class="btn-icon">💳</span>NFC Menu</button>
+                <button class="btn" onclick="planes()"><span class="btn-icon">✈️</span>Track Aircraft</button>
+                <button class="btn" onclick="tpms()"><span class="btn-icon">🚗</span>Read TPMS</button>
+                <button class="btn" onclick="weather()"><span class="btn-icon">🌡️</span>Weather Stations</button>
+            </div>
+        </div>
+        <div id="capture-controls" style="display: none;">
+            <h2 style="text-align: center; margin-bottom: 15px;">📻 Signal Capture</h2>
+            <div style="background: rgba(0, 255, 0, 0.1); border: 1px solid #00ff00; padding: 15px; border-radius: 5px; margin-bottom: 15px;">
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; margin-bottom: 5px;">Capture Name:</label>
+                    <input type="text" id="capture-name" placeholder="e.g., garage_door"
+                           style="width: 100%; padding: 8px; background: rgba(0,0,0,0.5); border: 1px solid #00ff00; color: #00ff00; border-radius: 3px;">
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; margin-bottom: 5px;">Frequency (MHz):</label>
+                    <select id="capture-frequency"
+                            style="width: 100%; padding: 8px; background: rgba(0,0,0,0.5); border: 1px solid #00ff00; color: #00ff00; border-radius: 3px;">
+                        <option value="315000000">315 MHz (TPMS, Garage)</option>
+                        <option value="433920000" selected>433.92 MHz (Most devices)</option>
+                        <option value="868000000">868 MHz (EU ISM)</option>
+                        <option value="915000000">915 MHz (US ISM)</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; margin-bottom: 5px;">Duration (seconds):</label>
+                    <input type="number" id="capture-duration" value="5" min="1" max="60"
+                           style="width: 100%; padding: 8px; background: rgba(0,0,0,0.5); border: 1px solid #00ff00; color: #00ff00; border-radius: 3px;">
+                </div>
+                <button class="btn" style="width:100%; margin-bottom: 10px;" onclick="captureSignal()">
+                    <span class="btn-icon">🎯</span>Start Capture
+                </button>
+            </div>
+            <div style="margin-top: 20px;">
+                <button class="btn" style="width:100%;" onclick="showMainMenu()">
+                    <span class="btn-icon">↩️</span>Back to Main Menu
+                </button>
+            </div>
+        </div>
+        <div id="library-controls" style="display: none;">
+            <h2 style="text-align: center; margin-bottom: 15px;">📚 Signal Library</h2>
+            <div id="signal-list" style="background: rgba(0, 255, 0, 0.1); border: 1px solid #00ff00; padding: 15px; border-radius: 5px; margin-bottom: 15px; max-height: 400px; overflow-y: auto;">
+                Loading...
+            </div>
+            <div style="margin-top: 20px;">
+                <button class="btn" style="width:100%;" onclick="showMainMenu()">
+                    <span class="btn-icon">↩️</span>Back to Main Menu
+                </button>
+            </div>
+        </div>
+        <div id="nfc-controls" style="display: none;">
+            <h2 style="text-align: center; margin-bottom: 15px;">NFC Operations</h2>
+            <button class="accordion">Scanning & Reading</button>
+            <div class="panel">
+                <div class="control-grid">
+                    <button class="btn" onclick="scanNFC()"><span class="btn-icon">🔍</span>Scan Card (Single)</button>
+                    <button class="btn" id="continuous-scan-btn" onclick="scanNFCContinuous()"><span class="btn-icon">🔄</span>Scan (Continuous)</button>
+                    <button class="btn" onclick="alert('Not implemented yet')"><span class="btn-icon">📖</span>Read Data Blocks</button>
+                </div>
+            </div>
+            <button class="accordion">Stored Cards</button>
+            <div class="panel">
+                <div class="control-grid">
+                    <button class="btn" onclick="alert('Not implemented yet')"><span class="btn-icon">➕</span>Store Card</button>
+                    <button class="btn" onclick="alert('Not implemented yet')"><span class="btn-icon">📋</span>List Stored</button>
+                    <button class="btn" onclick="alert('Not implemented yet')"><span class="btn-icon">❓</span>Compare Card</button>
+                </div>
+            </div>
+            <button class="accordion">Backup & Clone</button>
+            <div class="panel">
+                <div class="control-grid">
+                    <button class="btn" onclick="backupCard()"><span class="btn-icon">💾</span>Backup Card UID</button>
+                    <button class="btn" onclick="alert('Not implemented yet')"><span class="btn-icon">🗂️</span>List Backups</button>
+                    <button class="btn" onclick="alert('Not implemented yet')"><span class="btn-icon">📥</span>Restore from Backup</button>
+                    <button class="btn" onclick="alert('Not implemented yet')"><span class="btn-icon">✨</span>Clone Card (UID)</button>
+                </div>
+            </div>
+            <div style="margin-top: 30px;">
+                <button class="btn" style="width:100%;" onclick="showMainMenu()"><span class="btn-icon">↩️</span>Back to Main Menu</button>
+            </div>
+        </div>
+        <div id="output">Ready for commands...</div>
+    </div>
+    <script>
+    // Check hardware status on load
+    window.addEventListener('load', function() {
+        fetch('/api/status').then(r => r.json()).then(data => {
+            const status = [];
+            if (data.pn532 === 'initialized') status.push('NFC✓');
+            if (data.rtl_sdr === 'detected') status.push('RTL-SDR✓');
+            if (data.dump1090 === 'active') status.push('Flights✓');
+            if (data.cc1101 === 'initialized') status.push('CC1101✓');
+
+            if (status.length > 0) {
+                document.getElementById('hw-status').innerText = status.join(' | ');
+            } else {
+                document.getElementById('hw-status').innerText = 'Hardware initializing...';
+            }
+        }).catch(() => {
+            document.getElementById('hw-status').innerText = 'Status check failed';
+        });
+
+        // Check RTL-SDR mode
+        updateRTLSDRMode();
+    });
+
+    function updateRTLSDRMode() {
+        fetch('/api/rtlsdr/mode').then(r => r.json()).then(data => {
+            const modeText = data.mode === 'flights' ? '✈️ Flight Tracking' : '📡 433MHz Scanning';
+            document.getElementById('rtlsdr-mode').innerText = modeText;
+        }).catch(() => {
+            document.getElementById('rtlsdr-mode').innerText = 'Unknown';
+        });
+    }
+
+    function toggleRTLSDR() {
+        updateOutput('Switching RTL-SDR mode...');
+        fetch('/api/rtlsdr/toggle', { method: 'POST' })
+            .then(r => r.json())
+            .then(data => {
+                updateOutput(data.message);
+                updateRTLSDRMode();
+                // Refresh hardware status
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            })
+            .catch(error => {
+                updateOutput('Error switching mode: ' + error);
+            });
+    }
+
+    function updateOutput(text) {
+        document.getElementById('output').innerText = new Date().toLocaleTimeString() + '\n' + text;
+    }
+    function showNfcMenu() {
+        stopFlightStats();
+        document.getElementById('main-controls').style.display = 'none';
+        document.getElementById('nfc-controls').style.display = 'block';
+        updateOutput('NFC menu opened.');
+    }
+    function showMainMenu() {
+        stopFlightStats();
+        document.getElementById('nfc-controls').style.display = 'none';
+        document.getElementById('capture-controls').style.display = 'none';
+        document.getElementById('library-controls').style.display = 'none';
+        document.getElementById('main-controls').style.display = 'block';
+        updateOutput('Returned to main menu.');
+    }
+
+    function showCaptureMenu() {
+        stopFlightStats();
+        document.getElementById('main-controls').style.display = 'none';
+        document.getElementById('capture-controls').style.display = 'block';
+        updateOutput('Signal capture mode.\n\nPress a remote button, doorbell, or any RF device while capturing!\n\nCapture stores raw IQ data for later replay.');
+    }
+
+    function showSignalLibrary() {
+        stopFlightStats();
+        document.getElementById('main-controls').style.display = 'none';
+        document.getElementById('library-controls').style.display = 'block';
+        loadSignalLibrary();
+    }
+
+    function captureSignal() {
+        const name = document.getElementById('capture-name').value || `capture_${Date.now()}`;
+        const frequency = parseInt(document.getElementById('capture-frequency').value);
+        const duration = parseInt(document.getElementById('capture-duration').value);
+
+        updateOutput(`🎯 Capturing signal...\n\nName: ${name}\nFrequency: ${frequency / 1e6} MHz\nDuration: ${duration} seconds\n\n⚡ PRESS YOUR REMOTE/DEVICE NOW! ⚡\n\nCapturing...`);
+
+        fetch('/api/capture', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: name,
+                frequency: frequency,
+                duration: duration,
+                sample_rate: 2048000
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.error) {
+                updateOutput(`❌ Capture failed:\n${data.message}`);
+            } else {
+                const size = (data.metadata.file_size / 1024 / 1024).toFixed(2);
+                updateOutput(`✅ Capture successful!\n\nName: ${data.metadata.name}\nFrequency: ${data.metadata.frequency / 1e6} MHz\nDuration: ${data.metadata.duration}s\nFile size: ${size} MB\nSamples: ${data.metadata.num_samples}\n\nSaved to ~/piflip/captures/\n\n💡 View in Signal Library to replay!`);
+                document.getElementById('capture-name').value = '';
+            }
+        })
+        .catch(error => updateOutput(`Error: ${error}`));
+    }
+
+    function loadSignalLibrary() {
+        updateOutput('Loading signal library...');
+        fetch('/api/captures')
+            .then(r => r.json())
+            .then(data => {
+                const list = document.getElementById('signal-list');
+                if (data.count === 0) {
+                    list.innerHTML = '<p style="text-align: center; padding: 20px;">No captured signals yet.<br><br>Use "Capture Signal" to record RF signals!</p>';
+                    updateOutput('Signal library is empty.\n\nCapture some signals to get started!');
+                } else {
+                    let html = '<div style="font-size: 14px;">';
+                    data.captures.forEach((cap, i) => {
+                        const size = (cap.file_size / 1024 / 1024).toFixed(2);
+                        const date = new Date(cap.timestamp).toLocaleString();
+                        html += `
+                            <div style="border: 1px solid #00ff00; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                                <div style="font-weight: bold; margin-bottom: 5px;">📡 ${cap.name}</div>
+                                <div style="font-size: 12px; margin-bottom: 5px;">
+                                    🎯 ${cap.frequency / 1e6} MHz | ⏱️ ${cap.duration}s | 💾 ${size} MB
+                                </div>
+                                <div style="font-size: 11px; color: #00dd00; margin-bottom: 8px;">
+                                    ${date}
+                                </div>
+                                <button class="btn" style="padding: 5px 10px; font-size: 12px; margin-right: 5px;" onclick="replaySignal('${cap.name}')">
+                                    ▶️ Replay
+                                </button>
+                                <button class="btn" style="padding: 5px 10px; font-size: 12px; margin-right: 5px;" onclick="analyzeSignal('${cap.name}')">
+                                    🔍 Analyze
+                                </button>
+                                <button class="btn" style="padding: 5px 10px; font-size: 12px; background: rgba(255, 0, 0, 0.2);" onclick="deleteCapture('${cap.name}')">
+                                    🗑️ Delete
+                                </button>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    list.innerHTML = html;
+                    updateOutput(`Found ${data.count} captured signal(s)!\n\nClick to replay or delete.`);
+                }
+            })
+            .catch(error => updateOutput(`Error loading library: ${error}`));
+    }
+
+    function replaySignal(name) {
+        if (!confirm(`⚠️ WARNING: Transmit signal "${name}"?\n\nThis will broadcast on the captured frequency!\nOnly replay signals you own.`)) return;
+
+        updateOutput(`📡 Replaying signal: ${name}\n\nConfiguring CC1101...\nTransmitting...`);
+
+        fetch(`/api/replay/${name}`, { method: 'POST' })
+            .then(r => r.json())
+            .then(data => {
+                if (data.error) {
+                    updateOutput(`❌ Replay failed:\n${data.error}`);
+                } else {
+                    updateOutput(`✅ Signal replayed!\n\n${data.message}\n\n${data.note}\n\nOutput:\n${data.output || ''}`);
+                }
+            })
+            .catch(error => updateOutput(`Replay error: ${error}`));
+    }
+
+    function analyzeSignal(name) {
+        updateOutput(`🔍 Analyzing signal: ${name}\n\nUsing URH (Universal Radio Hacker)...\nThis may take a moment...`);
+
+        fetch(`/api/analyze/${name}`)
+            .then(r => r.json())
+            .then(data => {
+                if (data.error) {
+                    updateOutput(`❌ Analysis failed:\n${data.error}`);
+                } else {
+                    updateOutput(`📊 Analysis Results:\n\nCapture: ${data.capture_name}\nFile: ${data.file}\nSize: ${(data.file_size / 1024 / 1024).toFixed(2)} MB\n\nFrequency: ${data.metadata.frequency / 1e6} MHz\nSample Rate: ${data.metadata.sample_rate / 1e6} MS/s\nDuration: ${data.metadata.duration}s\n\nStatus: ${data.status}\n\n${data.note || ''}`);
+                }
+            })
+            .catch(error => updateOutput(`Analysis error: ${error}`));
+    }
+
+    function deleteCapture(name) {
+        if (!confirm(`Delete capture "${name}"?`)) return;
+
+        fetch(`/api/capture/${name}`, { method: 'DELETE' })
+            .then(r => r.json())
+            .then(data => {
+                updateOutput(`Deleted: ${data.files.join(', ')}`);
+                loadSignalLibrary();
+            })
+            .catch(error => updateOutput(`Delete error: ${error}`));
+    }
+    function scan433() {
+        stopFlightStats();
+        updateOutput('Scanning 433MHz for 30 seconds...\n\nLooking for:\n- Wireless doorbells\n- Car key fobs\n- Remote controls\n- Weather sensors\n- Garage door openers\n- Wireless thermometers\n\nPlease wait...');
+
+        fetch('/api/scan433')
+            .then(r => r.json())
+            .then(data => {
+                if (data.error) {
+                    updateOutput('ERROR: ' + data.message + '\n\n' + (data.raw_output || ''));
+                } else if (data.count > 0) {
+                    let output = `Found ${data.count} device(s)!\n`;
+                    output += `Scan: ${data.scan_duration} @ ${data.frequency}\n`;
+                    output += '═══════════════════════════════════\n\n';
+                    data.devices.forEach((device, i) => {
+                        output += `Device ${i+1}:\n`;
+                        output += JSON.stringify(device, null, 2) + '\n\n';
+                    });
+                    updateOutput(output);
+                } else {
+                    updateOutput(`Scan complete (${data.scan_duration})\nNo devices found.\n\nTips:\n- Press a doorbell button\n- Press car key fob\n- Activate a remote control\n- Make sure RTL-SDR antenna is connected\n\n${data.raw_output || ''}`);
+                }
+            })
+            .catch(error => updateOutput('Scan error: ' + error));
+    }
+    function scanNFC() {
+        stopFlightStats();
+        updateOutput('Scanning for NFC card...');
+        fetch('/api/nfc')
+            .then(r => r.json())
+            .then(data => {
+                console.log('NFC Response:', data);  // Debug log
+                if (data.card_present === true) {
+                    let output = '╔══════════════════════════════════════════════════╗\n';
+                    output += '║            🎩 NFC CARD DETECTED!                 ║\n';
+                    output += '╚══════════════════════════════════════════════════╝\n\n';
+                    output += 'UID:          ' + data.uid_readable + '\n';
+                    output += 'Type:         ' + (data.likely_type || data.type) + '\n';
+                    output += 'Manufacturer: ' + data.manufacturer + '\n';
+                    output += 'Memory:       ' + data.memory + '\n';
+                    output += 'Technology:   ' + data.technology + '\n';
+                    output += 'Encryption:   ' + data.encryption + '\n';
+                    if (data.block0) {
+                        output += '\nBlock 0 Data: ' + data.block0.data + '\n';
+                        output += 'Key Used:     ' + data.block0.key_used + '\n';
+                    }
+                    updateOutput(output);
+                } else {
+                    updateOutput('No card found. Place card on reader and try again.');
+                }
+            })
+            .catch(error => {
+                updateOutput('Error: ' + error);
+                console.error('NFC Error:', error);  // Debug log
+            });
+    }
+    function backupCard() {
+        stopFlightStats();
+        const name = prompt("Enter a name for this backup (e.g., 'blue_card'):");
+        if (!name) {
+            updateOutput("Backup cancelled.");
+            return;
+        }
+        updateOutput('Attempting to back up card to ' + name + '.json...');
+        fetch('/api/nfc/backup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name }),
+        }).then(r => r.json()).then(data => {
+            updateOutput(data.message || JSON.stringify(data, null, 2));
+        }).catch(error => {
+            updateOutput('Error: ' + error);
+        });
+    }
+    var nfcContinuousScanInterval = null;
+    function scanNFCContinuous() {
+        stopFlightStats();
+        const btn = document.getElementById('continuous-scan-btn');
+        if (nfcContinuousScanInterval) {
+            clearInterval(nfcContinuousScanInterval);
+            nfcContinuousScanInterval = null;
+            btn.innerHTML = '<span class="btn-icon">🔄</span>Scan (Continuous)';
+            updateOutput('Continuous scan stopped.');
+        } else {
+            btn.innerHTML = '<span class="btn-icon">⏹️</span>Stop Scan';
+            updateOutput('Continuous scan started...');
+            nfcContinuousScanInterval = setInterval(() => {
+                fetch('/api/nfc').then(r => r.json()).then(data => {
+                    if (data.card_present) {
+                        let output = `🎩 CARD: ${data.uid_readable} | ${data.likely_type || data.type} | ${data.manufacturer}`;
+                        updateOutput(output);
+                    }
+                });
+            }, 1000);
+        }
+    }
+
+    function stopFlightStats() {
+        if (flightStatsInterval) {
+            clearInterval(flightStatsInterval);
+            flightStatsInterval = null;
+        }
+    }
+    var flightStatsInterval = null;
+    function planes() {
+        // Open dump1090 map in new tab
+        window.open('http://' + window.location.hostname + ':8080', '_blank');
+
+        // Also show live stats in output
+        updateOutput('Opening flight map in new window...\nFetching live statistics...');
+
+        if (flightStatsInterval) {
+            clearInterval(flightStatsInterval);
+            flightStatsInterval = null;
+        }
+
+        // Update stats every 5 seconds
+        updateFlightStats();
+        flightStatsInterval = setInterval(updateFlightStats, 5000);
+    }
+
+    function updateFlightStats() {
+        fetch('/api/flights/stats').then(r => r.json()).then(data => {
+            if (data.error) {
+                updateOutput('Flight tracking error: ' + data.error + '\n\nMake sure dump1090-fa is running:\nsudo systemctl start dump1090-fa');
+                if (flightStatsInterval) {
+                    clearInterval(flightStatsInterval);
+                    flightStatsInterval = null;
+                }
+            } else {
+                const stats = `Flight Tracking Statistics:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Total Aircraft:     ${data.total_aircraft}
+With Position:      ${data.with_position}
+With Altitude:      ${data.with_altitude}
+Total Messages:     ${data.messages}
+Last Updated:       ${new Date(data.timestamp * 1000).toLocaleTimeString()}
+
+Map available at: http://${window.location.hostname}:8080
+(Click "Track Aircraft" again to stop updates)`;
+                updateOutput(stats);
+            }
+        }).catch(error => {
+            updateOutput('Error fetching flight stats: ' + error);
+        });
+    }
+    function tpms() {
+        stopFlightStats();
+        updateOutput('Scanning for TPMS sensors for 45 seconds...\n\n📍 IMPORTANT: For best results:\n- Park car near Raspberry Pi (within 50 feet)\n- Roll car forward/backward to activate sensors\n- Or drive past the Pi\n\nScanning 315MHz...\nPlease wait...');
+
+        fetch('/api/tpms')
+            .then(r => r.json())
+            .then(data => {
+                if (data.error) {
+                    updateOutput('ERROR: ' + data.message + '\n\n' + (data.raw_output || ''));
+                } else if (data.count > 0) {
+                    let output = `🚗 Found ${data.count} TPMS sensor(s)!\n\n`;
+                    data.sensors.forEach((sensor, i) => {
+                        output += `Sensor ${i+1}:\n`;
+                        output += JSON.stringify(sensor, null, 2) + '\n\n';
+                    });
+                    updateOutput(output);
+                } else {
+                    updateOutput(`TPMS Scan complete (${data.scan_duration})\n\n❌ No sensors detected.\n\n${data.note}\n\n${data.raw_output || ''}`);
+                }
+            })
+            .catch(error => updateOutput('TPMS scan error: ' + error));
+    }
+
+    function weather() {
+        stopFlightStats();
+        updateOutput('Scanning for weather stations for 60 seconds...\n\n🌡️ Looking for:\n- Acurite sensors\n- Ambient Weather stations\n- LaCrosse sensors\n- Oregon Scientific\n- Other 433MHz weather devices\n\nMost weather stations transmit every 30-60 seconds.\nPlease wait...');
+
+        fetch('/api/weather')
+            .then(r => r.json())
+            .then(data => {
+                if (data.error) {
+                    updateOutput('ERROR: ' + data.message + '\n\n' + (data.raw_output || ''));
+                } else if (data.count > 0) {
+                    let output = `🌡️ Found ${data.count} weather station(s)!\n\n`;
+                    data.stations.forEach((station, i) => {
+                        output += `Station ${i+1}:\n`;
+                        output += JSON.stringify(station, null, 2) + '\n\n';
+                    });
+                    updateOutput(output);
+                } else {
+                    updateOutput(`Weather scan complete (${data.scan_duration})\n\n❌ No stations detected.\n\n${data.note}\n\nNo weather stations in range, or they haven't transmitted yet.\n\n${data.raw_output || ''}`);
+                }
+            })
+            .catch(error => updateOutput('Weather scan error: ' + error));
+    }
+    var acc = document.getElementsByClassName("accordion");
+    for (var i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+        });
+    }
+    </script>
+</body>
+</html>

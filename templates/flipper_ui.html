@@ -1,0 +1,2449 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PiFlip Nano</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #FF6600;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+
+        /* Flipper-style header */
+        .header {
+            background: linear-gradient(180deg, #FF6600 0%, #FF8833 100%);
+            color: #000;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 20px;
+            box-shadow: 0 4px 10px rgba(255, 102, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .status-bar {
+            background: #1a1a1a;
+            padding: 8px 15px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .status-indicator {
+            display: flex;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-dot.active { background: #0f0; }
+        .status-dot.inactive { background: #f00; }
+        .status-dot.warning { background: #ff0; }
+
+        /* Breadcrumb navigation */
+        .breadcrumb {
+            background: #0a0a0a;
+            padding: 10px 15px;
+            font-size: 14px;
+            color: #888;
+            border-bottom: 1px solid #333;
+        }
+
+        .breadcrumb a {
+            color: #FF6600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        /* Main menu container */
+        .menu-container {
+            padding: 0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .menu-item {
+            background: linear-gradient(90deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-bottom: 1px solid #333;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .menu-item:active {
+            background: #333;
+        }
+
+        .menu-item:hover {
+            background: #2a2a2a;
+        }
+
+        .menu-item-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .menu-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #FF6600;
+        }
+
+        .menu-subtitle {
+            font-size: 12px;
+            color: #888;
+            margin-top: 3px;
+        }
+
+        .menu-arrow {
+            color: #666;
+            font-size: 18px;
+        }
+
+        /* Output panel - Fullscreen overlay */
+        .output-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000;
+            padding: 60px 30px 30px 30px; /* Extra top padding for close button */
+            font-size: 16px; /* Larger font for better readability */
+            line-height: 1.5; /* Better line spacing */
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', monospace;
+            z-index: 9999;
+            display: none; /* Hidden by default */
+            box-sizing: border-box;
+        }
+
+        .output-panel.active {
+            display: block;
+        }
+
+        .output-panel:empty::before {
+            content: 'Ready...';
+            color: #666;
+        }
+
+        /* Close button for output overlay */
+        .output-close {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: #FF6600;
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            z-index: 10000;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 4px 15px rgba(255, 102, 0, 0.5);
+            min-width: 120px;
+        }
+
+        .output-close:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 8px rgba(255, 102, 0, 0.5);
+        }
+
+        /* Scaled output styling for better visibility */
+        .output-panel h1,
+        .output-panel h2,
+        .output-panel h3 {
+            color: #FF6600;
+            margin: 20px 0 10px 0;
+        }
+
+        .output-panel strong {
+            color: #FF8833;
+        }
+
+        /* Better box drawing characters */
+        .output-panel {
+            letter-spacing: 0.05em;
+        }
+
+        /* Waterfall display */
+        .waterfall-container {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .waterfall-canvas {
+            width: 100%;
+            flex: 1;
+            background: #000;
+            image-rendering: pixelated;
+        }
+
+        .waterfall-controls {
+            background: #1a1a1a;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .waterfall-info {
+            background: #1a1a1a;
+            padding: 10px;
+            font-size: 12px;
+            color: #FF6600;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Action buttons */
+        .action-buttons {
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            background: linear-gradient(180deg, #FF6600 0%, #DD5500 100%);
+            color: #000;
+            border: none;
+            padding: 15px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 3px 10px rgba(255, 102, 0, 0.3);
+        }
+
+        .action-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 5px rgba(255, 102, 0, 0.3);
+        }
+
+        .action-btn.secondary {
+            background: linear-gradient(180deg, #444 0%, #222 100%);
+            color: #FF6600;
+        }
+
+        /* Mode toggle */
+        .mode-toggle {
+            background: #1a1a1a;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #FF6600;
+        }
+
+        .toggle-label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .toggle-switch {
+            width: 60px;
+            height: 30px;
+            background: #333;
+            border-radius: 15px;
+            position: relative;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: #FF6600;
+        }
+
+        .toggle-slider {
+            width: 24px;
+            height: 24px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transition: 0.3s;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            left: 33px;
+        }
+
+        /* Loading spinner */
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #333;
+            border-top: 2px solid #FF6600;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #FF6600; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">🦊 PiFlip Nano</div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-indicator">
+            <span><span class="status-dot active" id="nfc-dot"></span> NFC</span>
+            <span><span class="status-dot active" id="rtl-dot"></span> RTL</span>
+            <span><span class="status-dot active" id="cc1101-dot"></span> CC1101</span>
+        </div>
+        <div id="battery-indicator">🔋 100%</div>
+    </div>
+
+    <!-- Mode Toggle -->
+    <div class="mode-toggle" onclick="toggleMode()">
+        <span class="toggle-label" id="mode-label">📡 Scanning Mode</span>
+        <div class="toggle-switch" id="mode-switch">
+            <div class="toggle-slider"></div>
+        </div>
+    </div>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb" id="breadcrumb">
+        <a onclick="showMainMenu()">Main Menu</a>
+    </div>
+
+    <!-- Main Menu Container -->
+    <div class="menu-container" id="menu-container">
+        <!-- Main Menu -->
+        <div id="main-menu" class="menu-view">
+            <div class="menu-item" onclick="showDashboard()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">📊</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Dashboard</span>
+                        <span class="menu-subtitle">Stats & Recent Activity</span>
+                    </div>
+                </div>
+                <span class="menu-arrow">›</span>
+            </div>
+
+            <div class="menu-item" onclick="showSubMenu('favorites')">
+                <div class="menu-item-left">
+                    <span class="menu-icon">⭐</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Favorites</span>
+                        <span class="menu-subtitle">Quick Access</span>
+                    </div>
+                </div>
+                <span class="menu-arrow">›</span>
+            </div>
+
+            <div class="menu-item" onclick="showSubMenu('rf-tools')">
+                <div class="menu-item-left">
+                    <span class="menu-icon">📡</span>
+                    <div class="menu-text">
+                        <span class="menu-title">RF Tools</span>
+                        <span class="menu-subtitle">Scan, Capture, Replay</span>
+                    </div>
+                </div>
+                <span class="menu-arrow">›</span>
+            </div>
+
+            <div class="menu-item" onclick="showSubMenu('nfc-menu')">
+                <div class="menu-item-left">
+                    <span class="menu-icon">💳</span>
+                    <div class="menu-text">
+                        <span class="menu-title">NFC Tools</span>
+                        <span class="menu-subtitle">Read, Clone, Backup</span>
+                    </div>
+                </div>
+                <span class="menu-arrow">›</span>
+            </div>
+
+            <div class="menu-item" onclick="showSubMenu('library')">
+                <div class="menu-item-left">
+                    <span class="menu-icon">📚</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Signal Library</span>
+                        <span class="menu-subtitle">Manage Captures</span>
+                    </div>
+                </div>
+                <span class="menu-arrow">›</span>
+            </div>
+
+            <div class="menu-item" onclick="showSubMenu('tracking')">
+                <div class="menu-item-left">
+                    <span class="menu-icon">✈️</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Flight Tracking</span>
+                        <span class="menu-subtitle">ADS-B 1090MHz</span>
+                    </div>
+                </div>
+                <span class="menu-arrow">›</span>
+            </div>
+
+            <div class="menu-item" onclick="showSubMenu('settings')">
+                <div class="menu-item-left">
+                    <span class="menu-icon">⚙️</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Settings</span>
+                        <span class="menu-subtitle">Hardware, Config</span>
+                    </div>
+                </div>
+                <span class="menu-arrow">›</span>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="menu-view hidden">
+            <div id="dashboard-content"></div>
+        </div>
+
+        <!-- Favorites -->
+        <div id="favorites" class="menu-view hidden">
+            <div id="favorites-content"></div>
+        </div>
+
+        <!-- RF Tools Submenu -->
+        <div id="rf-tools" class="menu-view hidden">
+            <div class="menu-item" onclick="cc1101QuickTest()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">⚡</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Quick Signal Test</span>
+                        <span class="menu-subtitle">Find best frequency</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="cc1101CaptureSignal()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">📻</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Capture Signal (CC1101)</span>
+                        <span class="menu-subtitle">RX on any frequency</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="cc1101ScanFrequencies()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">🔍</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Scan Frequencies</span>
+                        <span class="menu-subtitle">Find active signals</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="cc1101ShowLibrary()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">📚</span>
+                    <div class="menu-text">
+                        <span class="menu-title">RF Signal Library</span>
+                        <span class="menu-subtitle">Saved captures</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="showWaterfall()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">🌊</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Spectrum Waterfall</span>
+                        <span class="menu-subtitle">Live frequency display</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="scan433()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">📡</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Scan 433MHz (RTL-SDR)</span>
+                        <span class="menu-subtitle">Find devices (30s)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="showCaptureForm()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">⏺️</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Capture IQ (RTL-SDR)</span>
+                        <span class="menu-subtitle">Record raw data</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="scanTPMS()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">🚗</span>
+                    <div class="menu-text">
+                        <span class="menu-title">TPMS Sensors</span>
+                        <span class="menu-subtitle">Tire pressure (45s)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="scanWeather()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">🌡️</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Weather Stations</span>
+                        <span class="menu-subtitle">433MHz sensors (60s)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NFC Menu -->
+        <div id="nfc-menu" class="menu-view hidden">
+            <div class="menu-item" onclick="scanNFC()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">🔍</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Scan Card</span>
+                        <span class="menu-subtitle">Read UID (single)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="scanNFCContinuous()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">📡</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Multi-Card Scanner</span>
+                        <span class="menu-subtitle">Compare multiple cards</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="backupNFC()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">💾</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Backup Card</span>
+                        <span class="menu-subtitle">Save to JSON</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="listSavedCards()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">📋</span>
+                    <div class="menu-text">
+                        <span class="menu-title">List Saved Cards</span>
+                        <span class="menu-subtitle">View library</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="cloneCard()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">✨</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Clone Card</span>
+                        <span class="menu-subtitle">Full dump clone</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Signal Library -->
+        <div id="library" class="menu-view hidden">
+            <div id="library-items"></div>
+        </div>
+
+        <!-- Flight Tracking -->
+        <div id="tracking" class="menu-view hidden">
+            <div class="menu-item" onclick="openFlightMap()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">🗺️</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Open Map</span>
+                        <span class="menu-subtitle">Port 8080</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="showFlightStats()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">📊</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Live Statistics</span>
+                        <span class="menu-subtitle">Aircraft count</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings -->
+        <div id="settings" class="menu-view hidden">
+            <div class="menu-item" onclick="checkHardware()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">🔧</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Hardware Status</span>
+                        <span class="menu-subtitle">Test modules</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="showInfo('Theme settings coming soon')">
+                <div class="menu-item-left">
+                    <span class="menu-icon">🎨</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Theme</span>
+                        <span class="menu-subtitle">Color schemes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Output Panel -->
+    <div class="output-panel" id="output">
+        <button class="output-close" onclick="closeOutput()">✕ CLOSE</button>
+    </div>
+
+    <script>
+        let currentView = 'main-menu';
+        let breadcrumbPath = ['Main Menu'];
+
+        // Show submenu
+        function showSubMenu(menuId) {
+            document.getElementById(currentView).classList.add('hidden');
+            document.getElementById(menuId).classList.remove('hidden');
+            currentView = menuId;
+
+            const menuNames = {
+                'dashboard': 'Dashboard',
+                'favorites': 'Favorites',
+                'rf-tools': 'RF Tools',
+                'nfc-menu': 'NFC Tools',
+                'library': 'Signal Library',
+                'tracking': 'Flight Tracking',
+                'settings': 'Settings'
+            };
+
+            breadcrumbPath.push(menuNames[menuId]);
+            updateBreadcrumb();
+
+            // Load content if needed
+            if (menuId === 'library') {
+                loadLibrary();
+            } else if (menuId === 'favorites') {
+                loadFavorites();
+            }
+        }
+
+        // Show dashboard
+        async function showDashboard() {
+            document.getElementById(currentView).classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            currentView = 'dashboard';
+
+            breadcrumbPath.push('Dashboard');
+            updateBreadcrumb();
+
+            await loadDashboard();
+        }
+
+        // Load dashboard content
+        async function loadDashboard() {
+            const dashboardContent = document.getElementById('dashboard-content');
+            dashboardContent.innerHTML = '<div style="padding: 20px; text-align: center;">📊 Loading dashboard...</div>';
+
+            try {
+                // Fetch stats and recent activity
+                const [statsRes, recentRes, favsRes] = await Promise.all([
+                    fetch('/api/stats'),
+                    fetch('/api/recent'),
+                    fetch('/api/favorites')
+                ]);
+
+                const stats = await statsRes.json();
+                const recent = await recentRes.json();
+                const favorites = await favsRes.json();
+
+                let output = '';
+
+                // Stats section
+                output += '<div style="padding: 15px; background: #1a1a1a; margin: 10px; border-radius: 8px;">';
+                output += '<div style="font-size: 18px; font-weight: bold; margin-bottom: 15px;">📊 STATISTICS</div>';
+                output += '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">';
+                output += `<div style="background: #2a2a2a; padding: 12px; border-radius: 6px; text-align: center;">`;
+                output += `<div style="font-size: 24px; color: #FF6600;">${stats.total_rf_captures || 0}</div>`;
+                output += `<div style="font-size: 12px; color: #888;">RF Captures</div>`;
+                output += `</div>`;
+                output += `<div style="background: #2a2a2a; padding: 12px; border-radius: 6px; text-align: center;">`;
+                output += `<div style="font-size: 24px; color: #FF6600;">${stats.total_nfc_reads || 0}</div>`;
+                output += `<div style="font-size: 12px; color: #888;">NFC Reads</div>`;
+                output += `</div>`;
+                output += `<div style="background: #2a2a2a; padding: 12px; border-radius: 6px; text-align: center;">`;
+                output += `<div style="font-size: 24px; color: #FF6600;">${stats.total_replays || 0}</div>`;
+                output += `<div style="font-size: 12px; color: #888;">Total Replays</div>`;
+                output += `</div>`;
+                output += `<div style="background: #2a2a2a; padding: 12px; border-radius: 6px; text-align: center;">`;
+                output += `<div style="font-size: 24px; color: #FF6600;">${stats.success_rate || 0}%</div>`;
+                output += `<div style="font-size: 12px; color: #888;">Success Rate</div>`;
+                output += `</div>`;
+                output += '</div>';
+                output += '</div>';
+
+                // Quick stats
+                const totalFavorites = (favorites.rf?.length || 0) + (favorites.nfc?.length || 0);
+                output += '<div style="padding: 15px; background: #1a1a1a; margin: 10px; border-radius: 8px;">';
+                output += '<div style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">⚡ QUICK STATS</div>';
+                output += `<div style="font-size: 14px; color: #888;">⭐ ${totalFavorites} Favorites</div>`;
+                output += `<div style="font-size: 14px; color: #888;">📜 ${recent.activities?.length || 0} Recent Activities</div>`;
+                output += '</div>';
+
+                // Recent activity
+                if (recent.activities && recent.activities.length > 0) {
+                    output += '<div style="padding: 15px; background: #1a1a1a; margin: 10px; border-radius: 8px;">';
+                    output += '<div style="font-size: 18px; font-weight: bold; margin-bottom: 15px;">📜 RECENT ACTIVITY</div>';
+
+                    recent.activities.slice(0, 5).forEach(act => {
+                        const icon = act.type === 'rf' ? '📡' : '💳';
+                        const actionText = act.action === 'capture' ? 'Captured' :
+                                          act.action === 'replay' ? 'Replayed' :
+                                          act.action === 'nfc_scan' ? 'Scanned' : act.action;
+                        const resultIcon = act.result === 'success' ? '✅' : '❌';
+                        const timeAgo = getTimeAgo(act.timestamp);
+
+                        output += `<div style="background: #2a2a2a; padding: 10px; margin-bottom: 8px; border-radius: 6px; display: flex; justify-content: space-between;">`;
+                        output += `<div><span style="font-size: 18px;">${icon}</span> ${actionText}: ${act.name}</div>`;
+                        output += `<div style="color: #888;">${resultIcon} ${timeAgo}</div>`;
+                        output += `</div>`;
+                    });
+
+                    output += '</div>';
+                }
+
+                dashboardContent.innerHTML = output;
+
+            } catch (error) {
+                dashboardContent.innerHTML = `<div style="padding: 20px; color: #f00;">❌ Error loading dashboard: ${error.message}</div>`;
+            }
+        }
+
+        // Helper: Get time ago
+        function getTimeAgo(timestamp) {
+            const now = new Date();
+            const then = new Date(timestamp);
+            const seconds = Math.floor((now - then) / 1000);
+
+            if (seconds < 60) return `${seconds}s ago`;
+            if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+            if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+            return `${Math.floor(seconds / 86400)}d ago`;
+        }
+
+        // Load favorites
+        async function loadFavorites() {
+            const favoritesContent = document.getElementById('favorites-content');
+            favoritesContent.innerHTML = '<div style="padding: 20px; text-align: center;">⭐ Loading favorites...</div>';
+
+            try {
+                const response = await fetch('/api/favorites');
+                const favorites = await response.json();
+
+                let output = '';
+
+                // RF Favorites
+                if (favorites.rf && favorites.rf.length > 0) {
+                    output += '<div style="padding: 15px; background: #1a1a1a; margin: 10px; border-radius: 8px;">';
+                    output += '<div style="font-size: 18px; font-weight: bold; margin-bottom: 15px;">📡 RF FAVORITES</div>';
+
+                    favorites.rf.forEach((fav, idx) => {
+                        const freq = fav.metadata?.frequency || '???';
+                        output += `<div class="menu-item" onclick="quickReplayRF('${fav.name}')">`;
+                        output += `<div class="menu-item-left">`;
+                        output += `<span class="menu-icon">⚡</span>`;
+                        output += `<div class="menu-text">`;
+                        output += `<span class="menu-title">${fav.name}</span>`;
+                        output += `<span class="menu-subtitle">${freq} MHz</span>`;
+                        output += `</div></div>`;
+                        output += `<span class="menu-arrow">▶️</span>`;
+                        output += `</div>`;
+                    });
+
+                    output += '</div>';
+                }
+
+                // NFC Favorites
+                if (favorites.nfc && favorites.nfc.length > 0) {
+                    output += '<div style="padding: 15px; background: #1a1a1a; margin: 10px; border-radius: 8px;">';
+                    output += '<div style="font-size: 18px; font-weight: bold; margin-bottom: 15px;">💳 NFC FAVORITES</div>';
+
+                    favorites.nfc.forEach((fav, idx) => {
+                        const uid = fav.metadata?.uid || 'Unknown';
+                        output += `<div class="menu-item" onclick="quickViewNFC('${fav.name}')">`;
+                        output += `<div class="menu-item-left">`;
+                        output += `<span class="menu-icon">💳</span>`;
+                        output += `<div class="menu-text">`;
+                        output += `<span class="menu-title">${fav.name}</span>`;
+                        output += `<span class="menu-subtitle">UID: ${uid}</span>`;
+                        output += `</div></div>`;
+                        output += `<span class="menu-arrow">📋</span>`;
+                        output += `</div>`;
+                    });
+
+                    output += '</div>';
+                }
+
+                if (output === '') {
+                    output = '<div style="padding: 20px; text-align: center; color: #888;">⭐ No favorites yet!<br><br>Add favorites from RF or NFC libraries.</div>';
+                }
+
+                favoritesContent.innerHTML = output;
+
+            } catch (error) {
+                favoritesContent.innerHTML = `<div style="padding: 20px; color: #f00;">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        // Quick replay from favorites
+        async function quickReplayRF(name) {
+            if (confirm(`⚡ Quick Replay: ${name}\n\nTransmit signal now?`)) {
+                await cc1101ReplaySignal(name);
+
+                // Log activity
+                try {
+                    await fetch('/api/activity', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'replay',
+                            type: 'rf',
+                            name: name,
+                            result: 'success'
+                        })
+                    });
+                } catch (e) {}
+            }
+        }
+
+        // Quick view NFC from favorites
+        function quickViewNFC(name) {
+            showOutput(`💳 ${name}\n\nGo to NFC Tools to scan or clone this card.`);
+        }
+
+        // Back to main menu
+        function showMainMenu() {
+            document.getElementById(currentView).classList.add('hidden');
+            document.getElementById('main-menu').classList.remove('hidden');
+            currentView = 'main-menu';
+            breadcrumbPath = ['Main Menu'];
+            updateBreadcrumb();
+        }
+
+        // Update breadcrumb
+        function updateBreadcrumb() {
+            const breadcrumb = document.getElementById('breadcrumb');
+            breadcrumb.innerHTML = breadcrumbPath.map((item, index) => {
+                if (index === breadcrumbPath.length - 1) {
+                    return item;
+                }
+                return `<a onclick="navigateToBreadcrumb(${index})">${item}</a>`;
+            }).join(' › ');
+        }
+
+        // Navigate via breadcrumb
+        function navigateToBreadcrumb(index) {
+            if (index === 0) {
+                showMainMenu();
+            }
+        }
+
+        // Output functions
+        function showOutput(text) {
+            const outputPanel = document.getElementById('output');
+
+            // Set text (preserve close button)
+            const closeBtn = outputPanel.querySelector('.output-close');
+            outputPanel.textContent = text;
+            outputPanel.appendChild(closeBtn);
+
+            // Show overlay
+            outputPanel.classList.add('active');
+        }
+
+        function appendOutput(text) {
+            const outputPanel = document.getElementById('output');
+            const closeBtn = outputPanel.querySelector('.output-close');
+            const currentText = outputPanel.textContent.replace('✕ CLOSE', '').trim();
+
+            outputPanel.textContent = currentText + '\n' + text;
+            outputPanel.appendChild(closeBtn);
+        }
+
+        function showInfo(text) {
+            showOutput('ℹ️ ' + text);
+        }
+
+        function closeOutput() {
+            // Clear any running scan intervals
+            if (window.nfcScanIntervals) {
+                clearInterval(window.nfcScanIntervals.animationInterval);
+                clearInterval(window.nfcScanIntervals.scanInterval);
+                window.nfcScanIntervals = null;
+            }
+
+            document.getElementById('output').classList.remove('active');
+        }
+
+        // Mode toggle
+        async function toggleMode() {
+            const modeSwitch = document.getElementById('mode-switch');
+            const modeLabel = document.getElementById('mode-label');
+
+            showOutput('⏳ Switching modes...');
+
+            try {
+                const response = await fetch('/api/rtlsdr/toggle', { method: 'POST' });
+                const data = await response.json();
+
+                showOutput(data.message);
+
+                // Update UI
+                if (data.new_mode === 'flight') {
+                    modeSwitch.classList.add('active');
+                    modeLabel.textContent = '✈️ Flight Mode';
+                } else {
+                    modeSwitch.classList.remove('active');
+                    modeLabel.textContent = '📡 Scanning Mode';
+                }
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        // RF Functions
+        async function scan433() {
+            showOutput('📡 Scanning 433MHz for 30 seconds...\nPress devices now!');
+            try {
+                const response = await fetch('/api/scan433');
+                const data = await response.json();
+                showOutput(JSON.stringify(data, null, 2));
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        function showCaptureForm() {
+            const name = prompt('Signal name:', 'capture_' + Date.now());
+            if (!name) return;
+
+            const freq = prompt('Frequency (MHz):', '433.92');
+            const duration = prompt('Duration (seconds):', '5');
+
+            captureSignal(name, parseFloat(freq) * 1e6, parseInt(duration));
+        }
+
+        async function captureSignal(name, frequency, duration) {
+            showOutput(`⏺️ Capturing "${name}" at ${frequency/1e6}MHz for ${duration}s...\n\nPress device NOW!`);
+
+            try {
+                const response = await fetch('/api/capture', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, frequency, duration, sample_rate: 2048000 })
+                });
+                const data = await response.json();
+                showOutput(JSON.stringify(data, null, 2));
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        async function scanTPMS() {
+            showOutput('🚗 Scanning TPMS for 45 seconds...\nRoll car back/forth!');
+            try {
+                const response = await fetch('/api/tpms');
+                const data = await response.json();
+                showOutput(JSON.stringify(data, null, 2));
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        async function scanWeather() {
+            showOutput('🌡️ Scanning weather stations for 60 seconds...');
+            try {
+                const response = await fetch('/api/weather');
+                const data = await response.json();
+                showOutput(JSON.stringify(data, null, 2));
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        // NFC Functions
+        async function scanNFC() {
+            // Show scanning animation
+            let scanTime = 0;
+            const maxWait = 5; // 5 seconds max wait
+
+            const animationInterval = setInterval(() => {
+                scanTime += 0.2;
+                const wave = Math.floor(scanTime * 5) % 4;
+                const waves = ['◐', '◓', '◑', '◒'];
+
+                let output = '╔════════════════════════════════════════════════════╗\n';
+                output += '║              💳 NFC SCANNER                        ║\n';
+                output += '╚════════════════════════════════════════════════════╝\n\n';
+                output += '⚡ WAITING FOR CARD ⚡\n\n';
+                output += `   ${waves[wave]} Scanning NFC Field ${waves[wave]}\n\n`;
+                output += 'Place card on reader...\n';
+                output += `Time: ${scanTime.toFixed(1)}s / ${maxWait}s\n`;
+
+                showOutput(output);
+
+                if (scanTime >= maxWait) {
+                    clearInterval(animationInterval);
+                }
+            }, 200);
+
+            try {
+                const response = await fetch('/api/nfc');
+                const data = await response.json();
+
+                clearInterval(animationInterval);
+
+                if (data.card_present === true) {
+                    let output = '╔══════════════════════════════════════════════════╗\n';
+                    output += '║            ✅ NFC CARD DETECTED!                 ║\n';
+                    output += '╚══════════════════════════════════════════════════╝\n\n';
+                    output += 'UID:          ' + data.uid_readable + '\n';
+                    output += 'Type:         ' + (data.likely_type || data.type) + '\n';
+                    output += 'Manufacturer: ' + data.manufacturer + '\n';
+                    output += 'Memory:       ' + data.memory + '\n';
+                    output += 'Technology:   ' + data.technology + '\n';
+                    output += 'Encryption:   ' + data.encryption + '\n';
+                    if (data.block0) {
+                        output += '\nBlock 0 Data: ' + data.block0.data + '\n';
+                        output += 'Key Used:     ' + data.block0.key_used + '\n';
+                    }
+                    showOutput(output);
+                } else {
+                    showOutput('❌ No card found\n\nPlace card on reader and try again');
+                }
+            } catch (error) {
+                clearInterval(animationInterval);
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        async function backupNFC() {
+            const name = prompt('Enter a name for this card (e.g., "office_badge", "blue_magic_card"):');
+            if (!name) {
+                showOutput('❌ Backup cancelled');
+                return;
+            }
+
+            showOutput('💾 Saving card as "' + name + '"...\nPlace card on reader...');
+            try {
+                const response = await fetch('/api/nfc/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name })
+                });
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    showOutput('✅ Card saved successfully!\n\n' + data.message);
+                } else {
+                    showOutput('❌ Error: ' + (data.message || JSON.stringify(data)));
+                }
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        async function listSavedCards() {
+            showOutput('📋 Loading saved cards...');
+            try {
+                const response = await fetch('/api/nfc/library');
+                const data = await response.json();
+
+                if (data.cards.length === 0) {
+                    showOutput('📋 No saved cards yet\n\nUse "Backup Card" to save cards to your library.');
+                    return;
+                }
+
+                let output = '╔══════════════════════════════════════════════════╗\n';
+                output += '║           📋 SAVED CARDS (' + data.count + ')                    ║\n';
+                output += '╚══════════════════════════════════════════════════╝\n\n';
+
+                data.cards.forEach((card, index) => {
+                    output += '─────────────────────────────────────────────────\n';
+                    output += (index + 1) + '. ' + card.saved_name + '\n';
+                    output += '   UID:          ' + card.uid_readable + '\n';
+                    output += '   Type:         ' + (card.likely_type || card.type) + '\n';
+                    output += '   Manufacturer: ' + card.manufacturer + '\n';
+                    output += '   Saved:        ' + new Date(card.saved_at).toLocaleString() + '\n';
+                });
+
+                output += '\n─────────────────────────────────────────────────\n';
+                output += '\nTotal: ' + data.count + ' card(s)\n\n';
+                output += 'Tip: Cards are saved in ~/piflip/nfc_library/';
+
+                showOutput(output);
+            } catch (error) {
+                showOutput('❌ Error loading cards: ' + error.message);
+            }
+        }
+
+        async function deleteCard(cardName) {
+            if (!confirm('Delete card "' + cardName + '"?')) {
+                return;
+            }
+
+            showOutput('🗑️ Deleting ' + cardName + '...');
+            try {
+                const response = await fetch('/api/nfc/library/' + cardName, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    showOutput('✅ Card deleted!\n\n' + data.message);
+                } else {
+                    showOutput('❌ Error: ' + (data.message || JSON.stringify(data)));
+                }
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        async function cloneCard() {
+            showOutput('╔══════════════════════════════════════════════════╗\n' +
+                       '║            ✨ CARD CLONING WIZARD                ║\n' +
+                       '╚══════════════════════════════════════════════════╝\n\n' +
+                       'Perfect for hotel key cards!\n\n' +
+                       'Step 1: Reading source card...\n' +
+                       'Place SOURCE card (hotel key) on reader...');
+
+            try {
+                // Step 1: Read full dump from source card
+                const readResponse = await fetch('/api/nfc/read_full', { method: 'POST' });
+                const sourceDump = await readResponse.json();
+
+                if (sourceDump.error) {
+                    showOutput('❌ Error reading source card:\n' + sourceDump.error);
+                    return;
+                }
+
+                const sectorsRead = Object.keys(sourceDump.sectors).length;
+                const totalSectors = 16;
+                const successRate = (sectorsRead / totalSectors * 100).toFixed(1);
+
+                showOutput('✅ Source card read successfully!\n\n' +
+                           'UID:     ' + sourceDump.uid + '\n' +
+                           'Sectors: ' + sectorsRead + '/' + totalSectors + ' (' + successRate + '%)\n\n' +
+                           '─────────────────────────────────────────────────\n\n' +
+                           'Step 2: Writing to magic card...\n' +
+                           'Remove source card.\n' +
+                           'Place MAGIC card (white/blue) on reader...\n\n' +
+                           'Click OK when ready...');
+
+                await new Promise(resolve => {
+                    const checkReady = setInterval(() => {
+                        if (confirm('Magic card on reader? Click OK to write, Cancel to abort.')) {
+                            clearInterval(checkReady);
+                            resolve();
+                        }
+                    }, 100);
+                });
+
+                showOutput('⚙️ Writing to magic card...\n' +
+                           'This may take 30-60 seconds...\n' +
+                           'DO NOT remove the card!');
+
+                // Step 2: Write to magic card
+                const writeResponse = await fetch('/api/nfc/clone', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ dump: sourceDump })
+                });
+                const writeResult = await writeResponse.json();
+
+                if (writeResult.error) {
+                    showOutput('❌ Error writing to magic card:\n' + writeResult.error);
+                    return;
+                }
+
+                const writeSuccessRate = (writeResult.sectors_written / writeResult.total_sectors * 100).toFixed(1);
+
+                showOutput('✅ Write complete!\n\n' +
+                           'Sectors written: ' + writeResult.sectors_written + '/' + writeResult.total_sectors +
+                           ' (' + writeSuccessRate + '%)\n\n' +
+                           '─────────────────────────────────────────────────\n\n' +
+                           'Step 3: Verifying clone...\n' +
+                           'Keep magic card on reader...');
+
+                // Step 3: Verify
+                const verifyResponse = await fetch('/api/nfc/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ dump: sourceDump })
+                });
+                const verifyResult = await verifyResponse.json();
+
+                if (verifyResult.error) {
+                    showOutput('⚠️  Could not verify:\n' + verifyResult.error +
+                               '\n\nBut write completed. Try using the card!');
+                    return;
+                }
+
+                if (verifyResult.verified) {
+                    showOutput('╔══════════════════════════════════════════════════╗\n' +
+                               '║          🎉 CLONE SUCCESSFUL! 🎉                 ║\n' +
+                               '╚══════════════════════════════════════════════════╝\n\n' +
+                               'UID Match:     ' + (verifyResult.uid_match ? '✅ YES' : '❌ NO') + '\n' +
+                               'Sectors Match: ' + verifyResult.sectors_match + '/' + verifyResult.sectors_total + '\n\n' +
+                               'Your magic card is now a clone of the source card!\n' +
+                               'Test it on your hotel room door! 🏨');
+                } else {
+                    showOutput('⚠️  Clone verification incomplete\n\n' +
+                               'UID Match:     ' + (verifyResult.uid_match ? '✅ YES' : '❌ NO') + '\n' +
+                               'Sectors Match: ' + verifyResult.sectors_match + '/' + verifyResult.sectors_total + '\n\n' +
+                               'The card was written but may not be perfect.\n' +
+                               'Try using it - it might still work!');
+                }
+
+            } catch (error) {
+                showOutput('❌ Clone failed:\n' + error.message);
+            }
+        }
+
+        // Library Functions
+        async function loadLibrary() {
+            showOutput('📚 Loading signal library...');
+            try {
+                const response = await fetch('/api/captures');
+                const data = await response.json();
+
+                const libraryItems = document.getElementById('library-items');
+                libraryItems.innerHTML = '';
+
+                if (data.captures.length === 0) {
+                    libraryItems.innerHTML = '<div class="menu-item"><div class="menu-item-left"><span class="menu-text"><span class="menu-title">No captures yet</span></span></div></div>';
+                    showOutput('📚 Library empty');
+                    return;
+                }
+
+                data.captures.forEach(cap => {
+                    const item = document.createElement('div');
+                    item.className = 'menu-item';
+                    item.innerHTML = `
+                        <div class="menu-item-left">
+                            <span class="menu-icon">📻</span>
+                            <div class="menu-text">
+                                <span class="menu-title">${cap.name}</span>
+                                <span class="menu-subtitle">${(cap.frequency/1e6).toFixed(2)}MHz • ${cap.duration}s • ${(cap.file_size/1024/1024).toFixed(1)}MB</span>
+                            </div>
+                        </div>
+                    `;
+                    item.onclick = () => showSignalActions(cap.name);
+                    libraryItems.appendChild(item);
+                });
+
+                showOutput(`📚 Found ${data.captures.length} signal(s)`);
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        function showSignalActions(name) {
+            const action = prompt(`Signal: ${name}\n\n1. Replay\n2. Analyze\n3. Delete\n\nEnter choice (1-3):`, '1');
+
+            if (action === '1') {
+                replaySignal(name);
+            } else if (action === '2') {
+                analyzeSignal(name);
+            } else if (action === '3') {
+                deleteSignal(name);
+            }
+        }
+
+        async function replaySignal(name) {
+            if (!confirm('⚠️ WARNING: This will transmit RF signal!\n\nOnly replay signals you own.\nContinue?')) return;
+
+            showOutput(`▶️ Replaying "${name}"...`);
+            try {
+                const response = await fetch(`/api/replay/${name}`, { method: 'POST' });
+                const data = await response.json();
+                showOutput(JSON.stringify(data, null, 2));
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        async function analyzeSignal(name) {
+            showOutput(`🔍 Analyzing "${name}"...`);
+            try {
+                const response = await fetch(`/api/analyze/${name}`);
+                const data = await response.json();
+                showOutput(JSON.stringify(data, null, 2));
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        async function deleteSignal(name) {
+            if (!confirm(`Delete "${name}"?`)) return;
+
+            showOutput(`🗑️ Deleting "${name}"...`);
+            try {
+                const response = await fetch(`/api/capture/${name}`, { method: 'DELETE' });
+                const data = await response.json();
+                showOutput(JSON.stringify(data, null, 2));
+                loadLibrary(); // Refresh
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        // Flight Tracking
+        function openFlightMap() {
+            window.open('http://192.168.86.141:8080', '_blank');
+            showOutput('✈️ Opening flight map in new tab...');
+        }
+
+        async function showFlightStats() {
+            showOutput('📊 Loading flight statistics...');
+            try {
+                const response = await fetch('/api/flights/stats');
+                const data = await response.json();
+                showOutput(JSON.stringify(data, null, 2));
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        // ==========================================
+        // CC1101 Enhanced Functions
+        // ==========================================
+
+        // Live capture visualization
+        function showLiveCaptureViz(name, freq, duration) {
+            const totalDuration = parseFloat(duration);
+            let elapsed = 0;
+
+            // Initial display
+            let output = '╔══════════════════════════════════════════════════╗\n';
+            output += '║          📻 LIVE CAPTURE                         ║\n';
+            output += '╚══════════════════════════════════════════════════╝\n\n';
+            output += `Signal:    ${name}\n`;
+            output += `Frequency: ${freq} MHz\n`;
+            output += `Duration:  ${duration}s\n\n`;
+            output += '⚡ PRESS REMOTE BUTTON NOW! ⚡\n\n';
+            output += '─────────────────────────────────────────────────\n';
+            output += 'LIVE WAVEFORM:\n';
+            output += '  [Waiting for signal...]\n\n';
+            output += 'SIGNAL STRENGTH:\n';
+            output += '  RSSI: [░░░░░░░░░░░░░░░░░░░░] --- dBm\n\n';
+            output += 'PROGRESS:\n';
+            output += '  [                              ] 0%\n';
+            output += '  Time: 0.0s / ' + duration + 's\n';
+
+            showOutput(output);
+
+            // Update progress every 100ms
+            const interval = setInterval(() => {
+                elapsed += 0.1;
+                const percent = Math.min(100, (elapsed / totalDuration) * 100);
+                const barWidth = 30;
+                const filled = Math.floor((percent / 100) * barWidth);
+                const empty = barWidth - filled;
+
+                // Generate random waveform (simulated - real one comes from backend)
+                const waveform = generateRandomWaveform(50);
+
+                // Generate random RSSI (simulated)
+                const rssi = -90 + Math.random() * 30; // -90 to -60
+                const rssiBar = generateRSSIBar(rssi, 20);
+
+                let liveOutput = '╔══════════════════════════════════════════════════╗\n';
+                liveOutput += '║          📻 LIVE CAPTURE                         ║\n';
+                liveOutput += '╚══════════════════════════════════════════════════╝\n\n';
+                liveOutput += `Signal:    ${name}\n`;
+                liveOutput += `Frequency: ${freq} MHz\n`;
+                liveOutput += `Duration:  ${duration}s\n\n`;
+                liveOutput += '⚡ CAPTURING... KEEP PRESSING! ⚡\n\n';
+                liveOutput += '─────────────────────────────────────────────────\n';
+                liveOutput += 'LIVE WAVEFORM:\n';
+                liveOutput += '  ' + waveform + '\n\n';
+                liveOutput += 'SIGNAL STRENGTH:\n';
+                liveOutput += '  RSSI: ' + rssiBar + '\n\n';
+                liveOutput += 'PROGRESS:\n';
+                liveOutput += '  [' + '='.repeat(filled) + (filled < barWidth ? '>' : '') + ' '.repeat(Math.max(0, empty - 1)) + '] ' + Math.floor(percent) + '%\n';
+                liveOutput += '  Time: ' + elapsed.toFixed(1) + 's / ' + duration + 's\n';
+
+                showOutput(liveOutput);
+
+                if (elapsed >= totalDuration) {
+                    clearInterval(interval);
+                }
+            }, 100);
+        }
+
+        // Generate random waveform for visualization
+        function generateRandomWaveform(width) {
+            const chars = ['▁', '▂', '▃', '▄', '▅', '▆', '▇', '█'];
+            let waveform = '';
+            for (let i = 0; i < width; i++) {
+                // More realistic: clusters of high/low
+                if (Math.random() > 0.7) {
+                    waveform += chars[Math.floor(Math.random() * 4) + 4]; // High
+                } else {
+                    waveform += chars[Math.floor(Math.random() * 4)]; // Low
+                }
+            }
+            return waveform;
+        }
+
+        // Generate RSSI bar
+        function generateRSSIBar(rssi, width) {
+            // RSSI: -100 (worst) to -30 (best)
+            const normalized = Math.max(0, Math.min(100, ((rssi + 100) / 70) * 100));
+            const filled = Math.floor((normalized / 100) * width);
+            const empty = width - filled;
+
+            const bar = '▓'.repeat(filled) + '░'.repeat(empty);
+
+            let quality = '';
+            if (rssi > -60) quality = '✅ STRONG';
+            else if (rssi > -80) quality = '⚠️  MODERATE';
+            else quality = '❌ WEAK';
+
+            return `[${bar}] ${rssi.toFixed(0)} dBm ${quality}`;
+        }
+
+        // Frequency scan animation
+        function showScanAnimation(startFreq, endFreq) {
+            let currentFreq = parseFloat(startFreq);
+            const endF = parseFloat(endFreq);
+            const step = 0.1;
+
+            const interval = setInterval(() => {
+                let output = '╔══════════════════════════════════════════════════╗\n';
+                output += '║          🔍 FREQUENCY SCANNER                    ║\n';
+                output += '╚══════════════════════════════════════════════════╝\n\n';
+                output += `Range: ${startFreq} - ${endFreq} MHz\n\n`;
+                output += '─────────────────────────────────────────────────\n';
+                output += 'SCANNING:\n';
+                output += `  ► ${currentFreq.toFixed(2)} MHz\n\n`;
+                output += 'SPECTRUM:\n';
+
+                // Show spectrum display
+                for (let f = parseFloat(startFreq); f <= endF; f += step) {
+                    const isScanning = Math.abs(f - currentFreq) < 0.05;
+                    const hasSignal = Math.random() > 0.85; // Random signals
+
+                    if (isScanning) {
+                        output += '  ► ';
+                    } else {
+                        output += '    ';
+                    }
+
+                    output += `${f.toFixed(2)} MHz `;
+
+                    if (hasSignal && Math.random() > 0.5) {
+                        const bars = Math.floor(Math.random() * 10) + 1;
+                        output += '█'.repeat(bars);
+                    } else {
+                        output += '░░░';
+                    }
+                    output += '\n';
+                }
+
+                output += '\n⚡ Scanning for active transmissions...';
+
+                showOutput(output);
+
+                currentFreq += step;
+                if (currentFreq > endF) {
+                    clearInterval(interval);
+                }
+            }, 200);
+        }
+
+        async function cc1101QuickTest() {
+            showOutput('⚡ QUICK SIGNAL TEST\n\nThis will test common frequencies.\nPress and HOLD your remote button now!\n\nTesting...');
+
+            const commonFreqs = [
+                { freq: 433.92, name: '433.92 MHz (most common)' },
+                { freq: 315.00, name: '315.00 MHz (US common)' },
+                { freq: 433.07, name: '433.07 MHz (alternate)' },
+                { freq: 433.42, name: '433.42 MHz (alternate)' }
+            ];
+
+            let results = [];
+
+            for (const test of commonFreqs) {
+                try {
+                    const response = await fetch('/api/cc1101/scan', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            start: test.freq - 0.05,
+                            end: test.freq + 0.05,
+                            step: 0.05,
+                            threshold: -90
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.signals && data.signals.length > 0) {
+                        const bestSignal = data.signals.reduce((a, b) => a.rssi > b.rssi ? a : b);
+                        results.push({
+                            freq: test.name,
+                            rssi: bestSignal.rssi,
+                            detected: true
+                        });
+                    } else {
+                        results.push({
+                            freq: test.name,
+                            rssi: null,
+                            detected: false
+                        });
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+
+            // Display results
+            let output = '╔══════════════════════════════════════════════════╗\n';
+            output += '║          ⚡ QUICK SIGNAL TEST RESULTS            ║\n';
+            output += '╚══════════════════════════════════════════════════╝\n\n';
+
+            const detected = results.filter(r => r.detected);
+
+            if (detected.length > 0) {
+                output += 'SIGNALS DETECTED:\n';
+                detected.forEach(r => {
+                    output += `  ✅ ${r.freq}: ${r.rssi} dBm\n`;
+                });
+
+                const best = detected.reduce((a, b) => a.rssi > b.rssi ? a : b);
+                output += `\n🎯 BEST: ${best.freq}\n`;
+                output += `   Use this frequency for capture!\n\n`;
+
+                output += 'NEXT STEP:\n';
+                output += `  1. Click "Capture Signal"\n`;
+                output += `  2. Use frequency from best result\n`;
+                output += `  3. Press remote during 5-second capture\n`;
+            } else {
+                output += '❌ No signals detected on common frequencies.\n\n';
+                output += 'Try:\n';
+                output += '  • Hold remote button closer to CC1101\n';
+                output += '  • Press and HOLD during test\n';
+                output += '  • Use "Scan Frequencies" for wider range\n';
+            }
+
+            showOutput(output);
+        }
+
+        async function cc1101CaptureSignal() {
+            const name = prompt('Signal name:', 'signal_' + Date.now());
+            if (!name) return;
+
+            const freq = prompt('Frequency (MHz):', '433.92');
+            const duration = prompt('Duration (seconds):', '5');
+
+            if (!freq || !duration) return;
+
+            // Show live capture visualization
+            showLiveCaptureViz(name, freq, duration);
+
+            try {
+                const response = await fetch('/api/cc1101/capture', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        frequency: parseFloat(freq),
+                        duration: parseFloat(duration),
+                        name: name
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'captured_and_saved') {
+                    let output = '╔══════════════════════════════════════════════════╗\n';
+                    output += '║          📻 SIGNAL CAPTURED & SAVED!             ║\n';
+                    output += '╚══════════════════════════════════════════════════╝\n\n';
+                    output += `Name:         ${name}\n`;
+                    output += `Frequency:    ${freq} MHz\n`;
+                    output += `Duration:     ${duration}s\n`;
+                    output += `Samples:      ${data.capture.sample_count.toLocaleString()}\n`;
+                    output += `Transitions:  ${data.save.timing_count}\n`;
+                    output += `RSSI:         ${data.capture.rssi.toFixed(1)} dBm\n\n`;
+
+                    // Signal quality assessment
+                    output += '─────────────────────────────────────────────────\n';
+                    output += 'SIGNAL QUALITY:\n';
+
+                    const transitions = data.save.timing_count;
+                    const rssi = data.capture.rssi;
+
+                    if (transitions > 1000) {
+                        output += '  Transitions: ✅ EXCELLENT (strong signal detected)\n';
+                    } else if (transitions > 100) {
+                        output += '  Transitions: ⚠️  WEAK (may work, try closer)\n';
+                    } else {
+                        output += '  Transitions: ❌ TOO FEW (probably missed signal)\n';
+                    }
+
+                    if (rssi > -60) {
+                        output += '  RSSI:        ✅ STRONG signal\n';
+                    } else if (rssi > -80) {
+                        output += '  RSSI:        ⚠️  MODERATE signal\n';
+                    } else {
+                        output += '  RSSI:        ❌ WEAK signal (try closer)\n';
+                    }
+
+                    output += '\n';
+
+                    // Recommendations
+                    if (transitions < 100) {
+                        output += '⚠️  WARNING: Very few transitions detected!\n';
+                        output += 'Try:\n';
+                        output += '  • Press and HOLD button during capture\n';
+                        output += '  • Move remote closer to CC1101\n';
+                        output += '  • Try different frequency (315 MHz?)\n\n';
+                    } else if (transitions > 10000) {
+                        output += '✨ Great capture! This should replay well.\n\n';
+                    }
+
+                    output += 'NEXT STEPS:\n';
+                    output += '  1. Go to "RF Signal Library"\n';
+                    output += '  2. Type "decode 1" to see binary data\n';
+                    output += '  3. Type "1" to replay signal\n';
+
+                    showOutput(output);
+
+                    // Log activity
+                    try {
+                        await fetch('/api/activity', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                action: 'capture',
+                                type: 'rf',
+                                name: name,
+                                result: 'success'
+                            })
+                        });
+                    } catch (e) {}
+                } else {
+                    showOutput(JSON.stringify(data, null, 2));
+                }
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        async function cc1101ScanFrequencies() {
+            const start = prompt('Start frequency (MHz):', '433.0');
+            const end = prompt('End frequency (MHz):', '434.0');
+            const step = prompt('Step size (MHz):', '0.1');
+            const threshold = prompt('RSSI threshold (dBm):', '-80');
+
+            if (!start || !end) return;
+
+            // Show scanning animation
+            showScanAnimation(start, end);
+
+            try {
+                const response = await fetch('/api/cc1101/scan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        start: parseFloat(start),
+                        end: parseFloat(end),
+                        step: parseFloat(step),
+                        threshold: parseFloat(threshold)
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.signals && data.signals.length > 0) {
+                    let output = '╔══════════════════════════════════════════════════╗\n';
+                    output += `║     🔍 FOUND ${data.count} ACTIVE SIGNAL${data.count > 1 ? 'S' : ''}!                  ║\n`;
+                    output += '╚══════════════════════════════════════════════════╝\n\n';
+
+                    data.signals.forEach((sig, i) => {
+                        output += `${i + 1}. ${sig.frequency} MHz - RSSI: ${sig.rssi} dBm\n`;
+                    });
+
+                    output += `\n📡 Scanned range: ${data.range}`;
+                    showOutput(output);
+                } else {
+                    showOutput(`❌ No signals found in ${data.range}\n\nTry:\n- Moving closer to signal source\n- Adjusting RSSI threshold\n- Different frequency range`);
+                }
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        async function cc1101ShowLibrary() {
+            showOutput('📚 Loading RF signal library...');
+
+            try {
+                const response = await fetch('/api/cc1101/library');
+                const data = await response.json();
+
+                if (data.signals && data.signals.length > 0) {
+                    let output = '╔══════════════════════════════════════════════════╗\n';
+                    output += `║          📚 RF SIGNAL LIBRARY (${data.count})               ║\n`;
+                    output += '╚══════════════════════════════════════════════════╝\n\n';
+
+                    data.signals.forEach((sig, i) => {
+                        output += `${i + 1}. ${sig.name}\n`;
+                        output += `   Freq: ${sig.frequency} MHz | Duration: ${sig.duration}s\n`;
+                        output += `   Saved: ${new Date(sig.timestamp).toLocaleString()}\n`;
+                        output += '─────────────────────────────────────────────────\n';
+                    });
+
+                    output += '\n💡 Tip: Use the menu to replay signals!';
+                    showOutput(output);
+
+                    // Ask if user wants to replay, decode, or delete
+                    setTimeout(() => {
+                        const action = prompt('Enter:\n  # = REPLAY\n  "decode #" = DECODE\n  "d#" = DELETE\n\nExample: decode 1', '1');
+                        if (!action) return;
+
+                        const actionStr = action.toLowerCase().trim();
+
+                        if (actionStr.startsWith('d')) {
+                            const index = parseInt(actionStr.substring(1)) - 1;
+                            if (index >= 0 && index < data.signals.length) {
+                                cc1101DeleteSignal(data.signals[index].name);
+                            }
+                        } else if (actionStr.startsWith('decode')) {
+                            const parts = actionStr.split(' ');
+                            const index = parseInt(parts[1]) - 1;
+                            if (index >= 0 && index < data.signals.length) {
+                                cc1101DecodeSignal(data.signals[index].name);
+                            }
+                        } else {
+                            const index = parseInt(actionStr) - 1;
+                            if (index >= 0 && index < data.signals.length) {
+                                cc1101ReplaySignal(data.signals[index].name);
+                            }
+                        }
+                    }, 500);
+
+                } else {
+                    showOutput('📚 RF Signal Library is empty.\n\nCapture signals using "Capture Signal" in RF Tools menu!');
+                }
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        async function cc1101ReplaySignal(name) {
+            if (!confirm(`⚠️ WARNING: This will TRANSMIT RF signal!\n\nSignal: ${name}\n\nOnly replay signals you own or have permission to use.\n\nContinue?`)) return;
+
+            showOutput(`▶️ Transmitting "${name}"...\n\n📡 Broadcasting on original frequency...`);
+
+            try {
+                const response = await fetch(`/api/cc1101/transmit/${name}`, {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'transmitted') {
+                    let output = '╔══════════════════════════════════════════════════╗\n';
+                    output += '║           📡 SIGNAL TRANSMITTED!                 ║\n';
+                    output += '╚══════════════════════════════════════════════════╝\n\n';
+                    output += `Signal:       ${name}\n`;
+                    output += `Frequency:    ${data.frequency} MHz\n`;
+                    output += `Timings sent: ${data.timing_count}\n\n`;
+                    output += '✅ Transmission complete!';
+                    showOutput(output);
+                } else {
+                    showOutput(JSON.stringify(data, null, 2));
+                }
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        async function cc1101DecodeSignal(name) {
+            showOutput(`🔍 Decoding "${name}"...\n\nAnalyzing pulse widths and extracting binary data...`);
+
+            try {
+                // Fetch both decode and waveform data
+                const [decodeRes, waveformRes] = await Promise.all([
+                    fetch(`/api/cc1101/decode/${name}`),
+                    fetch(`/api/waveform/${name}`)
+                ]);
+
+                const data = await decodeRes.json();
+                const waveform = await waveformRes.json();
+
+                if (data.error) {
+                    showOutput(`❌ Error: ${data.error}`);
+                    return;
+                }
+
+                // Format decode output
+                let output = '╔══════════════════════════════════════════════════╗\n';
+                output += '║          🔍 SIGNAL DECODED!                      ║\n';
+                output += '╚══════════════════════════════════════════════════╝\n\n';
+
+                output += `Signal:       ${data.name}\n`;
+                output += `Frequency:    ${data.frequency} MHz\n`;
+                output += `Duration:     ${data.duration}s\n\n`;
+
+                // Waveform visualization
+                if (waveform.simple_waveform) {
+                    output += '─────────────────────────────────────────────────\n';
+                    output += 'WAVEFORM:\n';
+                    output += `  ${waveform.simple_waveform}\n\n`;
+                }
+
+                // Pulse analysis
+                if (data.pulse_analysis && data.pulse_analysis.clusters) {
+                    const clusters = data.pulse_analysis.clusters;
+                    output += '─────────────────────────────────────────────────\n';
+                    output += 'PULSE WIDTHS:\n';
+                    output += `  Short: ${clusters.short.avg}µs (${clusters.short.count} pulses)\n`;
+                    output += `  Long:  ${clusters.long.avg}µs (${clusters.long.count} pulses)\n\n`;
+                }
+
+                // Binary data
+                if (data.binary && data.binary.bit_string) {
+                    output += '─────────────────────────────────────────────────\n';
+                    output += 'BINARY DATA:\n';
+                    const bitString = data.binary.bit_string;
+
+                    // Show in chunks of 32 bits (4 bytes)
+                    for (let i = 0; i < bitString.length; i += 32) {
+                        const chunk = bitString.substr(i, 32);
+                        // Add spaces every 8 bits
+                        const formatted = chunk.match(/.{1,8}/g).join(' ');
+                        output += `  ${formatted}\n`;
+                    }
+
+                    output += `\nTotal bits: ${data.binary.bit_count}\n\n`;
+                }
+
+                // Protocol info
+                if (data.protocol) {
+                    output += '─────────────────────────────────────────────────\n';
+                    output += 'PROTOCOL:\n';
+                    output += `  Type:     ${data.protocol.type}\n`;
+                    output += `  Encoding: ${data.protocol.encoding}\n\n`;
+
+                    // Repeating patterns
+                    if (data.protocol.patterns && data.protocol.patterns.length > 0) {
+                        output += 'REPEATING PATTERNS:\n';
+                        data.protocol.patterns.slice(0, 3).forEach((p, i) => {
+                            output += `  ${i + 1}. ${p.pattern}\n`;
+                            output += `     Hex: 0x${p.hex} | Repeats: ${p.repeats}x\n`;
+                        });
+                        output += '\n';
+                    }
+                }
+
+                output += '✅ Signal decoded! Ready to replay with exact timings.';
+                showOutput(output);
+
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        async function cc1101DeleteSignal(name) {
+            if (!confirm(`Delete signal "${name}"?`)) return;
+
+            showOutput(`🗑️ Deleting "${name}"...`);
+
+            try {
+                const response = await fetch(`/api/cc1101/library/${name}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'deleted') {
+                    showOutput(`✅ Deleted "${name}" from library.`);
+                    // Reload library after short delay
+                    setTimeout(() => cc1101ShowLibrary(), 1000);
+                } else {
+                    showOutput(JSON.stringify(data, null, 2));
+                }
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        // ==========================================
+        // End CC1101 Enhanced Functions
+        // ==========================================
+
+        // ==========================================
+        // RTL-SDR Enhanced Functions
+        // ==========================================
+
+        // Scan 433MHz with live animation and device detection
+        async function scan433() {
+            closeOutput(); // Close any existing output
+            showOutput(''); // Open the overlay
+
+            let devices = [];
+            let scanDuration = 30;
+            let elapsed = 0;
+
+            // Show initial scan animation
+            const animationInterval = setInterval(() => {
+                elapsed += 0.5;
+                const progress = Math.min(100, (elapsed / scanDuration) * 100);
+                const progressBar = generateProgressBar(Math.floor(progress), 100, 40);
+
+                let output = '╔════════════════════════════════════════════════════╗\n';
+                output += '║         📡 SCANNING 433MHz DEVICES                 ║\n';
+                output += '╚════════════════════════════════════════════════════╝\n\n';
+                output += '⚡ LIVE SCAN IN PROGRESS ⚡\n\n';
+                output += 'Frequency: 433.92 MHz\n';
+                output += 'Mode:      RTL_433 Protocol Decoder\n';
+                output += 'Duration:  30 seconds\n\n';
+                output += `Time: ${progressBar}\n\n`;
+
+                // Show frequency scanner animation
+                const freqBars = generateFrequencyScanAnimation(elapsed);
+                output += 'SPECTRUM:\n';
+                output += freqBars + '\n\n';
+
+                // Show detected devices so far
+                if (devices.length > 0) {
+                    output += `\n📻 DEVICES DETECTED: ${devices.length}\n`;
+                    output += '═══════════════════════════════════════════════════\n\n';
+
+                    // Sort devices by RSSI (strongest first)
+                    const sortedDevices = [...devices].sort((a, b) => {
+                        const rssiA = a.rssi || a.snr || -100;
+                        const rssiB = b.rssi || b.snr || -100;
+                        return rssiB - rssiA;
+                    });
+
+                    sortedDevices.forEach((dev, idx) => {
+                        const rssi = dev.rssi || dev.snr || 0;
+                        const rssiBar = generateRSSIBar(rssi, 15);
+                        output += `${idx + 1}. ${dev.model || dev.type || 'Unknown Device'}\n`;
+                        output += `   Signal: ${rssiBar}\n`;
+                        if (dev.id) output += `   ID: ${dev.id}\n`;
+                        output += '\n';
+                    });
+                } else {
+                    output += '\n⏳ Listening for devices...\n';
+                    output += '   Press remotes, walk by sensors...\n';
+                }
+
+                showOutput(output);
+            }, 500);
+
+            // Start actual scan
+            try {
+                const response = await fetch('/api/scan433');
+                const data = await response.json();
+
+                clearInterval(animationInterval);
+
+                if (data.error) {
+                    showOutput('❌ ERROR\n\n' + data.message + '\n\n' + (data.raw_output || ''));
+                    return;
+                }
+
+                devices = data.devices || [];
+
+                // Show final results
+                let output = '╔════════════════════════════════════════════════════╗\n';
+                output += '║         📡 SCAN COMPLETE                           ║\n';
+                output += '╚════════════════════════════════════════════════════╝\n\n';
+                output += `✅ Found ${devices.length} device(s)\n`;
+                output += `Scan Duration: ${data.scan_duration}\n`;
+                output += `Frequency: ${data.frequency}\n\n`;
+
+                if (devices.length === 0) {
+                    output += '❌ No devices detected\n\n';
+                    output += 'Try:\n';
+                    output += '  • Press remote buttons\n';
+                    output += '  • Walk near sensors\n';
+                    output += '  • Check battery in devices\n';
+                } else {
+                    // Sort by RSSI
+                    const sortedDevices = [...devices].sort((a, b) => {
+                        const rssiA = a.rssi || a.snr || -100;
+                        const rssiB = b.rssi || b.snr || -100;
+                        return rssiB - rssiA;
+                    });
+
+                    output += '═══════════════════════════════════════════════════\n\n';
+
+                    sortedDevices.forEach((dev, idx) => {
+                        const rssi = dev.rssi || dev.snr || 0;
+                        const rssiBar = generateRSSIBar(rssi, 15);
+                        const quality = rssi > -60 ? '✅ STRONG' : rssi > -80 ? '⚠️  MODERATE' : '❌ WEAK';
+
+                        output += `${idx + 1}. ${dev.model || dev.type || 'Unknown'}\n`;
+                        output += `───────────────────────────────────────────────────\n`;
+                        output += `Signal: ${rssiBar} ${quality}\n`;
+
+                        if (dev.id) output += `ID:     ${dev.id}\n`;
+                        if (dev.channel) output += `Chan:   ${dev.channel}\n`;
+                        if (dev.battery_ok !== undefined) {
+                            output += `Battery: ${dev.battery_ok ? '✅ OK' : '⚠️  LOW'}\n`;
+                        }
+                        if (dev.temperature_C) output += `Temp:   ${dev.temperature_C}°C\n`;
+                        if (dev.humidity) output += `Humid:  ${dev.humidity}%\n`;
+                        if (dev.pressure_hPa) output += `Press:  ${dev.pressure_hPa} hPa\n`;
+                        output += '\n';
+                    });
+                }
+
+                showOutput(output);
+
+            } catch (error) {
+                clearInterval(animationInterval);
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        // Generate RSSI bar (helper)
+        function generateRSSIBar(rssi, width) {
+            const normalized = Math.max(0, Math.min(100, ((rssi + 100) / 70) * 100));
+            const filled = Math.floor((normalized / 100) * width);
+            const empty = width - filled;
+            return '▓'.repeat(filled) + '░'.repeat(empty) + ` ${rssi.toFixed(0)} dBm`;
+        }
+
+        // Generate progress bar (helper)
+        function generateProgressBar(current, total, width) {
+            const percent = Math.floor((current / total) * 100);
+            const filled = Math.floor((current / total) * width);
+            const empty = width - filled - 1;
+
+            let bar;
+            if (filled >= width) {
+                bar = '='.repeat(width);
+            } else {
+                bar = '='.repeat(filled) + '>' + ' '.repeat(empty);
+            }
+
+            return `[${bar}] ${percent}%`;
+        }
+
+        // Generate frequency scan animation
+        function generateFrequencyScanAnimation(time) {
+            const freqs = [433.0, 433.2, 433.4, 433.6, 433.8, 434.0];
+            const currentIdx = Math.floor((time * 2) % freqs.length);
+
+            let output = '';
+            freqs.forEach((freq, idx) => {
+                const isActive = idx === currentIdx;
+                const bars = isActive ? '████' : '░░░░';
+                const marker = isActive ? '► ' : '  ';
+                output += `${marker}${freq.toFixed(1)} MHz ${bars}\n`;
+            });
+            return output;
+        }
+
+        // ==========================================
+        // NFC Enhanced Functions
+        // ==========================================
+
+        // Continuous NFC scanner - scans for multiple cards
+        async function scanNFCContinuous() {
+            closeOutput();
+            showOutput('');
+
+            let detectedCards = [];
+            let scanning = true;
+            let scanTime = 0;
+            const maxDuration = 60; // 60 seconds max
+
+            // Animation loop
+            const animationInterval = setInterval(() => {
+                scanTime += 0.5;
+
+                let output = '╔════════════════════════════════════════════════════╗\n';
+                output += '║       💳 CONTINUOUS NFC SCANNER                    ║\n';
+                output += '╚════════════════════════════════════════════════════╝\n\n';
+                output += '⚡ WAITING FOR CARDS ⚡\n\n';
+                output += 'Tap multiple cards to compare them\n';
+                output += `Time: ${scanTime.toFixed(1)}s / ${maxDuration}s\n\n`;
+
+                // Animated NFC field
+                const wave = Math.floor(scanTime * 4) % 4;
+                const waves = ['◐', '◓', '◑', '◒'];
+                output += `   ${waves[wave]} NFC Field Active ${waves[wave]}\n\n`;
+
+                // Show detected cards
+                if (detectedCards.length > 0) {
+                    output += `\n📇 CARDS DETECTED: ${detectedCards.length}\n`;
+                    output += '═══════════════════════════════════════════════════\n\n';
+
+                    detectedCards.forEach((card, idx) => {
+                        output += `${idx + 1}. ${card.type || 'Unknown'}\n`;
+                        output += `   UID: ${card.uid}\n`;
+                        output += `   Detected: ${new Date(card.timestamp).toLocaleTimeString()}\n`;
+                        output += '\n';
+                    });
+                } else {
+                    output += '\n⏳ No cards detected yet...\n';
+                    output += '   Place card on reader\n';
+                }
+
+                output += '\nPress CLOSE to stop scanning';
+
+                showOutput(output);
+
+                if (scanTime >= maxDuration) {
+                    clearInterval(animationInterval);
+                    clearInterval(scanInterval);
+                    scanning = false;
+                }
+            }, 500);
+
+            // Scan loop
+            const scanInterval = setInterval(async () => {
+                if (!scanning) return;
+
+                try {
+                    const response = await fetch('/api/nfc');
+                    const data = await response.json();
+
+                    if (data.card_present && data.uid_readable) {
+                        // Check if card already detected
+                        const alreadyDetected = detectedCards.some(c => c.uid === data.uid_readable);
+
+                        if (!alreadyDetected) {
+                            detectedCards.push({
+                                uid: data.uid_readable,
+                                type: data.likely_type || data.type,
+                                manufacturer: data.manufacturer,
+                                timestamp: Date.now()
+                            });
+                        }
+                    }
+                } catch (error) {
+                    console.error('NFC scan error:', error);
+                }
+            }, 1000);
+
+            // Store intervals so close button can clear them
+            window.nfcScanIntervals = { animationInterval, scanInterval };
+        }
+
+        // ==========================================
+        // Spectrum Waterfall
+        // ==========================================
+
+        let waterfallCanvas = null;
+        let waterfallCtx = null;
+        let waterfallEventSource = null;
+        let waterfallData = [];
+        const waterfallMaxLines = 400; // Keep last 400 scans
+
+        async function showWaterfall() {
+            closeOutput();
+            const outputPanel = document.getElementById('output');
+            const closeBtn = outputPanel.querySelector('.output-close');
+
+            // Create waterfall UI
+            outputPanel.innerHTML = `
+                <div class="waterfall-container">
+                    <div class="waterfall-info">
+                        <span id="waterfall-freq-range">433.0 - 434.0 MHz</span>
+                        <span id="waterfall-status">Starting...</span>
+                    </div>
+                    <canvas id="waterfall-canvas" class="waterfall-canvas"></canvas>
+                    <div class="waterfall-controls">
+                        <button class="action-btn" onclick="stopWaterfall()" style="flex: 0 0 auto; min-width: 150px;">⏹️ STOP</button>
+                        <span style="color: #888; font-size: 12px;">Click on waterfall to tune to frequency</span>
+                    </div>
+                </div>
+            `;
+            outputPanel.appendChild(closeBtn);
+            outputPanel.classList.add('active');
+
+            // Setup canvas
+            waterfallCanvas = document.getElementById('waterfall-canvas');
+            waterfallCtx = waterfallCanvas.getContext('2d');
+
+            // Set canvas size
+            waterfallCanvas.width = 512;  // Frequency bins
+            waterfallCanvas.height = 400; // History lines
+
+            // Click handler for tuning
+            waterfallCanvas.addEventListener('click', handleWaterfallClick);
+
+            // Start streaming
+            startWaterfallStream();
+        }
+
+        function startWaterfallStream() {
+            waterfallData = [];
+
+            // Use EventSource for server-sent events
+            waterfallEventSource = new EventSource('/api/waterfall/stream?start=433000000&end=434000000');
+
+            waterfallEventSource.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                updateWaterfall(data.spectrum);
+                document.getElementById('waterfall-status').textContent = `✅ Live (${data.spectrum.length} bins)`;
+            };
+
+            waterfallEventSource.onerror = function() {
+                document.getElementById('waterfall-status').textContent = '❌ Error - RTL-SDR busy?';
+            };
+        }
+
+        function updateWaterfall(spectrum) {
+            if (!waterfallCtx || !waterfallCanvas) return;
+
+            // Add new scan line to data
+            waterfallData.push(spectrum);
+
+            // Keep only last N lines
+            if (waterfallData.length > waterfallMaxLines) {
+                waterfallData.shift();
+            }
+
+            // Draw waterfall
+            drawWaterfall();
+        }
+
+        function drawWaterfall() {
+            const width = waterfallCanvas.width;
+            const height = waterfallCanvas.height;
+
+            // Clear canvas
+            waterfallCtx.fillStyle = '#000';
+            waterfallCtx.fillRect(0, 0, width, height);
+
+            // Draw each scan line
+            waterfallData.forEach((scan, lineIndex) => {
+                const y = height - 1 - lineIndex; // Scroll upward
+
+                scan.forEach((point, binIndex) => {
+                    const x = Math.floor((binIndex / scan.length) * width);
+                    const power = point[1]; // dB value
+
+                    // Map power to color
+                    const color = powerToColor(power);
+
+                    waterfallCtx.fillStyle = color;
+                    waterfallCtx.fillRect(x, y, Math.ceil(width / scan.length) + 1, 1);
+                });
+            });
+        }
+
+        function powerToColor(db) {
+            // Typical range: -40 (strong) to -90 (weak)
+            // Normalize to 0-1
+            const normalized = Math.max(0, Math.min(1, (db + 90) / 50));
+
+            // Create heat map color
+            let r, g, b;
+
+            if (normalized < 0.25) {
+                // Blue to cyan
+                r = 0;
+                g = Math.floor(normalized * 4 * 255);
+                b = 255;
+            } else if (normalized < 0.5) {
+                // Cyan to green
+                r = 0;
+                g = 255;
+                b = Math.floor((0.5 - normalized) * 4 * 255);
+            } else if (normalized < 0.75) {
+                // Green to yellow
+                r = Math.floor((normalized - 0.5) * 4 * 255);
+                g = 255;
+                b = 0;
+            } else {
+                // Yellow to red
+                r = 255;
+                g = Math.floor((1 - normalized) * 4 * 255);
+                b = 0;
+            }
+
+            return `rgb(${r},${g},${b})`;
+        }
+
+        function handleWaterfallClick(event) {
+            const rect = waterfallCanvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const freqPercent = x / rect.width;
+
+            // Calculate clicked frequency
+            const startFreq = 433.0;
+            const endFreq = 434.0;
+            const clickedFreq = startFreq + (freqPercent * (endFreq - startFreq));
+
+            if (confirm(`Tune to ${clickedFreq.toFixed(3)} MHz?`)) {
+                stopWaterfall();
+                // TODO: Add capture at this frequency
+                showOutput(`📻 Frequency selected: ${clickedFreq.toFixed(3)} MHz\n\nUse CC1101 Capture to record this frequency.`);
+            }
+        }
+
+        function stopWaterfall() {
+            if (waterfallEventSource) {
+                waterfallEventSource.close();
+                waterfallEventSource = null;
+            }
+            waterfallCanvas = null;
+            waterfallCtx = null;
+            waterfallData = [];
+        }
+
+        // Override closeOutput to stop waterfall
+        const originalCloseOutputWaterfall = closeOutput;
+        closeOutput = function() {
+            stopWaterfall();
+            originalCloseOutputWaterfall();
+        };
+
+        // ==========================================
+        // End Enhanced Functions
+        // ==========================================
+
+        // Hardware Check
+        async function checkHardware() {
+            showOutput('🔧 Checking hardware...');
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+
+                let output = '🔧 Hardware Status:\n\n';
+                output += `NFC (PN532): ${data.pn532 === 'initialized' ? '✅' : '❌'}\n`;
+                output += `RTL-SDR: ${data.rtl_sdr === 'detected' ? '✅' : '❌'}\n`;
+                output += `CC1101: ${data.cc1101 === 'initialized' ? '✅' : '⚠️'}\n`;
+                output += `dump1090: ${data.dump1090 === 'active' ? '✈️ Running' : '📡 Stopped'}\n`;
+
+                showOutput(output);
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        // Check hardware status
+        async function checkHardwareStatus() {
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+
+                // Update status dots
+                const nfcDot = document.getElementById('nfc-dot');
+                const rtlDot = document.getElementById('rtl-dot');
+                const cc1101Dot = document.getElementById('cc1101-dot');
+
+                nfcDot.className = data.nfc ? 'status-dot active' : 'status-dot inactive';
+                rtlDot.className = data.rtl_sdr ? 'status-dot active' : 'status-dot inactive';
+                cc1101Dot.className = data.cc1101 ? 'status-dot active' : 'status-dot inactive';
+            } catch (error) {
+                console.error('Hardware status check failed:', error);
+            }
+        }
+
+        // Initialize
+        window.onload = async function() {
+            showOutput('🦊 PiFlip Nano ready!\n\nSelect a tool from the menu.');
+
+            // Check hardware status
+            await checkHardwareStatus();
+
+            // Check mode
+            try {
+                const response = await fetch('/api/rtlsdr/mode');
+                const data = await response.json();
+                const modeSwitch = document.getElementById('mode-switch');
+                const modeLabel = document.getElementById('mode-label');
+
+                if (data.mode === 'flight') {
+                    modeSwitch.classList.add('active');
+                    modeLabel.textContent = '✈️ Flight Mode';
+                } else {
+                    modeSwitch.classList.remove('active');
+                    modeLabel.textContent = '📡 Scanning Mode';
+                }
+            } catch (error) {
+                console.error('Mode check failed:', error);
+            }
+        };
+    </script>
+</body>
+</html>

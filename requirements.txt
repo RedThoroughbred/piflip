@@ -1,0 +1,61 @@
+# PiFlip Python Dependencies
+# Install with: pip install -r requirements.txt
+
+# Web Framework
+Flask==3.1.2
+Werkzeug==3.1.3
+Jinja2==3.1.6
+click==8.1.8
+blinker==1.9.0
+itsdangerous==2.2.0
+MarkupSafe==3.0.2
+
+# Adafruit Hardware Libraries
+Adafruit-Blinka==8.64.0
+Adafruit-PlatformDetect==3.84.0
+Adafruit-PureIO==1.1.11
+adafruit-circuitpython-busdevice==5.2.13
+adafruit-circuitpython-pn532==2.4.5
+adafruit-circuitpython-typing==1.12.2
+adafruit-circuitpython-requests==4.1.13
+adafruit-circuitpython-connectionmanager==3.1.5
+
+# Raspberry Pi GPIO
+RPi.GPIO==0.7.1
+spidev==3.8
+
+# NFC Libraries
+nfcpy==1.0.4
+ndeflib==0.3.3
+pynfc==0.1.1
+pyDes==2.0.1
+
+# RTL-SDR
+pyrtlsdr==0.3.0
+
+# USB Communication
+pyusb==1.3.1
+libusb1==3.3.1
+pyftdi==0.57.1
+pyserial==3.5
+
+# Data Processing & Visualization
+numpy==2.0.2
+matplotlib==3.9.4
+pillow==11.3.0
+
+# HTTP Requests
+requests==2.32.5
+urllib3==2.5.0
+certifi==2025.8.3
+charset-normalizer==3.4.3
+idna==3.10
+
+# Utilities
+python-dateutil==2.9.0.post0
+packaging==25.0
+toml==0.10.2
+six==1.17.0
+
+# Note: Some packages are Raspberry Pi specific and may not work on other platforms
+# Hardware requirements: RTL-SDR, CC1101, PN532
