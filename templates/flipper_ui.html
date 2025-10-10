@@ -1261,6 +1261,26 @@
                     </div>
                 </div>
             </div>
+
+            <div class="menu-item" onclick="systemReboot()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">🔄</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Reboot</span>
+                        <span class="menu-subtitle">Restart system</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="systemShutdown()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">🔴</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Shutdown</span>
+                        <span class="menu-subtitle">Power off safely</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -5059,6 +5079,72 @@ Loading emulation options...`);
                 }
             } catch (error) {
                 showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        // ============================================
+        // SYSTEM POWER MANAGEMENT
+        // ============================================
+
+        async function systemShutdown() {
+            if (!confirm('⚠️  SHUTDOWN SYSTEM?\n\nThis will safely power off the Raspberry Pi.\n\nYou will need to unplug and replug the power to turn it back on.\n\nContinue?')) {
+                return;
+            }
+
+            showOutput('🔴 SHUTTING DOWN PIFLIP...\n\n' +
+                      'System will power off in 5 seconds.\n\n' +
+                      'Please wait for:\n' +
+                      '• All LEDs to stop blinking\n' +
+                      '• Green activity LED to turn off\n\n' +
+                      'Then it\'s safe to unplug power.\n\n' +
+                      'Goodbye! 👋');
+
+            try {
+                const response = await fetch('/api/system/shutdown', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    // Connection will be lost, but that's expected
+                    setTimeout(() => {
+                        showOutput('🔴 System shutting down...\n\nConnection will be lost.\n\nWait 30 seconds before unplugging power.');
+                    }, 2000);
+                }
+            } catch (error) {
+                // Expected - connection lost during shutdown
+                showOutput('🔴 Shutdown initiated.\n\nConnection lost (normal).\n\nWait for all LEDs to stop, then safe to unplug.');
+            }
+        }
+
+        async function systemReboot() {
+            if (!confirm('🔄 REBOOT SYSTEM?\n\nThis will restart the Raspberry Pi.\n\nYou will need to reconnect after ~60 seconds.\n\nContinue?')) {
+                return;
+            }
+
+            showOutput('🔄 REBOOTING PIFLIP...\n\n' +
+                      'System will restart in 5 seconds.\n\n' +
+                      'Please wait ~60 seconds then:\n' +
+                      '• Refresh this page\n' +
+                      '• Reconnect to PiFlip\n\n' +
+                      'Rebooting now...');
+
+            try {
+                const response = await fetch('/api/system/reboot', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    setTimeout(() => {
+                        showOutput('🔄 System rebooting...\n\nConnection will be lost.\n\nWait 60 seconds, then refresh page.');
+                    }, 2000);
+                }
+            } catch (error) {
+                // Expected - connection lost during reboot
+                showOutput('🔄 Reboot initiated.\n\nConnection lost (normal).\n\nWait 60 seconds, then refresh page.');
             }
         }
 

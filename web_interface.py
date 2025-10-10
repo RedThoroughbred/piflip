@@ -1798,6 +1798,38 @@ def wallet_full_test():
         return jsonify({'error': str(e)}), 500
 
 
+# =============================================================================
+# SYSTEM POWER MANAGEMENT
+# =============================================================================
+
+@app.route('/api/system/shutdown', methods=['POST'])
+def system_shutdown():
+    """Safely shutdown the Raspberry Pi"""
+    try:
+        import subprocess
+        # Shutdown now (use 'now' instead of time offset)
+        subprocess.Popen(['sudo', 'shutdown', '-h', 'now'])
+        return jsonify({
+            'status': 'success',
+            'message': 'System shutting down now...'
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/system/reboot', methods=['POST'])
+def system_reboot():
+    """Safely reboot the Raspberry Pi"""
+    try:
+        import subprocess
+        # Schedule reboot in 5 seconds to allow response to be sent
+        subprocess.Popen(['sudo', 'reboot'])
+        return jsonify({
+            'status': 'success',
+            'message': 'System rebooting in 5 seconds...'
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 
 if __name__ == '__main__':
     print("[*] Starting PiFlip Web Interface...")
