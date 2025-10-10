@@ -17,18 +17,27 @@ captures/*.json
 nfc_library/*.json
 backups/*.json
 rf_library/*.json
+bluetooth_library/*.json
+guardian_data/*.json
 
 # Keep directory structure but not contents
 !captures/.gitkeep
 !nfc_library/.gitkeep
 !backups/.gitkeep
 !rf_library/.gitkeep
+!bluetooth_library/.gitkeep
+!guardian_data/.gitkeep
 
 # Runtime data
 favorites.json
 stats.json
 recent_activity.json
+activity.json
 *.log
+
+# Configuration with potentially sensitive info
+config/wifi_config.json
+config/network_config.json
 
 # Temporary files
 *.tmp
@@ -51,3 +60,27 @@ Thumbs.db
 
 # Specific files that might contain sensitive info
 stored_uids.json
+
+# Documentation - keep important docs, ignore daily updates
+TODAYS_UPDATES.md
+UPGRADE_SUMMARY.txt
+web_interface_guardian_apis.txt
+
+# Screenshots with potential private info
+*.png
+*.jpg
+*.jpeg
+
+# Shell scripts (might contain IPs/passwords)
+wifi_auto_switch.sh
+restore_wifi.sh
+test_hotspot.sh
+test_hotspot_safe.sh
+setup_hotspot.sh
+wifi_mode.sh
+piflip-wifi.service
+
+# Gemini/AI helpers (might contain API keys)
+gemini_helper.py
+gemini_simple.py
+install_upgrades.sh

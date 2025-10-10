@@ -56,6 +56,62 @@ class URHAnalyzer:
         except Exception as e:
             return {'error': str(e)}
 
+    def generate_ascii_waveform(self, signal_data, width=60, height=8):
+        """
+        Generate ASCII waveform visualization from signal timings
+
+        Args:
+            signal_data: dict with 'timings' list of {state, duration_us}
+            width: character width of output
+            height: character height of output
+        """
+        if 'timings' not in signal_data or not signal_data['timings']:
+            return "No timing data available"
+
+        timings = signal_data['timings']
+
+        # Calculate total duration
+        total_duration = sum(t['duration_us'] for t in timings)
+
+        # Create waveform
+        waveform = []
+        for row in range(height):
+            waveform.append([' '] * width)
+
+        # Draw signal
+        x = 0
+        for timing in timings:
+            # Calculate width for this timing
+            timing_width = int((timing['duration_us'] / total_duration) * width)
+            if timing_width < 1:
+                timing_width = 1
+
+            # Determine y position (high or low)
+            if timing['state'] == 1:  # HIGH
+                y_start = 0
+                y_end = height // 2
+            else:  # LOW
+                y_start = height // 2
+                y_end = height
+
+            # Draw the signal level
+            for i in range(timing_width):
+                if x + i >= width:
+                    break
+                for y in range(y_start, y_end):
+                    waveform[y][x + i] = '█'
+
+            x += timing_width
+            if x >= width:
+                break
+
+        # Convert to string
+        output = []
+        for row in waveform:
+            output.append(''.join(row))
+
+        return '\n'.join(output)
+
     def demodulate_signal(self, capture_name, modulation='ASK'):
         """
         Demodulate captured signal

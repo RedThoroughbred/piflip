@@ -1,6 +1,6 @@
 # PiFlip Project - AI Assistant Context
 
-**Last Updated:** October 2, 2025
+**Last Updated:** October 10, 2025
 **Project Status:** Fully Functional ✅
 **Platform:** Raspberry Pi 3B running Raspberry Pi OS (Linux 6.1.21-v7+)
 
@@ -27,20 +27,33 @@ PiFlip is a **Flipper Zero alternative** built on Raspberry Pi. It's a multi-too
 - Flipper-style UI with hierarchical menus
 - Real-time hardware status monitoring
 
-### Core Dependencies (9 Python Modules)
+### Core Dependencies (15 Python Modules)
 All located in `/home/seth/piflip/`:
 
+**RF/Signal Processing:**
 1. **urh_analyzer.py** - URH (Universal Radio Hacker) integration for signal analysis
 2. **auto_analyzer.py** - Automatic signal analysis on capture
-3. **nfc_enhanced.py** - Enhanced NFC operations (read, save, library management)
-4. **nfc_cloner.py** - NFC card cloning to magic cards
-5. **nfc_emulator.py** - NFC emulation and virtual badge mode
-6. **cc1101_enhanced.py** - CC1101 transceiver control (RX/TX)
-7. **signal_decoder.py** - Decode signals to binary and extract protocols
-8. **favorites_manager.py** - Favorites, stats, and recent activity tracking
-9. **waveform_generator.py** - ASCII waveform visualization
+3. **cc1101_enhanced.py** - CC1101 transceiver control (RX/TX)
+4. **signal_decoder.py** - Decode signals to binary and extract protocols
+5. **spectrum_analyzer.py** - PortaPack-style waterfall display and signal detection
 
-**All 9 modules are actively used by web_interface.py** - do not delete!
+**NFC/RFID:**
+6. **nfc_enhanced.py** - Enhanced NFC operations (read, save, library management)
+7. **nfc_cloner.py** - NFC card cloning to magic cards
+8. **nfc_emulator.py** - NFC emulation and virtual badge mode
+9. **nfc_guardian.py** - Real-time NFC security monitoring (NEW Oct 10)
+10. **card_catalog.py** - NFC card inventory and tracking (NEW Oct 10)
+11. **rfid_wallet_tester.py** - RFID-blocking wallet effectiveness testing (NEW Oct 10)
+
+**Wireless:**
+12. **bluetooth_scanner.py** - BLE and Bluetooth Classic scanning
+13. **wifi_manager.py** - WiFi hotspot mode and network management
+
+**UI/Data:**
+14. **favorites_manager.py** - Favorites, stats, and recent activity tracking
+15. **waveform_generator.py** - ASCII waveform visualization
+
+**All 15 modules are actively used by web_interface.py** - do not delete!
 
 ---
 
@@ -92,14 +105,20 @@ GDO2   → Pin 31 (GPIO 6)
 ├── web_interface.py          ← Main Flask application
 ├── app.py                    ← Old interface? (investigate if needed)
 │
-├── [Core Modules - 9 files]
+├── [Core Modules - 15 files]
 ├── urh_analyzer.py
 ├── auto_analyzer.py
+├── cc1101_enhanced.py
+├── signal_decoder.py
+├── spectrum_analyzer.py
 ├── nfc_enhanced.py
 ├── nfc_cloner.py
 ├── nfc_emulator.py
-├── cc1101_enhanced.py
-├── signal_decoder.py
+├── nfc_guardian.py          ← NEW: Security monitoring
+├── card_catalog.py          ← NEW: Card inventory
+├── rfid_wallet_tester.py    ← NEW: Wallet testing
+├── bluetooth_scanner.py
+├── wifi_manager.py
 ├── favorites_manager.py
 ├── waveform_generator.py
 │
@@ -115,8 +134,10 @@ GDO2   → Pin 31 (GPIO 6)
 ├── rf_library/              ← Saved RF signals
 ├── nfc_library/             ← Saved NFC cards
 ├── backups/                 ← NFC card backups
+├── guardian_data/           ← Guardian scan logs and card catalog (NEW Oct 10)
 ├── config/                  ← Configuration files
 ├── decoded/                 ← Decoded signals
+├── bluetooth_library/       ← Bluetooth scan results
 │
 ├── start_piflip.sh          ← Launch script
 ├── status.sh                ← Hardware status check
@@ -190,6 +211,27 @@ PiAware/SkyAware web interface for dump1090-fa
 - `POST /api/nfc/read_full` - Full card dump (all sectors)
 - `POST /api/nfc/clone` - Clone to magic card
 - `POST /api/nfc/backup` - Backup card UID
+
+### NFC Guardian (NEW Oct 10)
+- `GET /api/guardian/status` - Get monitoring status and statistics
+- `POST /api/guardian/start` - Start real-time monitoring
+- `POST /api/guardian/stop` - Stop monitoring
+- `GET /api/guardian/suspicious` - View suspicious events log
+- `POST /api/guardian/clear_history` - Clear scan history
+
+### Card Catalog (NEW Oct 10)
+- `GET /api/catalog/cards` - List all registered cards
+- `GET /api/catalog/card/<uid>` - Get specific card details
+- `POST /api/catalog/add` - Add card by scanning
+- `POST /api/catalog/register` - Register card by UID
+- `POST /api/catalog/update/<uid>` - Update card info
+- `DELETE /api/catalog/delete/<uid>` - Delete card
+- `POST /api/catalog/identify` - Identify scanned card
+- `GET /api/catalog/stats` - Get catalog statistics
+
+### RFID Wallet Tester (NEW Oct 10)
+- `POST /api/wallet/quick_test` - Quick 3-second blocking test
+- `POST /api/wallet/full_test` - Full effectiveness test with baseline
 
 ### CC1101 Operations
 - `GET /api/cc1101/status` - Get chip status
@@ -397,16 +439,32 @@ See: [CLEANUP_SUMMARY.md](CLEANUP_SUMMARY.md) for details
 ## 🎯 Current Capabilities
 
 ### ✅ Working Features
+
+**RF/Signal Processing:**
 - [x] 433MHz device scanning
 - [x] Signal capture (IQ data with RTL-SDR)
 - [x] CC1101 transmission
-- [x] NFC card read/backup
 - [x] Flight tracking (ADS-B)
 - [x] TPMS sensor detection
 - [x] Weather station detection
-- [x] Web interface with Flipper-style UI
+- [x] Spectrum analyzer with waterfall
 - [x] Signal library management
 - [x] Auto-analysis on capture
+
+**NFC/RFID:**
+- [x] NFC card read/backup/clone
+- [x] NFC Guardian security monitoring (NEW Oct 10)
+- [x] Card Catalog inventory system (NEW Oct 10)
+- [x] RFID wallet effectiveness testing (NEW Oct 10)
+- [x] NFC emulation (experimental)
+
+**Wireless:**
+- [x] Bluetooth/BLE scanning
+- [x] WiFi hotspot mode
+- [x] WiFi network scanning
+
+**UI/System:**
+- [x] Web interface with Flipper-style UI
 - [x] Hardware status monitoring
 - [x] Mode switching (Flight/Scanning)
 
@@ -421,18 +479,105 @@ See: [CLEANUP_SUMMARY.md](CLEANUP_SUMMARY.md) for details
 
 ---
 
+## 🚀 Major Feature Upgrades
+
+### HackRF/PortaPack Upgrade (October 3, 2025)
+
+**WIRELESS & SPECTRUM FEATURES:**
+
+#### ✅ Bluetooth Scanner
+- **File:** `bluetooth_scanner.py`
+- BLE (Bluetooth Low Energy) scanning
+- Bluetooth Classic scanning
+- Device enumeration and RSSI monitoring
+- Service discovery
+- **API:** `/api/bluetooth/*` (7 new endpoints)
+
+#### ✅ WiFi Hotspot Mode
+- **File:** `wifi_manager.py`
+- Create WiFi network for iPad/phone access
+- Access PiFlip anywhere without external WiFi
+- Network scanning and management
+- **Default SSID:** PiFlip-RF
+- **Password:** piflip123
+- **API:** `/api/wifi/*` (6 new endpoints)
+
+#### ✅ Enhanced Spectrum Analyzer
+- **File:** `spectrum_analyzer.py`
+- PortaPack-style waterfall display
+- Signal detection and analysis
+- ASCII waterfall visualization
+- **API:** `/api/spectrum/*` (4 new endpoints)
+
+#### ✅ Real NFC Emulation
+- **Updated:** `nfc_emulator.py`
+- PN532 Target Mode implementation
+- Experimental card emulation
+- **API:** `/api/nfc/emulate_real/{name}`
+
+**See:** `HACKRF_UPGRADE.md` for complete documentation
+
+---
+
+### NFC Security Suite (October 10, 2025)
+
+**NFC GUARDIAN & PROTECTION FEATURES:**
+
+#### ✅ NFC Guardian Mode
+- **File:** `nfc_guardian.py`
+- Real-time background NFC monitoring
+- Suspicious pattern detection (3+ scans in 5 seconds)
+- Scan history logging (last 1000 scans)
+- Daily statistics and threat tracking
+- Alert level system (normal/elevated)
+- **Use Cases:** Crowded areas, skimmer detection, security testing
+- **API:** `/api/guardian/*` (5 new endpoints)
+
+#### ✅ Card Catalog
+- **File:** `card_catalog.py`
+- Complete NFC card inventory system
+- Track all your cards by UID
+- Last seen time and scan count tracking
+- Mark cards as "protected"
+- Custom notes and categorization
+- Card types: credit, debit, badge, transit, access, other
+- **Use Cases:** Card tracking, clone detection, inventory management
+- **API:** `/api/catalog/*` (8 new endpoints)
+
+#### ✅ RFID Wallet Tester
+- **File:** `rfid_wallet_tester.py`
+- Test RFID-blocking wallet effectiveness
+- Quick test (3 seconds) - simple blocking check
+- Full test (20 seconds) - comprehensive baseline vs protected analysis
+- Blocking percentage calculation
+- Effectiveness assessment (excellent/good/fair/poor)
+- **Use Cases:** Wallet testing, product verification, security validation
+- **API:** `/api/wallet/*` (2 new endpoints)
+
+**See:** `NFC_GUARDIAN_FEATURES.md` for complete documentation and usage guide
+
+**Total API Endpoints:** 95+ (80 from Oct 3, +15 from Oct 10)
+
+---
+
 ## 🤖 AI Assistant Guidelines
 
 ### When Helping with This Project:
 
-1. **Never delete these 9 core modules:**
+1. **Never delete these 15 core modules:**
    - urh_analyzer.py
    - auto_analyzer.py
-   - nfc_enhanced.py
-   - nfc_cloner.py
-   - nfc_emulator.py
    - cc1101_enhanced.py
    - signal_decoder.py
+   - spectrum_analyzer.py (NEW Oct 3)
+   - nfc_enhanced.py
+   - nfc_cloner.py
+   - nfc_emulator.py (UPDATED Oct 3)
+   - nfc_guardian.py (NEW Oct 10)
+   - card_catalog.py (NEW Oct 10)
+   - rfid_wallet_tester.py (NEW Oct 10)
+   - bluetooth_scanner.py (NEW Oct 3)
+   - wifi_manager.py (NEW Oct 3)
    - favorites_manager.py
    - waveform_generator.py
 
@@ -444,15 +589,19 @@ See: [CLEANUP_SUMMARY.md](CLEANUP_SUMMARY.md) for details
 
 5. **Hardware is live:** Changes to GPIO/SPI/I2C code affect real hardware - test carefully!
 
-6. **User data:** captures/, rf_library/, nfc_library/ contain user data - never delete without permission
+6. **User data:** captures/, rf_library/, nfc_library/, bluetooth_library/, guardian_data/ contain user data - never delete without permission
 
 7. **piflip_env/:** Virtual environment (78 MB) - required, don't delete
 
-8. **Documentation:** Keep README.md, DEPENDENCY_AUDIT.md, and this file updated
+8. **Documentation:** Keep README.md, DEPENDENCY_AUDIT.md, HACKRF_UPGRADE.md, NFC_GUARDIAN_FEATURES.md, and this file updated
 
 9. **Security:** This is educational - don't help with malicious use
 
 10. **Testing:** Encourage using /test endpoint before deploying changes
+
+11. **New Features:**
+    - Oct 3, 2025: Bluetooth, WiFi hotspot, spectrum analyzer
+    - Oct 10, 2025: NFC Guardian, Card Catalog, RFID Wallet Tester
 
 ---
 

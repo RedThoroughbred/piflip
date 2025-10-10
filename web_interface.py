@@ -27,6 +27,13 @@ from signal_decoder import SignalDecoder
 from nfc_emulator import NFCEmulator, MagicCardHelper
 from favorites_manager import FavoritesManager
 from waveform_generator import WaveformGenerator
+from bluetooth_scanner import BluetoothScanner
+from wifi_manager import WiFiManager, WiFiScanner
+from spectrum_analyzer import SpectrumAnalyzer
+from rf_advanced_tx import RFAdvancedTX
+from nfc_guardian import NFCGuardian
+from card_catalog import CardCatalog
+from rfid_wallet_tester import RFIDWalletTester
 
 app = Flask(__name__)
 
@@ -378,10 +385,10 @@ def nfc_save():
         return jsonify({'status': 'Error', 'message': 'NFC not initialized'}), 500
 
     try:
-        # Read card
-        card_data = controller.read_card_detailed(timeout=1.0)
+        # Read card with longer timeout
+        card_data = controller.read_card_detailed(timeout=3.0)
         if card_data is None:
-            return jsonify({'status': 'Error', 'message': 'No card found'}), 404
+            return jsonify({'status': 'Error', 'message': 'No card found. Keep card on reader for 3 seconds.'}), 404
 
         # Save to library
         result = controller.save_card(card_data, name)
@@ -579,10 +586,35 @@ def cc1101_status():
 
 @app.route('/api/analyze/<capture_name>')
 def analyze_signal(capture_name):
-    """Analyze a captured signal with URH"""
+    """Analyze a captured signal with URH and generate visualization"""
     try:
         analyzer = URHAnalyzer()
         result = analyzer.analyze_capture(capture_name)
+
+        # Load signal data for visualization
+        capture_dir = Path(os.path.expanduser("~/piflip/captures"))
+        signal_file = capture_dir / f"{capture_name}.json"
+
+        if signal_file.exists():
+            with open(signal_file, 'r') as f:
+                signal_data = json.load(f)
+
+            # Add ASCII waveform if we have timings
+            if 'timings' in signal_data:
+                result['waveform_ascii'] = analyzer.generate_ascii_waveform(signal_data, width=60, height=8)
+                result['timings'] = signal_data['timings']
+
+            # Add decoded binary if available
+            if 'decoded_binary' in signal_data:
+                result['decoded_binary'] = signal_data['decoded_binary']
+
+            # Add frequency and sample rate
+            if 'frequency' in signal_data:
+                result['frequency'] = signal_data['frequency']
+            if 'sample_rate' in signal_data:
+                result['sample_rate'] = signal_data['sample_rate']
+
+        result['status'] = 'success'
         return jsonify(result)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -856,41 +888,7 @@ def remove_favorite(item_type, name):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/stats')
-def get_stats():
-    """Get usage statistics"""
-    try:
-        fm = FavoritesManager()
-        stats = fm.get_stats()
-        return jsonify(stats)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/api/recent')
-def get_recent():
-    """Get recent activity"""
-    try:
-        fm = FavoritesManager()
-        recent = fm.get_recent(limit=10)
-        return jsonify({'activities': recent})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/api/activity', methods=['POST'])
-def add_activity():
-    """Add activity to recent list"""
-    try:
-        fm = FavoritesManager()
-        data = request.get_json()
-        activity = fm.add_activity(
-            data['action'],
-            data['type'],
-            data['name'],
-            data.get('result', 'success')
-        )
-        return jsonify(activity)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+# Dashboard endpoints moved to end of file (before if __name__)
 
 @app.route('/api/waveform/<signal_name>')
 def get_waveform(signal_name):
@@ -1025,6 +1023,781 @@ def waterfall_stream():
                 continue
 
     return Response(generate(), mimetype='text/event-stream')
+
+# --- Dashboard API Routes ---
+
+@app.route('/api/stats')
+def get_stats():
+    """Get dashboard statistics"""
+    try:
+        captures_dir = Path.home() / 'piflip' / 'captures'
+        nfc_dir = Path.home() / 'piflip' / 'nfc_library'
+
+        # Count RF captures
+        rf_captures = list(captures_dir.glob('*.json')) if captures_dir.exists() else []
+
+        # Count NFC cards
+        nfc_cards = list(nfc_dir.glob('*.json')) if nfc_dir.exists() else []
+
+        # Calculate storage used
+        total_size = 0
+        if captures_dir.exists():
+            for file in captures_dir.iterdir():
+                if file.is_file():
+                    total_size += file.stat().st_size
+
+        # Load activity log if exists
+        activity_file = Path.home() / 'piflip' / 'activity.json'
+        total_replays = 0
+        total_scans = 0
+
+        if activity_file.exists():
+            try:
+                with open(activity_file, 'r') as f:
+                    activities = json.load(f)
+                    total_replays = sum(1 for a in activities if a.get('action') == 'replay')
+                    total_scans = sum(1 for a in activities if a.get('action') == 'scan')
+            except:
+                pass
+
+        # Frequency breakdown
+        freq_count = {}
+        for capture in rf_captures:
+            try:
+                with open(capture, 'r') as f:
+                    data = json.load(f)
+                    freq = data.get('frequency', 'unknown')
+                    if freq != 'unknown':
+                        freq_mhz = f"{float(freq)/1e6:.2f}" if freq > 1000 else f"{freq:.2f}"
+                        freq_count[freq_mhz] = freq_count.get(freq_mhz, 0) + 1
+            except:
+                continue
+
+        return jsonify({
+            'total_rf_captures': len(rf_captures),
+            'total_nfc_reads': len(nfc_cards),
+            'total_replays': total_replays,
+            'total_scans': total_scans,
+            'storage_used_mb': round(total_size / (1024 * 1024), 2),
+            'success_rate': 95,  # Placeholder - could track actual success/failure
+            'top_frequencies': dict(sorted(freq_count.items(), key=lambda x: x[1], reverse=True)[:5])
+        })
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/recent')
+def get_recent():
+    """Get recent activity"""
+    try:
+        captures_dir = Path.home() / 'piflip' / 'captures'
+        nfc_dir = Path.home() / 'piflip' / 'nfc_library'
+
+        recent = []
+
+        # Get recent RF captures
+        if captures_dir.exists():
+            for json_file in sorted(captures_dir.glob('*.json'), key=lambda x: x.stat().st_mtime, reverse=True)[:10]:
+                try:
+                    with open(json_file, 'r') as f:
+                        data = json.load(f)
+                        recent.append({
+                            'type': 'rf_capture',
+                            'name': json_file.stem,
+                            'frequency': data.get('frequency', 'unknown'),
+                            'duration': data.get('duration', 'unknown'),
+                            'timestamp': data.get('timestamp', json_file.stat().st_mtime),
+                            'size_kb': round(json_file.stat().st_size / 1024, 2)
+                        })
+                except:
+                    continue
+
+        # Get recent NFC reads
+        if nfc_dir.exists():
+            for json_file in sorted(nfc_dir.glob('*.json'), key=lambda x: x.stat().st_mtime, reverse=True)[:5]:
+                try:
+                    with open(json_file, 'r') as f:
+                        data = json.load(f)
+                        recent.append({
+                            'type': 'nfc_read',
+                            'name': json_file.stem,
+                            'uid': data.get('uid', 'unknown'),
+                            'card_type': data.get('card_type', 'unknown'),
+                            'timestamp': data.get('timestamp', json_file.stat().st_mtime)
+                        })
+                except:
+                    continue
+
+        # Sort all by timestamp
+        recent.sort(key=lambda x: x.get('timestamp', 0), reverse=True)
+
+        return jsonify(recent[:15])
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/activity', methods=['POST'])
+def log_activity():
+    """Log user activity for dashboard"""
+    try:
+        activity_file = Path.home() / 'piflip' / 'activity.json'
+
+        # Load existing activities
+        activities = []
+        if activity_file.exists():
+            try:
+                with open(activity_file, 'r') as f:
+                    activities = json.load(f)
+            except:
+                activities = []
+
+        # Add new activity
+        new_activity = request.get_json()
+        new_activity['timestamp'] = datetime.now().isoformat()
+        activities.append(new_activity)
+
+        # Keep only last 100 activities
+        activities = activities[-100:]
+
+        # Save
+        with open(activity_file, 'w') as f:
+            json.dump(activities, f, indent=2)
+
+        return jsonify({'status': 'logged'})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/rssi')
+def get_rssi():
+    """Get current RSSI (signal strength) from CC1101"""
+    try:
+        controller = initialize_cc1101_enhanced()
+        if not controller:
+            return jsonify({'error': 'CC1101 not initialized'}), 500
+
+        # Put CC1101 in RX mode to read RSSI
+        controller.strobe_command(controller.SRX)
+        time.sleep(0.01)  # Brief delay for RSSI to settle
+
+        # Read RSSI
+        rssi_data = controller.read_rssi()
+
+        return jsonify(rssi_data)
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# --- Bluetooth API Routes ---
+
+@app.route('/api/bluetooth/scan', methods=['POST'])
+def bluetooth_scan():
+    """Scan for Bluetooth devices"""
+    try:
+        scanner = BluetoothScanner()
+        data = request.get_json() or {}
+        scan_type = data.get('type', 'comprehensive')  # ble, classic, comprehensive
+        duration = data.get('duration', 15)
+
+        if scan_type == 'ble':
+            result = scanner.scan_ble_devices(duration)
+        elif scan_type == 'classic':
+            result = scanner.scan_classic_devices(duration)
+        else:
+            result = scanner.scan_comprehensive(duration)
+
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/bluetooth/device/<address>/info')
+def bluetooth_device_info(address):
+    """Get detailed device information"""
+    try:
+        scanner = BluetoothScanner()
+        result = scanner.get_device_info(address)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/bluetooth/device/<address>/services')
+def bluetooth_device_services(address):
+    """Enumerate device services"""
+    try:
+        scanner = BluetoothScanner()
+        device_type = request.args.get('type', 'BLE')
+        result = scanner.get_device_services(address, device_type)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/bluetooth/device/<address>/rssi', methods=['POST'])
+def bluetooth_monitor_rssi(address):
+    """Monitor device RSSI"""
+    try:
+        scanner = BluetoothScanner()
+        data = request.get_json() or {}
+        duration = data.get('duration', 10)
+        result = scanner.monitor_device_rssi(address, duration)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/bluetooth/library')
+def bluetooth_library():
+    """List saved Bluetooth devices"""
+    try:
+        scanner = BluetoothScanner()
+        devices = scanner.list_saved_devices()
+        return jsonify({'devices': devices, 'count': len(devices)})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/bluetooth/save', methods=['POST'])
+def bluetooth_save():
+    """Save Bluetooth device"""
+    try:
+        scanner = BluetoothScanner()
+        data = request.get_json()
+        device_data = data.get('device')
+        name = data.get('name')
+        result = scanner.save_device(device_data, name)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/bluetooth/library/<name>', methods=['DELETE'])
+def bluetooth_delete(name):
+    """Delete saved Bluetooth device"""
+    try:
+        scanner = BluetoothScanner()
+        result = scanner.delete_device(name)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/bluetooth/reset', methods=['POST'])
+def bluetooth_reset():
+    """Reset Bluetooth adapter"""
+    try:
+        scanner = BluetoothScanner()
+        result = scanner.reset_bluetooth()
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# --- WiFi API Routes ---
+
+@app.route('/api/wifi/status')
+def wifi_status():
+    """Get WiFi status"""
+    try:
+        manager = WiFiManager()
+        status = manager.get_wifi_status()
+        return jsonify(status)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/wifi/hotspot/enable', methods=['POST'])
+def wifi_enable_hotspot():
+    """Enable WiFi hotspot mode"""
+    try:
+        manager = WiFiManager()
+        result = manager.enable_hotspot()
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/wifi/hotspot/disable', methods=['POST'])
+def wifi_disable_hotspot():
+    """Disable WiFi hotspot"""
+    try:
+        manager = WiFiManager()
+        result = manager.disable_hotspot()
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/wifi/toggle', methods=['POST'])
+def wifi_toggle():
+    """Toggle WiFi mode"""
+    try:
+        manager = WiFiManager()
+        result = manager.toggle_mode()
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/wifi/scan')
+def wifi_scan():
+    """Scan for WiFi networks"""
+    try:
+        manager = WiFiManager()
+        result = manager.scan_networks()
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/wifi/connect', methods=['POST'])
+def wifi_connect():
+    """Connect to WiFi network"""
+    try:
+        manager = WiFiManager()
+        data = request.get_json()
+        ssid = data.get('ssid')
+        password = data.get('password')
+        result = manager.connect_to_network(ssid, password)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# --- Spectrum Analyzer API Routes ---
+
+@app.route('/api/spectrum/scan', methods=['POST'])
+def spectrum_scan():
+    """Quick spectrum scan"""
+    try:
+        analyzer = SpectrumAnalyzer()
+        data = request.get_json() or {}
+        center_freq = data.get('center_freq', 433.92)
+        span = data.get('span', 2.0)
+        bins = data.get('bins', 256)
+        result = analyzer.quick_scan(center_freq, span, bins)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/spectrum/waterfall', methods=['POST'])
+def spectrum_waterfall():
+    """Waterfall scan"""
+    try:
+        analyzer = SpectrumAnalyzer()
+        data = request.get_json() or {}
+        center_freq = data.get('center_freq', 433.92)
+        span = data.get('span', 2.0)
+        duration = data.get('duration', 10)
+        interval = data.get('interval', 0.2)
+        result = analyzer.waterfall_scan(center_freq, span, duration, interval)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/spectrum/detect', methods=['POST'])
+def spectrum_detect():
+    """Detect signals in spectrum"""
+    try:
+        analyzer = SpectrumAnalyzer()
+        data = request.get_json()
+        spectrum_data = data.get('spectrum_data')
+        threshold = data.get('threshold', -80)
+        min_width = data.get('min_width', 0.05)
+        result = analyzer.detect_signals(spectrum_data, threshold, min_width)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/spectrum/save', methods=['POST'])
+def spectrum_save():
+    """Save spectrum scan"""
+    try:
+        analyzer = SpectrumAnalyzer()
+        data = request.get_json()
+        scan_data = data.get('scan_data')
+        name = data.get('name')
+        result = analyzer.save_scan(scan_data, name)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/spectrum/reset', methods=['POST'])
+def spectrum_reset():
+    """Reset RTL-SDR device"""
+    try:
+        analyzer = SpectrumAnalyzer()
+        result = analyzer.reset_rtlsdr()
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/hardware/status')
+def hardware_status():
+    """Check hardware status (CC1101, PN532, RTL-SDR)"""
+    status = {
+        'cc1101': False,
+        'pn532': False,
+        'rtl_sdr': False
+    }
+
+    try:
+        # Check CC1101
+        from cc1101_enhanced import CC1101Enhanced
+        cc = CC1101Enhanced()
+        status['cc1101'] = True
+    except:
+        pass
+
+    try:
+        # Check PN532
+        from nfc_emulator import NFCEmulator
+        nfc = NFCEmulator()
+        status['pn532'] = True
+    except:
+        pass
+
+    try:
+        # Check RTL-SDR with quick timeout
+        result = subprocess.run(
+            ['rtl_test', '-t'],
+            capture_output=True,
+            text=True,
+            timeout=2
+        )
+        if 'Found 1 device' in result.stdout or 'Found 1 device' in result.stderr:
+            status['rtl_sdr'] = True
+    except:
+        pass
+
+    return jsonify(status)
+
+# --- Enhanced NFC Emulation Route ---
+
+@app.route('/api/nfc/emulate_real/<name>', methods=['POST'])
+def nfc_emulate_real(name):
+    """Actually emulate NFC card (experimental)"""
+    try:
+        emulator = NFCEmulator()
+        card_data = emulator.load_card(name)
+
+        if not card_data:
+            return jsonify({'error': 'Card not found'}), 404
+
+        data = request.get_json() or {}
+        duration = data.get('duration', 30)
+
+        result = emulator.emulate_card(card_data, duration)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# ═══════════════════════════════════════════════════════════════
+# ADVANCED TX FEATURES
+# ═══════════════════════════════════════════════════════════════
+
+@app.route('/api/tx/replay_variations/<signal_name>', methods=['POST'])
+def tx_replay_variations(signal_name):
+    """Replay signal with frequency and timing variations"""
+    try:
+        adv_tx = RFAdvancedTX()
+        data = request.get_json() or {}
+
+        freq_offsets = data.get('frequency_offsets', [-0.5, -0.25, 0, 0.25, 0.5])
+        timing_variations = data.get('timing_variations', [0.95, 1.0, 1.05])
+
+        result = adv_tx.replay_with_variations(
+            signal_name,
+            frequency_offsets=freq_offsets,
+            timing_variations=timing_variations
+        )
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/tx/brute_force', methods=['POST'])
+def tx_brute_force():
+    """Brute force simple fixed codes (educational only!)"""
+    try:
+        adv_tx = RFAdvancedTX()
+        data = request.get_json()
+
+        frequency = data.get('frequency', 433.92)
+        bit_length = data.get('bit_length', 8)
+
+        if bit_length > 16:
+            return jsonify({'error': 'Bit length limited to 16 for safety'}), 400
+
+        result = adv_tx.brute_force_codes(frequency, bit_length)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/tx/fuzz/<signal_name>', methods=['POST'])
+def tx_fuzz_signal(signal_name):
+    """Fuzz signal by varying timings"""
+    try:
+        adv_tx = RFAdvancedTX()
+        data = request.get_json() or {}
+
+        fuzz_percentage = data.get('fuzz_percentage', 10)
+        iterations = data.get('iterations', 50)
+
+        result = adv_tx.signal_fuzzing(signal_name, fuzz_percentage, iterations)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/tx/jam', methods=['POST'])
+def tx_jam_frequency():
+    """Continuous transmission for jamming/testing (educational only!)"""
+    try:
+        adv_tx = RFAdvancedTX()
+        data = request.get_json()
+
+        frequency = data.get('frequency', 433.92)
+        duration = data.get('duration', 10)
+        pattern = data.get('pattern', 'noise')
+
+        result = adv_tx.continuous_jam(frequency, duration, pattern)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/tx/rolling_code', methods=['POST'])
+def tx_rolling_code():
+    """Capture and immediately replay for rolling codes"""
+    try:
+        adv_tx = RFAdvancedTX()
+        data = request.get_json()
+
+        frequency = data.get('frequency', 433.92)
+        capture_duration = data.get('capture_duration', 30)
+
+        result = adv_tx.rolling_code_capture_replay(frequency, capture_duration)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/tx/custom_signal', methods=['POST'])
+def tx_custom_signal():
+    """Generate and transmit custom signal from binary pattern"""
+    try:
+        adv_tx = RFAdvancedTX()
+        data = request.get_json()
+
+        frequency = data.get('frequency', 433.92)
+        pattern = data.get('pattern', '101010')
+        bit_duration = data.get('bit_duration_us', 500)
+
+        result = adv_tx.generate_custom_signal(frequency, pattern, bit_duration)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+# ═══════════════════════════════════════════════════════════════
+# NFC GUARDIAN API ROUTES
+# ═══════════════════════════════════════════════════════════════
+
+# Global guardian instance
+guardian = None
+card_catalog = None
+wallet_tester = None
+
+def get_guardian():
+    """Get or create guardian instance"""
+    global guardian
+    if guardian is None:
+        guardian = NFCGuardian()
+    return guardian
+
+def get_card_catalog():
+    """Get or create card catalog instance"""
+    global card_catalog
+    if card_catalog is None:
+        card_catalog = CardCatalog()
+    return card_catalog
+
+def get_wallet_tester():
+    """Get or create wallet tester instance"""
+    global wallet_tester
+    if wallet_tester is None:
+        wallet_tester = RFIDWalletTester()
+    return wallet_tester
+
+@app.route('/api/guardian/status')
+def guardian_status():
+    """Get Guardian monitoring status"""
+    try:
+        g = get_guardian()
+        return jsonify(g.get_status())
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/guardian/start', methods=['POST'])
+def guardian_start():
+    """Start Guardian monitoring"""
+    try:
+        g = get_guardian()
+        result = g.start_monitoring()
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/guardian/stop', methods=['POST'])
+def guardian_stop():
+    """Stop Guardian monitoring"""
+    try:
+        g = get_guardian()
+        result = g.stop_monitoring()
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/guardian/suspicious')
+def guardian_suspicious():
+    """Get suspicious events"""
+    try:
+        g = get_guardian()
+        limit = request.args.get('limit', 20, type=int)
+        events = g.get_suspicious_events(limit=limit)
+        return jsonify({'events': events})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/guardian/clear_history', methods=['POST'])
+def guardian_clear_history():
+    """Clear scan history"""
+    try:
+        g = get_guardian()
+        result = g.clear_history()
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# ═══════════════════════════════════════════════════════════════
+# CARD CATALOG API ROUTES
+# ═══════════════════════════════════════════════════════════════
+
+@app.route('/api/catalog/cards')
+def catalog_list_cards():
+    """Get all cards in catalog"""
+    try:
+        catalog = get_card_catalog()
+        cards = catalog.get_all_cards()
+        return jsonify({'cards': cards})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/catalog/card/<uid>')
+def catalog_get_card(uid):
+    """Get specific card by UID"""
+    try:
+        catalog = get_card_catalog()
+        card = catalog.get_card(uid)
+        if card:
+            return jsonify({'card': card})
+        else:
+            return jsonify({'error': 'Card not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/catalog/add', methods=['POST'])
+def catalog_add_card():
+    """Add card to catalog by scanning"""
+    try:
+        catalog = get_card_catalog()
+        data = request.get_json()
+        
+        name = data.get('name', 'Unnamed Card')
+        card_type = data.get('type', 'unknown')
+        protected = data.get('protected', False)
+        notes = data.get('notes', '')
+        
+        result = catalog.add_card(name, card_type, protected, notes)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/catalog/register', methods=['POST'])
+def catalog_register_card():
+    """Register card by UID without scanning"""
+    try:
+        catalog = get_card_catalog()
+        data = request.get_json()
+        
+        uid = data.get('uid')
+        if not uid:
+            return jsonify({'error': 'UID required'}), 400
+            
+        name = data.get('name', 'Unnamed Card')
+        card_type = data.get('type', 'unknown')
+        protected = data.get('protected', False)
+        notes = data.get('notes', '')
+        
+        result = catalog.register_card_by_uid(uid, name, card_type, protected, notes)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/catalog/update/<uid>', methods=['POST'])
+def catalog_update_card(uid):
+    """Update card information"""
+    try:
+        catalog = get_card_catalog()
+        data = request.get_json()
+        result = catalog.update_card(uid, **data)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/catalog/delete/<uid>', methods=['DELETE'])
+def catalog_delete_card(uid):
+    """Delete card from catalog"""
+    try:
+        catalog = get_card_catalog()
+        result = catalog.delete_card(uid)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/catalog/identify', methods=['POST'])
+def catalog_identify():
+    """Scan and identify card"""
+    try:
+        catalog = get_card_catalog()
+        result = catalog.identify_scanned_card()
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/catalog/stats')
+def catalog_stats():
+    """Get catalog statistics"""
+    try:
+        catalog = get_card_catalog()
+        stats = catalog.get_stats()
+        return jsonify(stats)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# ═══════════════════════════════════════════════════════════════
+# WALLET TESTER API ROUTES
+# ═══════════════════════════════════════════════════════════════
+
+@app.route('/api/wallet/quick_test', methods=['POST'])
+def wallet_quick_test():
+    """Quick wallet blocking test"""
+    try:
+        tester = get_wallet_tester()
+        data = request.get_json() or {}
+        duration = data.get('duration', 3)
+        result = tester.quick_test(test_duration=duration)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/wallet/full_test', methods=['POST'])
+def wallet_full_test():
+    """Full wallet effectiveness test"""
+    try:
+        tester = get_wallet_tester()
+        data = request.get_json() or {}
+        duration = data.get('duration', 10)
+        result = tester.test_blocking_effectiveness(duration=duration)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 
 if __name__ == '__main__':
     print("[*] Starting PiFlip Web Interface...")

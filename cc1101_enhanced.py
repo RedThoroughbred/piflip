@@ -162,6 +162,34 @@ class CC1101Enhanced:
 
         return freq_mhz
 
+    def read_rssi(self):
+        """
+        Read RSSI (Received Signal Strength Indicator) value
+
+        Returns:
+            dict with rssi_raw (0-255), rssi_dbm (-115 to 0), and signal_strength (0-100)
+        """
+        # Read RSSI register (must be in RX mode)
+        rssi_raw = self.read_register(self.RSSI | 0xC0)
+
+        # Convert to dBm using CC1101 formula
+        # RSSI_dBm = (RSSI_dec / 2) - 74 (if RSSI_dec >= 128)
+        # RSSI_dBm = (RSSI_dec / 2) - 74 (if RSSI_dec < 128)
+        if rssi_raw >= 128:
+            rssi_dbm = ((rssi_raw - 256) / 2) - 74
+        else:
+            rssi_dbm = (rssi_raw / 2) - 74
+
+        # Convert to 0-100 signal strength (for visual display)
+        # -115 dBm = 0%, -50 dBm = 100%
+        signal_strength = max(0, min(100, int(((rssi_dbm + 115) / 65) * 100)))
+
+        return {
+            'rssi_raw': rssi_raw,
+            'rssi_dbm': round(rssi_dbm, 1),
+            'signal_strength': signal_strength
+        }
+
     def configure_default(self):
         """Configure CC1101 with default settings for 433.92MHz OOK"""
         # Set 433.92MHz
