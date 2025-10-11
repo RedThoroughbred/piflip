@@ -377,8 +377,12 @@ It helps others discover the project and motivates continued development.
 
 ---
 
+<div align="center">
+
 **Made with ❤️ by the security research community**
 
 **PiFlip v2.0** - October 2025
 
-![Settings Menu](docs/screenshots/settings-menu.png)
+⭐ **Star this repo if you find it useful!** ⭐
+
+</div>
