@@ -1,474 +1,384 @@
-# 🦊 PiFlip - Raspberry Pi RF & NFC Multi-Tool
+# 🦊 PiFlip
 
-**A Flipper Zero alternative built with Raspberry Pi 3B**
+**A Powerful RF Security Research Tool Built on Raspberry Pi**
 
-**Status:** ✅ Fully Functional (October 2025)
+PiFlip is a Flipper Zero alternative with more power, wider frequency range, and a professional web interface. Perfect for security research, RF analysis, and NFC testing.
 
----
-
-## 🎯 What is PiFlip?
-
-PiFlip is a portable RF hacking and NFC tool similar to Flipper Zero, but built on Raspberry Pi with more powerful capabilities:
-
-- **Sub-GHz RF:** Capture, analyze, and replay signals (315-433MHz)
-- **NFC/RFID:** Read, backup, and clone cards
-- **Flight Tracking:** Track aircraft with ADS-B (1090MHz)
-- **Wide-band SDR:** 24MHz - 1.7GHz reception
-- **Signal Analysis:** Integrated URH (Universal Radio Hacker)
+![PiFlip Home](docs/screenshots/home.png)
 
 ---
 
-## ✅ Hardware
+## ✨ Key Features
 
-| Module | Status | Purpose |
-|--------|--------|---------|
-| **Raspberry Pi 3B** | ✅ Working | Main computer |
-| **RTL-SDR Blog V4** | ✅ Working | Wide-band receiver (24-1700MHz) |
-| **CC1101** | ✅ Working | Sub-GHz transceiver (300-928MHz) |
-| **PN532** | ✅ Working | NFC/RFID reader/writer |
-| **3A Power Supply** | ✅ Required | Stable power for all modules |
+### 📡 **RF Power Tools**
+Advanced transmission features for security testing:
+- **Signal Fuzzing** - Find hidden commands by mutating captured signals
+- **Protocol Encoder** - Create signals from scratch (PT2262, PT2264, HCS301)
+- **Frequency Scanner** - Auto-sweep to find unknown frequencies
+- **Signal Playlists** - Automate complex transmission sequences
+- **Jamming Tool** - Test RF security (educational use only)
 
-**Cost:** ~$120 total (vs $169 for Flipper Zero)
+![Advanced TX Menu](docs/screenshots/advanced-tx-menu.png)
+
+### 🛡️ **NFC Security Suite**
+Professional NFC security and testing tools:
+- **NFC Guardian** - Real-time monitoring with suspicious pattern detection
+- **Card Catalog** - Complete inventory system for all your NFC cards
+- **RFID Wallet Tester** - Test blocking effectiveness of RFID-blocking wallets
+- **NFC Emulation** - Emulate saved cards (experimental)
+- **Deep Analysis** - Comprehensive card analysis and security assessment
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/nfc-guardian-started.png" alt="NFC Guardian"/></td>
+    <td width="50%"><img src="docs/screenshots/nfc-deep-analysis-1.png" alt="Deep Analysis"/></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>NFC Guardian Active Monitoring</sub></td>
+    <td align="center"><sub>NFC Deep Analysis Results</sub></td>
+  </tr>
+</table>
+
+### 📶 **Wireless Tools**
+Comprehensive wireless scanning and management:
+- **Bluetooth Scanner** - BLE and Classic device discovery
+- **WiFi Hotspot** - Turn PiFlip into mobile access point
+- **WiFi Scanner** - Network discovery and analysis
+- **Spectrum Analyzer** - PortaPack-style waterfall display
+
+![Bluetooth Scanner](docs/screenshots/bluetooth-scan-results.png)
+
+### 🔧 **Sub-GHz RF Tools**
+Complete RF capture, analysis, and replay:
+- **433MHz Scanner** - Detect remotes, sensors, and IoT devices
+- **TPMS Scanner** - Read tire pressure sensors
+- **Weather Station** - Decode weather sensor data
+- **Signal Capture** - Record and save RF signals (RTL-SDR & CC1101)
+- **Signal Replay** - Transmit saved signals with CC1101
+
+![RF Tools](docs/screenshots/rf-tools-menu.png)
+
+---
+
+## 🔥 Why PiFlip?
+
+**Advantages over Flipper Zero:**
+- ✅ More powerful hardware (Raspberry Pi 3B vs STM32)
+- ✅ Wideband SDR (24 MHz - 1.7 GHz vs 433 MHz only)
+- ✅ Web interface (use from phone, tablet, laptop)
+- ✅ Better NFC features (Guardian, Catalog, Wallet Tester)
+- ✅ Advanced RF tools (Fuzzing, Protocol Encoder, Freq Scanner)
+- ✅ 95+ API endpoints for automation
+- ✅ Open source and extensible
+- ✅ Lower cost (~$120 vs $169)
+
+**Advantages over HackRF:**
+- ✅ Easier to use (no GNU Radio knowledge required)
+- ✅ Built-in protocol support
+- ✅ Web interface for remote access
+- ✅ NFC capabilities (HackRF can't do NFC)
+- ✅ Turnkey solution (flash and go)
+
+---
+
+## 🛠️ Hardware Requirements
+
+### Required Components
+| Component | Purpose | Cost |
+|-----------|---------|------|
+| **Raspberry Pi 3B/3B+** | Main computer | $35 |
+| **RTL-SDR Blog V4** | Wideband receiver (24 MHz - 1.7 GHz) | $40 |
+| **CC1101 Module** | Sub-GHz transceiver (300-928 MHz TX/RX) | $5 |
+| **PN532 NFC Module** | NFC/RFID reader/writer (13.56 MHz) | $10 |
+| **32GB MicroSD Card** | Storage | $10 |
+| **5V 3A Power Supply** | Power (**critical!**) | $10 |
+| **Total** | | **~$120** |
+
+### Pin Connections
+
+**PN532 (I2C):**
+```
+PN532 → Raspberry Pi
+VCC   → Pin 1  (3.3V)
+GND   → Pin 6  (GND)
+SDA   → Pin 3  (GPIO 2)
+SCL   → Pin 5  (GPIO 3)
+```
+
+**CC1101 (SPI):**
+```
+CC1101 → Raspberry Pi
+VCC    → Pin 17 (3.3V)
+GND    → Pin 9  (GND)
+SCK    → Pin 23 (GPIO 11)
+MISO   → Pin 21 (GPIO 9)
+MOSI   → Pin 19 (GPIO 10)
+CSN    → Pin 24 (GPIO 8)
+GDO0   → Pin 11 (GPIO 17)
+GDO2   → Pin 31 (GPIO 6)
+```
+
+**RTL-SDR:** USB connection only
 
 ---
 
 ## 🚀 Quick Start
 
-### **1. Access Web Interface:**
-```
-http://192.168.86.141:5000
-```
+### Option 1: Flash Pre-built Image (Coming Soon)
+1. Download PiFlip image
+2. Flash to 32GB microSD card using [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
+3. Connect hardware modules
+4. Power on Raspberry Pi
+5. Access web interface at `http://piflip.local:5000`
 
-### **2. Test All Hardware:**
-```
-http://192.168.86.141:5000/test
-```
-Click "RUN ALL TESTS" - all should pass ✅
+### Option 2: Manual Installation
+See [Installation Guide](docs/guides/getting-started.md)
 
-### **3. Try Key Features:**
+### First Time Setup
+1. Connect to PiFlip network or find IP on your network
+2. Open browser and navigate to `http://piflip.local:5000`
+3. Check hardware status in Dashboard
+4. Start exploring features!
 
-**Scan NFC Card:**
-- NFC Tools → Scan Card
-- Place card on reader
+---
 
-**Capture RF Signal:**
-- RF Tools → Capture Signal
-- Press device (key fob, remote, etc.)
+## 📸 Screenshots Gallery
 
-**Track Flights:**
-- Toggle to Flight Mode
-- Flight Tracking → Open Map
+### 🏠 Main Interface
+<div align="center">
+
+| Main Menu | RF Signal Library | Advanced TX |
+|:---------:|:-----------------:|:-----------:|
+| ![](docs/screenshots/main-menu-1.png) | ![](docs/screenshots/rf-signal-library.png) | ![](docs/screenshots/advanced-tx-menu.png) |
+| *All features accessible from main menu* | *Manage captured signals* | *Advanced transmission tools* |
+
+</div>
+
+### 📡 RF Tools & Signal Analysis
+<div align="center">
+
+| Live Capture | Saved Captures | Signal Strength |
+|:------------:|:--------------:|:---------------:|
+| ![](docs/screenshots/live-capture.png) | ![](docs/screenshots/saved-signal-capture.png) | ![](docs/screenshots/signal-strength-meter.png) |
+| *Real-time signal capture* | *View and replay saved signals* | *Monitor signal strength* |
+
+| Frequency Scanner | Quick Test | Saved Captures List |
+|:-----------------:|:----------:|:-------------------:|
+| ![](docs/screenshots/frequency-scanner-results.png) | ![](docs/screenshots/quick-signal-test.png) | ![](docs/screenshots/saved-captures.png) |
+| *Auto-sweep frequency ranges* | *Quick signal testing* | *All your captures* |
+
+</div>
+
+### 🛡️ NFC Security Suite
+<div align="center">
+
+| NFC Tools Menu | Card Scan | Card Library |
+|:--------------:|:---------:|:------------:|
+| ![](docs/screenshots/nfc-tools-menu.png) | ![](docs/screenshots/nfc-card-scan.png) | ![](docs/screenshots/nfc-card-library.png) |
+| *Complete NFC toolkit* | *Scan and analyze cards* | *Your saved cards* |
+
+| NFC Guardian | Continuous Scan | Deep Analysis |
+|:------------:|:---------------:|:-------------:|
+| ![](docs/screenshots/nfc-guardian-started.png) | ![](docs/screenshots/nfc-continuous-scan.png) | ![](docs/screenshots/nfc-deep-analysis-1.png) |
+| *Real-time threat monitoring* | *Monitor NFC activity* | *Detailed card analysis* |
+
+| Guardian Status | Suspicious Events | Deep Analysis Results |
+|:---------------:|:-----------------:|:---------------------:|
+| ![](docs/screenshots/nfc-guardian-sttus.png) | ![](docs/screenshots/suspicious-events-log.png) | ![](docs/screenshots/nfc-deep-analysis-2.png) |
+| *View monitoring status* | *Security threat log* | *Security assessment* |
+
+| Card Catalog | Wallet Tester | Test Results |
+|:------------:|:-------------:|:------------:|
+| ![](docs/screenshots/card-catalog-menu.png) | ![](docs/screenshots/wallet-tester-menu.png) | ![](docs/screenshots/wallet-test-scan.png) |
+| *Inventory all your cards* | *Test RFID blocking* | *Effectiveness results* |
+
+</div>
+
+### 📶 Wireless Tools
+<div align="center">
+
+| Bluetooth Scanner | BT Scan Results | WiFi Tools |
+|:-----------------:|:---------------:|:----------:|
+| ![](docs/screenshots/bluetooth-scanner-menu.png) | ![](docs/screenshots/bluetooth-scan-results.png) | ![](docs/screenshots/wifi-tools-menu.png) |
+| *BLE & Classic scanning* | *Discovered devices* | *WiFi management* |
+
+| WiFi Networks | Spectrum Analyzer | Settings |
+|:-------------:|:-----------------:|:--------:|
+| ![](docs/screenshots/wifi-networks-scan.png) | ![](docs/screenshots/spectrum-analyzer-menu.png) | ![](docs/screenshots/settings-menu.png) |
+| *Network scanner* | *Real-time spectrum view* | *System configuration* |
+
+</div>
+
+<div align="center">
+
+**📁 [View all 32 screenshots →](docs/screenshots/)**
+
+</div>
 
 ---
 
 ## 📚 Documentation
 
-| Document | Description |
-|----------|-------------|
-| **HARDWARE_TEST_RESULTS_FINAL.md** | Complete test results ✅ |
-| **SIGNAL_WORKFLOW_EXPLAINED.md** | How capture/replay works |
-| **WEB_INTERFACE_TEST_GUIDE.md** | Testing guide |
-| **HARDWARE_STRATEGY.md** | Hardware decisions |
-| **FLIGHT_TRACKING_GUIDE.md** | Flight tracking setup |
-| **INTERFACE_GUIDE.md** | Feature reference |
-| **ROADMAP.md** | Future plans |
+### Getting Started
+- [Getting Started Guide](docs/guides/getting-started.md) - Basic usage and setup
+- [RTL-SDR Setup](docs/setup/rtl-sdr-setup.md) - RTL-SDR specific configuration
+- [Troubleshooting](docs/guides/troubleshooting.md) - Common issues and solutions
+
+### Features
+- [NFC Security Suite](docs/features/nfc-security-suite.md) - Guardian, Catalog, Wallet Tester
+- [Wireless Tools](docs/features/wireless-tools.md) - Bluetooth, WiFi, Spectrum Analyzer
+- [Signal Types Explained](docs/guides/signal-types.md) - Understanding different RF signals
+
+### Advanced
+- [API Reference](docs/guides/api-reference.md) - All 95+ REST endpoints
+- [Advanced TX Guide](docs/guides/advanced-tx.md) - Signal fuzzing, encoding, scanning
+- [TX Verification Guide](docs/guides/tx-verification.md) - Testing transmission features
+
+### Development
+- [Roadmap](docs/development/roadmap.md) - Future features and plans
+- [Flipper Zero Comparison](docs/development/flipper-comparison.md) - Feature comparison
+- [AI Integration](docs/development/ai-integration.md) - Using Claude with PiFlip
 
 ---
 
-## 🎨 Features
+## 🎯 Use Cases
 
-### **✅ Working Now:**
+### Security Research
+- Test RFID/NFC security of your own devices
+- Analyze RF protocols and find vulnerabilities
+- Test jamming resistance of wireless systems
+- Evaluate RFID-blocking wallet effectiveness
 
-**RF Tools:**
-- [x] 433MHz device scanning
-- [x] Signal capture (IQ data)
-- [x] Signal library management
-- [x] CC1101 transmission (test bursts)
-- [x] TPMS sensor detection
-- [x] Weather station detection
-- [x] Flight tracking (ADS-B)
+### RF Analysis
+- Capture and decode 433MHz devices (remotes, sensors)
+- Analyze tire pressure monitoring systems (TPMS)
+- Decode weather station transmissions
+- Reverse engineer RF protocols
 
-**NFC Tools:**
-- [x] Card scanning (UID read)
-- [x] Card backup to JSON
-- [x] Mifare Classic support
+### Penetration Testing
+- Assess wireless security for authorized clients
+- Test badge cloning vulnerabilities
+- Evaluate RF attack surface
+- Document NFC security posture
 
-**Interface:**
-- [x] Flipper-style web UI
-- [x] Mode switching (Flight vs Scanning)
-- [x] Test suite
-- [x] Signal library browser
-- [x] Real-time status
-
-### **⏳ In Progress:**
-
-- [ ] Full signal replay (needs URH analysis)
-- [ ] Auto-analysis integration
-- [ ] Protocol library
-- [ ] NFC clone/write features
-- [ ] 3.5" touchscreen support
-- [ ] 3D printed case
+### Education & Learning
+- Learn about RF protocols and modulation
+- Understand NFC/RFID technology
+- Practice signal analysis
+- Experiment with SDR technology
 
 ---
 
-## 🔧 Installation
+## ⚠️ Legal & Ethical Use
 
-### **Prerequisites:**
-- Raspberry Pi 3B (or 4)
-- RTL-SDR Blog V4
-- CC1101 module
-- PN532 NFC module
-- 3A power supply (important!)
+**IMPORTANT:** PiFlip is designed for:
+- ✅ Security research on YOUR OWN devices
+- ✅ Educational purposes and learning
+- ✅ Authorized penetration testing with permission
+- ✅ RF protocol analysis and research
 
-### **Software Setup:**
-```bash
-# Already installed on your Pi:
-- Flask (web interface)
-- dump1090-fa (flight tracking)
-- rtl_433 (433MHz decoding)
-- rtl-sdr tools
-- URH (Universal Radio Hacker)
-- Python 3
-```
+**ILLEGAL uses:**
+- ❌ Interfering with others' wireless systems
+- ❌ Jamming communications (illegal in most countries)
+- ❌ Cloning cards you don't own
+- ❌ Unauthorized access to systems
+- ❌ Car theft or car hacking
+- ❌ Stealing RFID/NFC credentials
 
-### **Run Web Interface:**
-```bash
-cd ~/piflip
-python3 web_interface.py
-```
+**You are responsible for complying with all local laws and regulations.**
 
 ---
 
-## 📱 Web Interface
+## 🛠️ Technical Specifications
 
-### **Main UI:**
-```
-http://192.168.86.141:5000
-```
-
-**Flipper-style hierarchical menu:**
-- RF Tools
-  - Scan 433MHz
-  - Capture Signal
-  - TPMS Sensors
-  - Weather Stations
-- NFC Tools
-  - Scan Card
-  - Backup Card
-- Signal Library
-  - View captures
-  - Replay signals
-  - Analyze with URH
-- Flight Tracking
-  - Open Map
-  - Live Statistics
-- Settings
-  - Hardware Status
-
-### **Test Suite:**
-```
-http://192.168.86.141:5000/test
-```
-
-Automated testing of all features.
-
-### **Flight Map:**
-```
-http://192.168.86.141:8080
-```
-
-Live aircraft tracking map (PiAware/SkyAware).
+| Specification | Details |
+|---------------|---------|
+| **Frequency Range** | 24 MHz - 1.7 GHz (receive)<br/>300-928 MHz (transmit) |
+| **NFC/RFID** | 13.56 MHz (ISO14443A/B, MIFARE) |
+| **Sub-GHz** | 300-348 MHz, 387-464 MHz, 779-928 MHz |
+| **Modulation** | OOK, ASK, FSK, GFSK, MSK |
+| **Sample Rate** | Up to 2.4 MS/s (RTL-SDR) |
+| **TX Power** | Up to +10 dBm (CC1101) |
+| **Interface** | Web UI (responsive, mobile-friendly) |
+| **API** | 95+ REST endpoints |
+| **Languages** | Python 3, JavaScript |
+| **Platform** | Raspberry Pi 3B/3B+/4 |
 
 ---
 
-## 🧪 Testing
+## 🚀 Recent Updates
 
-### **All Hardware Test:**
-```bash
-# Via web interface
-http://192.168.86.141:5000/test
+### v2.0 - October 2025
+**Major Release: NFC Security Suite & RF Power Tools**
 
-# Or command line tests
-cd ~/piflip
+**New Features:**
+- 🛡️ **NFC Guardian** - Real-time security monitoring with pattern detection
+- 📇 **Card Catalog** - Complete NFC card inventory system
+- 🧪 **RFID Wallet Tester** - Test blocking effectiveness
+- 🎲 **Signal Fuzzing** - Automated signal mutation for security testing
+- 🔤 **Protocol Encoder** - Create signals from scratch (PT2262, PT2264, HCS301)
+- 📡 **Frequency Scanner** - Auto-sweep frequency ranges
+- 📋 **Signal Playlists** - Automate transmission sequences
+- ⚡ **Jamming Tool** - RF interference for security testing
+- 🔴 **Shutdown/Reboot** - Power management from web UI
 
-# Test RTL-SDR
-rtl_test -t
+**Improvements:**
+- Fixed Deep Analysis block rendering bug
+- Updated UI with 32 comprehensive screenshots
+- Reorganized documentation structure
+- 15 new API endpoints
+- Enhanced error handling
 
-# Test 433MHz
-./test_keyfob_now.sh
-
-# Test flights
-./test_flight_reception.sh
-
-# Test NFC
-curl http://127.0.0.1:5000/api/nfc
-
-# Test CC1101
-python3 test_cc1101_transmit.py
-```
-
----
-
-## 📊 Capabilities Comparison
-
-| Feature | Flipper Zero | PiFlip |
-|---------|--------------|--------|
-| **Sub-GHz RX** | CC1101 (narrowband) | RTL-SDR (wideband!) ✅ |
-| **Sub-GHz TX** | CC1101 | CC1101 ✅ |
-| **NFC** | Yes | PN532 ✅ |
-| **125kHz RFID** | Yes | ❌ (can add) |
-| **Infrared** | Yes | ❌ (can add) |
-| **iButton** | Yes | ❌ (can add) |
-| **Flight Tracking** | ❌ | ADS-B 1090MHz ✅ |
-| **Wideband SDR** | ❌ | 24MHz-1.7GHz ✅ |
-| **Processing Power** | ARM Cortex-M4 | ARM Cortex-A53 (4 cores) ✅ |
-| **Storage** | 256KB | microSD (GB+) ✅ |
-| **Display** | 128x64 LCD | ⏳ Web UI (3.5" coming) |
-| **Battery** | Built-in | ⏳ External (power bank) |
-| **Size** | Pocket-sized | Portable (larger) |
-| **Cost** | $169 | ~$120 ✅ |
-
-**PiFlip Advantages:**
-- More powerful hardware
-- Wideband SDR reception
-- Flight tracking
-- Full IQ capture for analysis
-- Upgradeable/expandable
-- Linux environment
+See [ROADMAP.md](docs/development/roadmap.md) for planned features.
 
 ---
 
-## 🔌 Wiring Diagrams
-
-### **RTL-SDR:**
-```
-RTL-SDR Blog V4 → Pi USB port
-Antenna → RTL-SDR SMA connector
-```
-
-### **PN532 (I2C):**
-```
-PN532 → Raspberry Pi
-VCC   → Pin 1 (3.3V)
-GND   → Pin 6 (GND)
-SDA   → Pin 3 (GPIO 2)
-SCL   → Pin 5 (GPIO 3)
-```
-
-### **CC1101 (SPI):**
-```
-CC1101 → Raspberry Pi
-VCC    → Pin 17 (3.3V)
-GND    → Pin 9 (GND)
-SCK    → Pin 23 (GPIO 11 / SCLK)
-MISO   → Pin 21 (GPIO 9 / MISO)
-MOSI   → Pin 19 (GPIO 10 / MOSI)
-CSN    → Pin 24 (GPIO 8 / CE0)
-GDO0   → Pin 11 (GPIO 17)
-GDO2   → Pin 31 (GPIO 6)
-```
-
----
-
-## 🎯 Common Use Cases
-
-### **1. Analyze Key Fob:**
-```bash
-# Capture signal
-Web UI → RF Tools → Capture Signal
-Name: my_car_key
-Frequency: 433.92 MHz
-Duration: 5 seconds
-[Press key fob NOW!]
-
-# Analyze
-Signal Library → my_car_key → Analyze
-
-# Replay
-Signal Library → my_car_key → Replay
-```
-
-### **2. Backup NFC Card:**
-```bash
-# Scan card
-Web UI → NFC Tools → Scan Card
-[Place card on reader]
-
-# Backup
-NFC Tools → Backup Card
-```
-
-### **3. Track Flights:**
-```bash
-# Switch mode
-Toggle to Flight Mode
-
-# Open map
-Flight Tracking → Open Map
-```
-
----
-
-## ⚡ Power Requirements
-
-**CRITICAL:** Use 3A power supply!
-
-**Recommended:**
-- Official Raspberry Pi 5V 3A PSU
-- CanaKit 5V 3A PSU
-
-**Don't use:**
-- Phone chargers (usually 1-2A)
-- Old USB chargers
-- Unpowered USB hubs
-
-**Why:** RTL-SDR + Pi + other modules need ~2.5A minimum. Insufficient power causes:
-- Under-voltage warnings
-- RTL-SDR poor reception
-- Random reboots
-- SD card corruption
-
----
-
-## 🐛 Troubleshooting
-
-### **No Flights Detected:**
-1. Check mode: Should be "Flight Mode"
-2. Move antenna to window (1090MHz needs line-of-sight)
-3. Check if flights overhead: https://globe.adsbexchange.com/
-4. Try during busy times (morning/evening)
-
-### **433MHz Scan Finds Nothing:**
-1. Check mode: Should be "Scanning Mode"
-2. Press device DURING scan (not before)
-3. Try both 315MHz and 433.92MHz
-4. Get closer to device
-
-### **Under-voltage Warnings:**
-```bash
-vcgencmd get_throttled
-# Should show: 0x0 or 0x50000
-# If 0x50005 = Need better power supply!
-```
-
-### **RTL-SDR "Device Busy" Error:**
-- Switch modes (Flight vs Scanning)
-- Only one program can use RTL-SDR at a time
-
----
-
-## 🛒 Shopping List
-
-**Essential:**
-- Raspberry Pi 3B: $35
-- RTL-SDR Blog V4: $35
-- CC1101 Module: $3
-- PN532 NFC Module: $10
-- 3A Power Supply: $10
-- microSD Card 32GB: $10
-- **Total: $103**
-
-**Recommended:**
-- Powered USB Hub: $15
-- USB Extension Cable: $7
-- Better antenna: $20
-- **Total: $145**
-
-**Future:**
-- 3.5" Touchscreen: $25
-- Pi Zero 2 W (portable): $15
-- Battery bank: $25
-- 3D printed case: $10
-- **Total for portable: $220**
-
----
-
-## 📈 Performance
-
-### **Tested & Working:**
-- ✅ FM Radio reception: Perfect
-- ✅ NFC card read: <1 second
-- ✅ Signal capture: 20MB in 5 seconds
-- ✅ CC1101 transmission: Working
-- ✅ Flight messages: 31/min (needs better antenna)
-- ✅ Web interface: Responsive
-- ✅ No under-voltage: With 3A PSU
-
----
-
-## 🚀 Next Steps
-
-**Immediate:**
-1. Test key fob capture
-2. Analyze signal in URH
-3. Test replay
-
-**This Week:**
-1. Get USB extension cable ($7)
-2. Improve antenna placement
-3. Test more RF devices
-
-**This Month:**
-1. Order 3.5" touchscreen ($25)
-2. Design 3D case
-3. Build protocol library
-4. Complete auto-analysis
-
----
-
-## 🤝 Contributing
-
-This is a personal project, but ideas welcome!
-
-**Current Focus:**
-- Auto-analysis improvements
-- Protocol library
-- UI refinements
-- Documentation
-
----
-
-## 📄 License
-
-Personal educational project. Use responsibly and legally.
-
-**Legal Notice:**
-- Only capture/replay YOUR OWN devices
-- Don't interfere with others' systems
-- Check local RF transmission regulations
-- This is a LEARNING tool
-
----
-
-## 🎉 Credits
+## 🙏 Credits
 
 **Built with:**
-- Raspberry Pi
-- RTL-SDR Blog
-- dump1090-fa (FlightAware)
-- rtl_433 (Benjamin Larsson)
-- URH (Universal Radio Hacker)
-- Flask (Pallets)
+- [RTL-SDR](https://www.rtl-sdr.com/) - Software Defined Radio
+- [CC1101](https://www.ti.com/product/CC1101) - Texas Instruments Sub-GHz transceiver
+- [PN532](https://www.nxp.com/docs/en/nxp/data-sheets/PN532_C1.pdf) - NXP NFC controller
+- [Flask](https://flask.palletsprojects.com/) - Web framework
+- [Adafruit Libraries](https://github.com/adafruit) - Python drivers
+- Inspired by [Flipper Zero](https://flipperzero.one/)
 
-**Inspired by:**
-- Flipper Zero
-- HackRF
-- Proxmark3
-
----
-
-## 📞 Status
-
-**Last Updated:** October 1, 2025
-**Version:** 1.0 (Fully Functional)
-**Tested:** All hardware ✅
-**Ready for:** Signal capture, NFC ops, Flight tracking
-
-**Your PiFlip is ready to use!** 🦊✨
+**Special thanks:**
+- Open source SDR community
+- Raspberry Pi Foundation
+- Security research community
+- All contributors and testers
 
 ---
 
-**Quick Links:**
-- Web UI: http://192.168.86.141:5000
-- Test Suite: http://192.168.86.141:5000/test
-- Flight Map: http://192.168.86.141:8080
+## 📜 License
+
+**Educational and Security Research Use Only**
+
+This project is provided for educational purposes and authorized security research only. The authors are not responsible for misuse or illegal activities performed with this tool.
+
+See [LICENSE](LICENSE) for details.
+
+---
+
+## 📞 Support & Community
+
+- **Documentation:** [docs/](docs/) - Comprehensive guides and references
+- **Issues:** [GitHub Issues](https://github.com/RedThoroughbred/piflip/issues) - Report bugs
+- **Discussions:** [GitHub Discussions](https://github.com/RedThoroughbred/piflip/discussions) - Ask questions
+
+---
+
+## 🌟 Star History
+
+If you find PiFlip useful, please star the repo! ⭐
+
+It helps others discover the project and motivates continued development.
+
+---
+
+**Made with ❤️ by the security research community**
+
+**PiFlip v2.0** - October 2025
+
+![Settings Menu](docs/screenshots/settings-menu.png)

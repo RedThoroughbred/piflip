@@ -34,6 +34,7 @@ from rf_advanced_tx import RFAdvancedTX
 from nfc_guardian import NFCGuardian
 from card_catalog import CardCatalog
 from rfid_wallet_tester import RFIDWalletTester
+from rf_power_tools import RFPowerTools
 
 app = Flask(__name__)
 
@@ -1613,6 +1614,16 @@ def get_wallet_tester():
         wallet_tester = RFIDWalletTester()
     return wallet_tester
 
+# RF Power Tools instance
+rf_power_tools = None
+
+def get_rf_power_tools():
+    """Get or create RF power tools instance"""
+    global rf_power_tools
+    if rf_power_tools is None:
+        rf_power_tools = RFPowerTools()
+    return rf_power_tools
+
 @app.route('/api/guardian/status')
 def guardian_status():
     """Get Guardian monitoring status"""
@@ -1827,6 +1838,138 @@ def system_reboot():
             'status': 'success',
             'message': 'System rebooting in 5 seconds...'
         })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+# =============================================================================
+# RF POWER TOOLS - ADVANCED TRANSMISSION FEATURES
+# =============================================================================
+
+@app.route('/api/rf/fuzz', methods=['POST'])
+def rf_fuzz_signal():
+    """Fuzz a signal with mutations"""
+    try:
+        data = request.get_json()
+        signal_name = data.get('signal')
+        mode = data.get('mode', 'bit_flip')  # bit_flip, random, increment
+        max_attempts = data.get('max_attempts', 50)
+        delay_ms = data.get('delay_ms', 100)
+
+        tools = get_rf_power_tools()
+        result = tools.fuzz_signal(signal_name, mode, max_attempts, delay_ms)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/rf/encode', methods=['POST'])
+def rf_encode_protocol():
+    """Encode and transmit signal using protocol"""
+    try:
+        data = request.get_json()
+        protocol = data.get('protocol')  # PT2262, PT2264, HCS301, custom
+        code = data.get('code')  # Binary string like "101010101010"
+        frequency = data.get('frequency', 433.92)
+
+        tools = get_rf_power_tools()
+        result = tools.encode_protocol(protocol, code, frequency)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/rf/frequency_sweep', methods=['POST'])
+def rf_frequency_sweep():
+    """Sweep frequency range while transmitting"""
+    try:
+        data = request.get_json()
+        signal_name = data.get('signal')
+        start_freq = data.get('start_freq', 433.0)
+        end_freq = data.get('end_freq', 434.0)
+        step_mhz = data.get('step', 0.05)
+        delay_ms = data.get('delay_ms', 500)
+        repeats = data.get('repeats', 3)
+
+        tools = get_rf_power_tools()
+        result = tools.frequency_sweep(signal_name, start_freq, end_freq, step_mhz, delay_ms, repeats)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/rf/playlist/execute', methods=['POST'])
+def rf_execute_playlist():
+    """Execute signal playlist"""
+    try:
+        data = request.get_json()
+        playlist = data.get('playlist', [])
+
+        tools = get_rf_power_tools()
+        result = tools.execute_playlist(playlist)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/rf/playlist/save', methods=['POST'])
+def rf_save_playlist():
+    """Save playlist to file"""
+    try:
+        data = request.get_json()
+        name = data.get('name')
+        playlist = data.get('playlist', [])
+
+        tools = get_rf_power_tools()
+        result = tools.save_playlist(name, playlist)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/rf/playlist/load/<name>')
+def rf_load_playlist(name):
+    """Load playlist from file"""
+    try:
+        tools = get_rf_power_tools()
+        playlist = tools.load_playlist(name)
+
+        if playlist is None:
+            return jsonify({'error': 'Playlist not found'}), 404
+
+        return jsonify({'status': 'success', 'playlist': playlist})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/rf/playlists')
+def rf_list_playlists():
+    """List all saved playlists"""
+    try:
+        playlist_dir = Path.home() / "piflip" / "playlists"
+        playlist_dir.mkdir(exist_ok=True)
+
+        playlists = []
+        for file in playlist_dir.glob("*.json"):
+            with open(file) as f:
+                data = json.load(f)
+                playlists.append({
+                    'name': file.stem,
+                    'created': data.get('created'),
+                    'steps': len(data.get('playlist', []))
+                })
+
+        return jsonify({'playlists': playlists})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/rf/jam', methods=['POST'])
+def rf_jam_frequency():
+    """Jam frequency (security testing only)"""
+    try:
+        data = request.get_json()
+        frequency = data.get('frequency', 433.92)
+        duration_sec = data.get('duration', 10)
+        mode = data.get('mode', 'noise')  # noise, tone, sweep
+        power = data.get('power', 'max')
+
+        tools = get_rf_power_tools()
+        result = tools.jam_frequency(frequency, duration_sec, mode, power)
+        return jsonify(result)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

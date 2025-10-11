@@ -1019,62 +1019,73 @@
                 </div>
             </div>
 
-            <div class="menu-item" onclick="txFuzzSignal()">
+            <div class="menu-item" onclick="powerToolsFuzz()">
                 <div class="menu-item-left">
                     <span class="menu-icon">🎲</span>
                     <div class="menu-text">
                         <span class="menu-title">Signal Fuzzing</span>
-                        <span class="menu-subtitle">Random timing variations</span>
+                        <span class="menu-subtitle">Bit flip & mutations</span>
                     </div>
                 </div>
             </div>
 
-            <div class="menu-item" onclick="txRollingCode()">
+            <div class="menu-item" onclick="powerToolsEncode()">
                 <div class="menu-item-left">
-                    <span class="menu-icon">⏱️</span>
+                    <span class="menu-icon">🔤</span>
                     <div class="menu-text">
-                        <span class="menu-title">Rolling Code Helper</span>
-                        <span class="menu-subtitle">Capture & quick replay</span>
+                        <span class="menu-title">Protocol Encoder</span>
+                        <span class="menu-subtitle">Create from code</span>
                     </div>
                 </div>
             </div>
 
-            <div class="menu-item" onclick="txCustomSignal()">
-                <div class="menu-item-left">
-                    <span class="menu-icon">✨</span>
-                    <div class="menu-text">
-                        <span class="menu-title">Custom Signal</span>
-                        <span class="menu-subtitle">Generate from binary</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="menu-item" onclick="txJamFrequency()">
+            <div class="menu-item" onclick="powerToolsFreqSweep()">
                 <div class="menu-item-left">
                     <span class="menu-icon">📡</span>
                     <div class="menu-text">
-                        <span class="menu-title">Frequency Jammer</span>
-                        <span class="menu-subtitle">Educational testing</span>
+                        <span class="menu-title">Frequency Scanner</span>
+                        <span class="menu-subtitle">Auto sweep & transmit</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="powerToolsPlaylist()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">📋</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Signal Playlist</span>
+                        <span class="menu-subtitle">Macros & sequences</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="powerToolsJammer()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">⚡</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Jamming Tool</span>
+                        <span class="menu-subtitle">Security testing</span>
                     </div>
                 </div>
             </div>
 
             <div style="padding: 20px; background: #1a1a1a; margin: 10px; border-radius: 8px; border-left: 4px solid #FF6600;">
-                <div style="font-size: 14px; color: #ccc; margin-bottom: 10px;">🚀 Advanced TX Features</div>
+                <div style="font-size: 14px; color: #ccc; margin-bottom: 10px;">⚡ RF Power Tools</div>
                 <div style="font-size: 12px; color: #888; line-height: 1.6;">
                     <strong>Hardware:</strong> CC1101 (Sub-GHz)<br>
                     <strong>Range:</strong> 300-928 MHz<br>
                     <br>
-                    <strong>Features:</strong><br>
-                    • Replay with freq/timing variations<br>
-                    • Brute force fixed codes<br>
-                    • Signal fuzzing<br>
-                    • Rolling code capture/replay<br>
-                    • Custom signal generation<br>
-                    • Educational jamming<br>
+                    <strong>New Features:</strong><br>
+                    • <strong>Signal Fuzzing</strong> - Find hidden commands<br>
+                    • <strong>Protocol Encoder</strong> - Create from scratch<br>
+                    • <strong>Frequency Scanner</strong> - Auto sweep<br>
+                    • <strong>Signal Playlists</strong> - Automation<br>
+                    • <strong>Jamming Tool</strong> - Security testing<br>
                     <br>
-                    <strong>⚠️ Use responsibly!</strong><br>
-                    Only on your own devices
+                    <strong>⚠️ IMPORTANT:</strong><br>
+                    Educational & security testing only!<br>
+                    Only use on YOUR OWN devices.<br>
+                    Check local regulations.
                 </div>
             </div>
         </div>
@@ -5145,6 +5156,285 @@ Loading emulation options...`);
             } catch (error) {
                 // Expected - connection lost during reboot
                 showOutput('🔄 Reboot initiated.\n\nConnection lost (normal).\n\nWait 60 seconds, then refresh page.');
+            }
+        }
+
+        // ============================================
+        // RF POWER TOOLS
+        // ============================================
+
+        async function powerToolsFuzz() {
+            const signal = prompt('Enter signal name to fuzz:');
+            if (!signal) return;
+
+            const mode = prompt('Fuzzing mode:\n\n1 = bit_flip (flip each bit)\n2 = random (random mutations)\n3 = increment (try sequential codes)\n\nEnter 1, 2, or 3:');
+            const modeMap = {'1': 'bit_flip', '2': 'random', '3': 'increment'};
+            const selectedMode = modeMap[mode] || 'bit_flip';
+
+            const attempts = prompt('Max attempts (default 50):', '50');
+
+            if (!confirm(`⚡ FUZZ SIGNAL?\n\nSignal: ${signal}\nMode: ${selectedMode}\nAttempts: ${attempts}\n\nThis will transmit ${attempts} variations.\n\nContinue?`)) {
+                return;
+            }
+
+            showOutput(`🎲 FUZZING SIGNAL: ${signal}\n\nMode: ${selectedMode}\nAttempts: ${attempts}\n\nTransmitting variations...`);
+
+            try {
+                const response = await fetch('/api/rf/fuzz', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        signal: signal,
+                        mode: selectedMode,
+                        max_attempts: parseInt(attempts),
+                        delay_ms: 100
+                    })
+                });
+                const data = await response.json();
+
+                if (data.status === 'complete') {
+                    let output = '╔═══════════════════════════════════════════╗\n';
+                    output += '║      🎲 FUZZING COMPLETE               ║\n';
+                    output += '╚═══════════════════════════════════════════╝\n\n';
+                    output += `Signal: ${data.signal}\n`;
+                    output += `Mode: ${data.mode}\n`;
+                    output += `Original bits: ${data.original_bits}\n`;
+                    output += `Variations tested: ${data.attempts}\n\n`;
+                    output += '✅ All variations transmitted!\n\n';
+                    output += 'Check if target device responded to any variation.';
+                    showOutput(output);
+                } else {
+                    showOutput('❌ Error: ' + (data.message || data.error));
+                }
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        async function powerToolsEncode() {
+            const protocol = prompt('Protocol:\n\n1 = PT2262 (common remotes)\n2 = PT2264 (variant)\n3 = HCS301 (KeeLoq)\n4 = custom\n\nEnter 1-4:', '1');
+            const protocolMap = {'1': 'PT2262', '2': 'PT2264', '3': 'HCS301', '4': 'custom'};
+            const selectedProtocol = protocolMap[protocol] || 'PT2262';
+
+            const code = prompt('Enter binary code (e.g., 101010101010):');
+            if (!code) return;
+
+            const freq = prompt('Frequency (MHz):', '433.92');
+
+            if (!confirm(`🔤 ENCODE & TRANSMIT?\n\nProtocol: ${selectedProtocol}\nCode: ${code}\nFrequency: ${freq} MHz\n\nContinue?`)) {
+                return;
+            }
+
+            showOutput(`🔤 ENCODING SIGNAL\n\nProtocol: ${selectedProtocol}\nCode: ${code}\nFrequency: ${freq} MHz\n\nTransmitting...`);
+
+            try {
+                const response = await fetch('/api/rf/encode', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        protocol: selectedProtocol,
+                        code: code,
+                        frequency: parseFloat(freq)
+                    })
+                });
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    let output = '╔═══════════════════════════════════════════╗\n';
+                    output += '║      🔤 SIGNAL ENCODED & SENT          ║\n';
+                    output += '╚═══════════════════════════════════════════╝\n\n';
+                    output += `Protocol: ${data.protocol}\n`;
+                    output += `Code: ${data.code}\n`;
+                    output += `Frequency: ${data.frequency} MHz\n`;
+                    output += `Transitions: ${data.transitions}\n\n`;
+                    output += '✅ Signal transmitted successfully!';
+                    showOutput(output);
+                } else {
+                    showOutput('❌ Error: ' + (data.message || data.error));
+                }
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        async function powerToolsFreqSweep() {
+            const signal = prompt('Enter signal name to transmit:');
+            if (!signal) return;
+
+            const start = prompt('Start frequency (MHz):', '433.0');
+            const end = prompt('End frequency (MHz):', '434.0');
+            const step = prompt('Step size (MHz):', '0.05');
+
+            const numSteps = Math.ceil((parseFloat(end) - parseFloat(start)) / parseFloat(step));
+
+            if (!confirm(`📡 FREQUENCY SWEEP?\n\nSignal: ${signal}\nRange: ${start} - ${end} MHz\nStep: ${step} MHz\n\nThis will test ${numSteps} frequencies.\n\nContinue?`)) {
+                return;
+            }
+
+            showOutput(`📡 FREQUENCY SWEEP\n\nSignal: ${signal}\nRange: ${start} - ${end} MHz\nStep: ${step} MHz\n\nScanning... (this may take a while)`);
+
+            try {
+                const response = await fetch('/api/rf/frequency_sweep', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        signal: signal,
+                        start_freq: parseFloat(start),
+                        end_freq: parseFloat(end),
+                        step: parseFloat(step),
+                        delay_ms: 500,
+                        repeats: 3
+                    })
+                });
+                const data = await response.json();
+
+                if (data.status === 'complete') {
+                    let output = '╔═══════════════════════════════════════════╗\n';
+                    output += '║      📡 SWEEP COMPLETE                 ║\n';
+                    output += '╚═══════════════════════════════════════════╝\n\n';
+                    output += `Signal: ${data.signal}\n`;
+                    output += `Range: ${data.start_freq} - ${data.end_freq} MHz\n`;
+                    output += `Step: ${data.step} MHz\n`;
+                    output += `Frequencies tested: ${data.frequencies_tested}\n\n`;
+                    output += '✅ Sweep complete!\n\n';
+                    output += 'Check which frequency triggered your device.';
+                    showOutput(output);
+                } else {
+                    showOutput('❌ Error: ' + (data.message || data.error));
+                }
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
+            }
+        }
+
+        async function powerToolsPlaylist() {
+            const action = prompt('Playlist:\n\n1 = Create & Execute\n2 = Load Saved\n3 = View Saved\n\nEnter 1-3:', '1');
+
+            if (action === '1') {
+                // Create playlist
+                const numSignals = prompt('How many signals in playlist?', '2');
+                const num = parseInt(numSignals);
+
+                const playlist = [];
+                for (let i = 0; i < num; i++) {
+                    const signal = prompt(`Signal ${i+1} name:`);
+                    if (!signal) break;
+
+                    const delay = prompt(`Delay after signal ${i+1} (seconds):`, '1');
+                    const repeats = prompt(`Repeats for signal ${i+1}:`, '3');
+
+                    playlist.push({
+                        signal: signal,
+                        delay: parseFloat(delay),
+                        repeats: parseInt(repeats)
+                    });
+                }
+
+                if (playlist.length === 0) {
+                    showInfo('No signals added to playlist');
+                    return;
+                }
+
+                const save = confirm('Save this playlist?');
+                if (save) {
+                    const name = prompt('Playlist name:');
+                    if (name) {
+                        await fetch('/api/rf/playlist/save', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name: name, playlist: playlist })
+                        });
+                    }
+                }
+
+                // Execute
+                showOutput(`📋 EXECUTING PLAYLIST\n\n${playlist.length} signals\n\nRunning...`);
+
+                const response = await fetch('/api/rf/playlist/execute', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ playlist: playlist })
+                });
+                const data = await response.json();
+
+                let output = '╔═══════════════════════════════════════════╗\n';
+                output += '║      📋 PLAYLIST COMPLETE              ║\n';
+                output += '╚═══════════════════════════════════════════╝\n\n';
+                output += `Steps executed: ${data.executed}/${data.total_steps}\n\n`;
+                data.steps.forEach(step => {
+                    output += `${step.step}. ${step.signal} - ${step.status}\n`;
+                });
+                showOutput(output);
+
+            } else if (action === '2') {
+                // Load saved
+                showInfo('Load playlist feature - check API for saved playlists');
+            } else if (action === '3') {
+                // View saved
+                try {
+                    const response = await fetch('/api/rf/playlists');
+                    const data = await response.json();
+
+                    let output = '📋 SAVED PLAYLISTS\n\n';
+                    if (data.playlists.length === 0) {
+                        output += 'No saved playlists yet';
+                    } else {
+                        data.playlists.forEach(p => {
+                            output += `• ${p.name} (${p.steps} steps)\n`;
+                        });
+                    }
+                    showOutput(output);
+                } catch (error) {
+                    showOutput('❌ Error: ' + error.message);
+                }
+            }
+        }
+
+        async function powerToolsJammer() {
+            if (!confirm('⚠️  WARNING: JAMMING TOOL\n\nThis tool generates RF interference.\n\n✓ LEGAL: Testing YOUR OWN devices\n✗ ILLEGAL: Interfering with others\n\nJamming is ILLEGAL in most countries.\nUse ONLY for security testing your own equipment.\n\nDo you understand and agree?')) {
+                return;
+            }
+
+            const freq = prompt('Frequency to jam (MHz):', '433.92');
+            const duration = prompt('Duration (seconds):', '10');
+            const mode = prompt('Mode:\n\n1 = noise (random)\n2 = tone (carrier)\n3 = sweep (±1 MHz)\n\nEnter 1-3:', '1');
+
+            const modeMap = {'1': 'noise', '2': 'tone', '3': 'sweep'};
+            const selectedMode = modeMap[mode] || 'noise';
+
+            if (!confirm(`⚡ START JAMMING?\n\nFrequency: ${freq} MHz\nDuration: ${duration} seconds\nMode: ${selectedMode}\n\n⚠️  Use responsibly!\n\nContinue?`)) {
+                return;
+            }
+
+            showOutput(`⚡ JAMMING ACTIVATED\n\nFrequency: ${freq} MHz\nMode: ${selectedMode}\nDuration: ${duration}s\n\nTransmitting interference...`);
+
+            try {
+                const response = await fetch('/api/rf/jam', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        frequency: parseFloat(freq),
+                        duration: parseInt(duration),
+                        mode: selectedMode,
+                        power: 'max'
+                    })
+                });
+                const data = await response.json();
+
+                if (data.status === 'complete') {
+                    let output = '╔═══════════════════════════════════════════╗\n';
+                    output += '║      ⚡ JAMMING COMPLETE               ║\n';
+                    output += '╚═══════════════════════════════════════════╝\n\n';
+                    output += `Frequency: ${data.frequency} MHz\n`;
+                    output += `Mode: ${data.mode}\n`;
+                    output += `Duration: ${data.duration.toFixed(1)}s\n\n`;
+                    output += '✅ Jamming session complete';
+                    showOutput(output);
+                } else {
+                    showOutput('❌ Error: ' + (data.message || data.error));
+                }
+            } catch (error) {
+                showOutput('❌ Error: ' + error.message);
             }
         }
 
