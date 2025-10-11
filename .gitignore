@@ -66,10 +66,14 @@ TODAYS_UPDATES.md
 UPGRADE_SUMMARY.txt
 web_interface_guardian_apis.txt
 
-# Screenshots with potential private info
+# Screenshots with potential private info (EXCEPT docs/screenshots)
 *.png
 *.jpg
 *.jpeg
+# Allow docs/screenshots/ - these are intentional for documentation
+!docs/screenshots/*.png
+!docs/screenshots/*.jpg
+!docs/screenshots/*.jpeg
 
 # Shell scripts (might contain IPs/passwords)
 wifi_auto_switch.sh
