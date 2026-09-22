@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>PiFlip Nano</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta charset="utf-8">
+    <title>PiFlip</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0b0d12">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
         /* =====================================================================
            PiFlip design system
@@ -418,98 +422,257 @@
         .swatch { width: 34px; height: 34px; border-radius: 50%; border: 2px solid transparent; box-shadow: inset 0 0 0 2px rgba(0,0,0,.25); }
         .swatch.sel { border-color: var(--text); }
         input[type=range] { width: 100%; accent-color: var(--accent); min-height: 32px; }
-
-        /* overlay SDR pages (compat until the listening views land) */
-        .sdr-page { white-space: normal; font-family: 'Courier New', monospace; color: #ddd; }
-        .sdr-page h3 { margin: 0 0 10px 0; }
-        .sdr-bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
-        .sdr-bar select, .sdr-bar input { background: #1a1a1a; color: #FF6600; border: 1px solid #FF6600;
-            border-radius: 8px; padding: 12px; font-family: 'Courier New', monospace; font-size: 14px; }
-        .sdr-bar .action-btn { flex: 0 0 auto; min-width: 110px; }
-        .sdr-status { font-size: 13px; color: #888; margin: 6px 0 12px 0; }
-        .sdr-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        .sdr-table th { text-align: left; color: #FF6600; border-bottom: 1px solid #FF6600; padding: 6px 4px; }
-        .sdr-table td { border-bottom: 1px solid #222; padding: 6px 4px; vertical-align: top; }
-        .sdr-table td.rd { color: #aaa; font-size: 12px; word-break: break-word; }
-        .sdr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
-        .sdr-tile { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 14px 10px;
-            cursor: pointer; text-align: center; }
-        .sdr-tile:active { border-color: #FF6600; }
-        .sdr-tile .ic { font-size: 26px; }
-        .sdr-tile .nm { color: #FF6600; font-weight: bold; margin-top: 6px; font-size: 13px; }
-        .sdr-tile .ct { color: #888; font-size: 11px; margin-top: 3px; }
-        .sdr-ch { display: flex; justify-content: space-between; gap: 10px; align-items: center; background: #1a1a1a;
-            border: 1px solid #333; border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; cursor: pointer; }
-        .sdr-ch.cur { border-color: #0f0; }
-        .sdr-ch.dig { opacity: .45; cursor: default; }
-        .sdr-ch .l { min-width: 0; }
-        .sdr-ch .n { color: #FF8833; font-weight: bold; font-size: 14px; }
-        .sdr-ch .x { color: #777; font-size: 11px; margin-top: 2px; }
-        .sdr-ch .f { color: #0f0; font-size: 15px; white-space: nowrap; text-align: right; }
-        .sdr-ch .f small { color: #888; display: block; font-size: 11px; }
-        .sdr-now { position: sticky; top: -60px; background: #111; border: 1px solid #FF6600; border-radius: 8px;
-            padding: 10px 12px; margin-bottom: 12px; display: none; z-index: 2; }
-        .sdr-now.on { display: block; }
-        .sdr-lcd { font-size: 28px; color: #0f0; }
-        .sdr-lock { color: #0f0; } .sdr-hop { color: #ff0; }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">🦊 PiFlip Nano</div>
+    <!-- Icon sprite (inline, offline) -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <defs>
+            <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></symbol>
+            <symbol id="i-radio" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2.5"/><path d="m7 8 9-5"/><circle cx="15.5" cy="14" r="2.5"/><path d="M7 12.5h3M7 15.5h3"/></symbol>
+            <symbol id="i-scan" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8a6 6 0 0 1 0 8.4M7.8 16.2a6 6 0 0 1 0-8.4M19 5a10 10 0 0 1 0 14M5 19A10 10 0 0 1 5 5"/></symbol>
+            <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/></symbol>
+            <symbol id="i-more" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+            <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></symbol>
+            <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6.5" y="6.5" width="11" height="11" rx="1.5" fill="currentColor"/></symbol>
+            <symbol id="i-skip" viewBox="0 0 24 24"><path d="M6 6v12l8.5-6z" fill="currentColor"/><path d="M18 6v12"/></symbol>
+            <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.9z"/></symbol>
+            <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+            <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 12h3l2-6 3 12 3-15 3 18 2-9h4"/></symbol>
+            <symbol id="i-thermo" viewBox="0 0 24 24"><path d="M14 14.8V5a2 2 0 1 0-4 0v9.8a4 4 0 1 0 4 0z"/><path d="M12 9v7"/></symbol>
+            <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+            <symbol id="i-back" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
+            <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+            <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+            <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></symbol>
+            <symbol id="i-antenna" viewBox="0 0 24 24"><path d="M12 10v11M8 21h8"/><circle cx="12" cy="8" r="2"/><path d="M8.5 4.5a5 5 0 0 0 0 7M15.5 4.5a5 5 0 0 1 0 7"/></symbol>
+            <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .6-8A6 6 0 0 0 6 9.5 4.3 4.3 0 0 0 7 18z"/><path d="m13 11-2 3h3l-2 3"/></symbol>
+            <symbol id="i-head" viewBox="0 0 24 24"><path d="M4 16v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></symbol>
+            <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+            <symbol id="i-chip" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></symbol>
+            <symbol id="i-save" viewBox="0 0 24 24"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/></symbol>
+            <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 3v8"/><path d="M6.4 6.6a8 8 0 1 0 11.2 0"/></symbol>
+            <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 3.5V8h4.5"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20.5V16h-4.5"/></symbol>
+            <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+            <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.2 0 1.8-.8 1.8-1.8 0-1.2-1-1.6-1-2.6s.8-1.6 1.8-1.6H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10.5" cy="7.5" r="1"/><circle cx="15" cy="7.5" r="1"/></symbol>
+            <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></symbol>
+            <symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+        </defs>
+    </svg>
 
-    <!-- Status Bar -->
-    <div class="status-bar">
-        <div class="status-indicator">
-            <span><span class="status-dot active" id="nfc-dot"></span> NFC</span>
-            <span><span class="status-dot active" id="rtl-dot"></span> RTL</span>
-            <span><span class="status-dot active" id="cc1101-dot"></span> CC1101</span>
-            <span id="tx-indicator" style="display: none;"><span class="status-dot" style="background: #ff0; animation: blink 0.5s infinite;"></span> TX</span>
+    <!-- App bar -->
+    <header class="header">
+        <button class="brand" onclick="showView('home')" aria-label="PiFlip home">
+            <span class="brand-mark"><svg class="ic"><use href="#i-antenna"/></svg></span>
+            <span>PiFlip</span>
+        </button>
+        <div class="header-spacer"></div>
+        <!-- Status chips (legacy ids kept for existing scripts) -->
+        <div class="status-bar">
+            <div class="status-indicator">
+                <span title="RTL-SDR"><span class="status-dot inactive" id="rtl-dot"></span> SDR</span>
+                <span class="mod-extra" title="NFC"><span class="status-dot inactive" id="nfc-dot"></span> NFC</span>
+                <span class="mod-extra" title="CC1101"><span class="status-dot inactive" id="cc1101-dot"></span> CC</span>
+                <span id="tx-indicator" style="display: none;"><span class="status-dot" style="background: var(--warn); animation: blink 0.5s infinite;"></span> TX</span>
+            </div>
+            <div id="battery-indicator">🔋 100%</div>
         </div>
-        <div id="battery-indicator">🔋 100%</div>
-    </div>
+        <button class="icon-btn" onclick="showView('settings')" aria-label="Settings"><svg class="ic"><use href="#i-gear"/></svg></button>
+    </header>
 
-    <!-- Breadcrumb -->
-    <div class="breadcrumb" id="breadcrumb">
-        <a onclick="showMainMenu()">Main Menu</a>
+    <!-- Breadcrumb (More > sub-pages only) -->
+    <div class="breadcrumb" id="breadcrumb" style="display:none">
+        <a onclick="showMainMenu()">More</a>
     </div>
 
     <!-- Main Menu Container -->
     <div class="menu-container" id="menu-container">
-        <!-- Welcome Screen -->
-        <div id="welcome-screen" class="menu-view">
-            <div style="text-align: center; padding: 40px 20px;">
-                <div style="font-size: 64px; margin-bottom: 20px;">🦊</div>
-                <div style="font-size: 28px; font-weight: bold; color: #FF6600; margin-bottom: 10px;">PiFlip</div>
-                <div style="font-size: 14px; color: #888; margin-bottom: 40px;">RF & NFC Multi-Tool</div>
+        <!-- Legacy welcome screen: kept (hidden) so existing hardware-check scripts keep working -->
+        <div id="welcome-screen" class="menu-view hidden">
+            <div id="welcome-hw-status">
+                <div id="welcome-cc1101"></div>
+                <div id="welcome-nfc"></div>
+                <div id="welcome-rtl"></div>
+            </div>
+        </div>
 
-                <!-- Hardware Status -->
-                <div style="background: #1a1a1a; padding: 20px; border-radius: 12px; margin-bottom: 30px; border: 1px solid #333;">
-                    <div style="font-size: 16px; font-weight: bold; margin-bottom: 15px; color: #FF6600;">🔧 Hardware Status</div>
-                    <div id="welcome-hw-status" style="font-size: 14px; color: #ccc; line-height: 2;">
-                        <div id="welcome-cc1101">📡 CC1101: <span style="color: #888;">Checking...</span></div>
-                        <div id="welcome-nfc">💳 PN532 (NFC): <span style="color: #888;">Checking...</span></div>
-                        <div id="welcome-rtl">📻 RTL-SDR: <span style="color: #888;">Checking...</span></div>
+        <!-- ================= HOME ================= -->
+        <div id="home" class="menu-view">
+            <div class="page-title"><div><h1 id="home-greet">Listening</h1><p id="home-sub">PiFlip receiver</p></div></div>
+
+            <div class="hero" id="home-hero">
+                <div class="lcd">
+                    <div class="k" id="home-now-k">Now</div>
+                    <div class="freq" id="home-now-freq">— — —<small>MHz</small></div>
+                    <div class="name" id="home-now-name">Nothing playing</div>
+                    <div class="meta">
+                        <span class="chip" id="home-now-mode">IDLE</span>
+                        <span class="bars" id="home-now-bars"><i></i><i></i><i></i><i></i><i></i></span>
                     </div>
                 </div>
+                <div class="hero-actions" id="home-now-actions"></div>
+            </div>
 
-                <!-- Quick Start Button -->
-                <div class="menu-item" onclick="showMainMenu()" style="max-width: 400px; margin: 0 auto; background: linear-gradient(90deg, #FF6600, #FF8833); border: none; min-height: 65px;">
-                    <div style="width: 100%; text-align: center;">
-                        <div style="font-size: 18px; font-weight: bold; color: #000;">Get Started →</div>
-                    </div>
+            <div class="section-label">Quick actions</div>
+            <div class="quick-grid">
+                <button class="quick" onclick="showView('radio')"><span class="well"><svg class="ic"><use href="#i-radio"/></svg></span>Radio</button>
+                <button class="quick" onclick="showView('scan')"><span class="well"><svg class="ic"><use href="#i-scan"/></svg></span>Scanner</button>
+                <button class="quick" onclick="showView('catalog')"><span class="well"><svg class="ic"><use href="#i-grid"/></svg></span>Catalog</button>
+                <button class="quick" onclick="showView('sensors')"><span class="well"><svg class="ic"><use href="#i-thermo"/></svg></span>Sensors</button>
+                <button class="quick" onclick="showView('spectrum')"><span class="well"><svg class="ic"><use href="#i-wave"/></svg></span>Spectrum</button>
+                <button class="quick" onclick="showCatalogType('noaa')"><span class="well"><svg class="ic"><use href="#i-cloud"/></svg></span>Weather</button>
+            </div>
+
+            <div class="section-label">Favorites <button onclick="showView('catalog')">Browse</button></div>
+            <div class="hscroll" id="home-favs"></div>
+
+            <div class="section-label">Recent</div>
+            <div class="list" id="home-recents"></div>
+
+            <div class="section-label">Device</div>
+            <div class="card" id="home-device">
+                <div class="device-row">
+                    <span class="device-ic"><svg class="ic"><use href="#i-antenna"/></svg></span>
+                    <div class="grow"><div style="font-weight:650">RTL-SDR</div><div class="small muted" id="home-dev-sub">Checking…</div></div>
+                    <span class="chip" id="home-dev-chip">…</span>
                 </div>
-
-                <!-- Version Info -->
-                <div style="margin-top: 40px; font-size: 11px; color: #666;">
-                    Version 1.0.0 • Raspberry Pi<br>
-                    Made with ❤️ for the hacker community
+                <div class="device-row">
+                    <span class="device-ic"><svg class="ic"><use href="#i-chip"/></svg></span>
+                    <div class="grow"><div style="font-weight:650">Other modules</div><div class="small muted" id="home-mod-sub">NFC · CC1101</div></div>
                 </div>
             </div>
         </div>
 
+        <!-- ================= RADIO ================= -->
+        <div id="radio-view" class="menu-view hidden">
+            <div class="page-title"><div><h1>Radio</h1><p>Tune &amp; listen</p></div>
+                <button class="star-btn" id="rv-star" onclick="radioToggleStar()" aria-label="Favorite"><svg class="ic"><use href="#i-star"/></svg></button></div>
+            <div class="lcd">
+                <div class="k">Tuned</div>
+                <div class="freq" id="rv-freq">---.---<small>MHz</small></div>
+                <div class="name" id="rv-name"></div>
+                <div class="meta">
+                    <span class="chip" id="rv-mode">WFM</span>
+                    <span class="row" style="gap:8px"><span class="small" style="color:var(--lcd-dim);letter-spacing:.1em">SIGNAL</span>
+                        <span class="bars" id="rv-bars"><i></i><i></i><i></i><i></i><i></i></span></span>
+                </div>
+                <div class="meter"><b id="rv-meter"></b></div>
+            </div>
+            <div class="small muted" id="rv-status" style="margin-top:8px;min-height:18px"></div>
+
+            <div class="play-wrap">
+                <button class="round-btn" onclick="radioNudge(-1)" aria-label="Step down"><svg class="ic"><use href="#i-minus"/></svg></button>
+                <button class="play-btn" id="rv-play" onclick="radioPlayToggle()" aria-label="Play"><svg class="ic"><use href="#i-play"/></svg></button>
+                <button class="round-btn" onclick="radioNudge(1)" aria-label="Step up"><svg class="ic"><use href="#i-plus"/></svg></button>
+            </div>
+
+            <div class="card">
+                <div class="freq-input"><input class="input" id="rv-input" inputmode="decimal" placeholder="Frequency" autocomplete="off"><span>MHz</span></div>
+                <div class="seg" id="rv-seg" style="margin-top:10px">
+                    <button data-m="wfm" class="sel">WFM</button><button data-m="nfm">NFM</button><button data-m="am">AM</button>
+                </div>
+                <button class="btn primary block" style="margin-top:10px" onclick="radioTuneInput()">Tune</button>
+            </div>
+
+            <div class="section-label">Presets <button onclick="window.location.href='/radio'">Edit</button></div>
+            <div id="rv-presets"></div>
+        </div>
+
+        <!-- ================= SCANNER ================= -->
+        <div id="scan-view" class="menu-view hidden">
+            <div class="page-title"><div><h1>Scanner</h1><p>Hops channels, stops on activity</p></div></div>
+            <div class="lcd">
+                <div class="k" id="sv-k">Idle</div>
+                <div class="freq" id="sv-freq">---.----<small>MHz</small></div>
+                <div class="name" id="sv-name">Pick a list and press Scan</div>
+                <div class="meta"><span class="chip" id="sv-chip">READY</span><span class="small" style="color:var(--lcd-dim)" id="sv-metric"></span></div>
+                <div class="progress"><b id="sv-prog"></b></div>
+            </div>
+            <div class="play-wrap">
+                <button class="round-btn" onclick="scanStop()" aria-label="Stop"><svg class="ic"><use href="#i-stop"/></svg></button>
+                <button class="play-btn" id="sv-play" onclick="scanToggle()" aria-label="Scan"><svg class="ic"><use href="#i-scan"/></svg></button>
+                <button class="round-btn" onclick="scanSkip()" aria-label="Skip"><svg class="ic"><use href="#i-skip"/></svg></button>
+            </div>
+            <div class="card">
+                <label class="field"><span>Channel list</span><select class="select" id="scan-src"></select></label>
+                <div class="form-grid" style="margin-top:12px">
+                    <label class="field"><span>Detect by</span><select class="select" id="scan-method">
+                        <option value="audio">Audio clarity</option><option value="rf">RF power</option></select></label>
+                    <label class="field"><span>Dwell</span><select class="select" id="scan-dwell">
+                        <option value="1.0">1.0 s</option><option value="1.5">1.5 s</option><option value="2.5">2.5 s</option></select></label>
+                </div>
+                <label class="field" style="margin-top:12px"><span>When locked</span><select class="select" id="scan-resume">
+                    <option value="0">Stay on the channel</option><option value="4">Resume after 4 s quiet</option><option value="10">Resume after 10 s quiet</option></select></label>
+                <p class="note">Audio plays while locked. Digital / trunked channels are skipped.</p>
+            </div>
+        </div>
+
+        <!-- ================= CATALOG ================= -->
+        <div id="catalog-view" class="menu-view hidden">
+            <div id="cv-types">
+                <div class="page-title"><div><h1>Catalog</h1><p>Named channels, fully offline</p></div></div>
+                <div class="search"><svg class="ic sm"><use href="#i-search"/></svg><input class="input" id="cv-q" placeholder="Search all channels" oninput="catalogSearch(this.value)" autocomplete="off"></div>
+                <div id="cv-search-results" class="list"></div>
+                <div id="cv-grids">
+                    <div class="section-label">Standard channels</div>
+                    <div class="tile-grid" id="cv-t1"></div>
+                    <div class="section-label">Local · Cincinnati / Hamilton Co.</div>
+                    <div class="tile-grid" id="cv-t2"></div>
+                    <p class="note">Local entries come from cited public sources (RepeaterBook, AirNav, RadioReference, Wikipedia). See SOURCES.md.</p>
+                </div>
+            </div>
+            <div id="cv-list" class="hidden">
+                <div class="page-title">
+                    <button class="icon-btn" onclick="catalogBack()" aria-label="Back" style="margin-left:-10px"><svg class="ic"><use href="#i-back"/></svg></button>
+                    <div class="grow"><h1 id="cv-title" style="font-size:22px"></h1><p id="cv-sub"></p></div>
+                    <button class="btn" id="cv-scan" onclick="catalogScanList()"><svg class="ic sm"><use href="#i-scan"/></svg>Scan</button>
+                </div>
+                <div class="search"><svg class="ic sm"><use href="#i-search"/></svg><input class="input" id="cv-fq" placeholder="Filter" oninput="catalogFilter(this.value)" autocomplete="off"></div>
+                <div class="list" id="cv-rows"></div>
+            </div>
+        </div>
+
+        <!-- ================= SENSORS (rtl_433) ================= -->
+        <div id="sensors-view" class="menu-view hidden">
+            <div class="page-title"><div><h1>Sensors</h1><p>Live rtl_433 decoder</p></div></div>
+            <div class="card">
+                <div class="seg" id="rtl433-seg">
+                    <button data-b="315M">315 MHz</button><button data-b="433.92M" class="sel">433.92</button><button data-b="915M">915 MHz</button>
+                </div>
+                <div class="btn-row" style="margin-top:10px">
+                    <button class="btn primary" onclick="rtl433Start()"><svg class="ic sm"><use href="#i-play"/></svg>Start</button>
+                    <button class="btn" onclick="rtl433Stop()"><svg class="ic sm"><use href="#i-stop"/></svg>Stop</button>
+                </div>
+                <div class="row" style="margin-top:12px"><span class="chip" id="rtl433-chip">STOPPED</span><span class="small muted grow ellipsis" id="rtl433-status">Pick a band and press Start.</span></div>
+            </div>
+            <div class="section-label">Devices <span class="small" id="rtl433-count" style="letter-spacing:0;text-transform:none"></span></div>
+            <div id="rtl433-rows"><div class="empty">No devices yet</div></div>
+            <div class="section-label">History <button onclick="rtl433History()">Last 24 h</button></div>
+            <div id="rtl433-history" class="list"></div>
+        </div>
+
+        <!-- ================= SPECTRUM ================= -->
+        <div id="spectrum-view" class="menu-view hidden">
+            <div class="page-title"><div><h1>Spectrum</h1><p>Live waterfall · tap to listen</p></div></div>
+            <div class="row" style="margin-bottom:10px">
+                <select class="select grow" id="waterfall-band" onchange="changeWaterfallBand(this.value)"></select>
+            </div>
+            <div class="btn-row" style="margin-bottom:12px">
+                <button class="btn primary" id="wf-start" onclick="startWaterfallStream()"><svg class="ic sm"><use href="#i-play"/></svg>Start</button>
+                <button class="btn" onclick="stopWaterfall()"><svg class="ic sm"><use href="#i-stop"/></svg>Stop</button>
+                <button class="btn" onclick="saveWaterfall()"><svg class="ic sm"><use href="#i-save"/></svg>Save</button>
+            </div>
+            <div class="wf-wrap">
+                <div class="wf-head"><span id="waterfall-freq-range">433.0 – 434.0 MHz</span><span id="waterfall-status">Stopped</span></div>
+                <canvas id="waterfall-canvas" class="waterfall-canvas" width="512" height="400"></canvas>
+                <div class="wf-scale"><span id="wf-lo">433.0</span><span id="wf-mid"></span><span id="wf-hi">434.0</span></div>
+            </div>
+            <p class="note">The spectrum view uses the dongle, so starting it stops the radio, scanner and sensor decoder.</p>
+        </div>
+
         <!-- Main Menu -->
         <div id="main-menu" class="menu-view hidden">
+            <div class="page-title"><div><h1>More</h1><p>All tools</p></div></div>
             <div class="menu-item" onclick="showSubMenu('rf-tools')">
                 <div class="menu-item-left">
                     <span class="menu-icon">📡</span>
@@ -521,7 +684,7 @@
                 <span class="menu-arrow">›</span>
             </div>
 
-            <div class="menu-item" onclick="window.location.href='/radio'" id="radio-menu-item" style="display: none;">
+            <div class="menu-item" onclick="showView('radio')" id="radio-menu-item" style="display: none;">
                 <div class="menu-item-left">
                     <span class="menu-icon">🎧</span>
                     <div class="menu-text">
@@ -653,7 +816,7 @@
                 <span class="menu-arrow">›</span>
             </div>
 
-            <div class="menu-item" onclick="showSubMenu('settings')">
+            <div class="menu-item" onclick="showView('settings')">
                 <div class="menu-item-left">
                     <span class="menu-icon">⚙️</span>
                     <div class="menu-text">
@@ -1335,45 +1498,45 @@
         </div>
 
         <div id="settings" class="menu-view hidden">
-            <div class="menu-item" onclick="checkHardware()">
-                <div class="menu-item-left">
-                    <span class="menu-icon">🔧</span>
-                    <div class="menu-text">
-                        <span class="menu-title">Hardware Status</span>
-                        <span class="menu-subtitle">Test modules</span>
-                    </div>
-                </div>
+            <div class="page-title"><div><h1>Settings</h1><p>Look, listening defaults, device</p></div></div>
+
+            <div class="section-label">Appearance</div>
+            <div class="card">
+                <div class="set-row"><div><div class="t">Accent color</div><div class="s">Buttons, highlights, active tab</div></div></div>
+                <div class="swatches" id="set-swatches" style="padding:4px 0 14px"></div>
+                <div class="set-row"><div><div class="t">OLED black</div><div class="s">Pure black background</div></div>
+                    <div class="toggle-switch" id="set-oled" onclick="setPref('oled', !prefs.oled)"><div class="toggle-slider"></div></div></div>
             </div>
 
-            <div class="menu-item" onclick="showInfo('Theme settings coming soon')">
-                <div class="menu-item-left">
-                    <span class="menu-icon">🎨</span>
-                    <div class="menu-text">
-                        <span class="menu-title">Theme</span>
-                        <span class="menu-subtitle">Color schemes</span>
-                    </div>
+            <div class="section-label">Listening</div>
+            <div class="card">
+                <div class="set-row" style="flex-direction:column;align-items:stretch;gap:6px;padding:8px 0">
+                    <div class="row"><div class="grow"><div class="t">RF gain</div><div class="s">Radio, scanner and sensors (0 = auto)</div></div><span class="chip mono" id="set-gain-v">40 dB</span></div>
+                    <input type="range" id="set-gain" min="0" max="50" step="1" oninput="$('set-gain-v').textContent = this.value > 0 ? this.value + ' dB' : 'Auto'" onchange="setPref('gain', parseInt(this.value, 10))">
                 </div>
+                <div class="set-row"><div class="grow"><div class="t">Scanner dwell</div><div class="s">Time on each channel</div></div>
+                    <select class="select" id="set-dwell" style="width:auto" onchange="setPref('dwell', parseFloat(this.value))">
+                        <option value="1">1.0 s</option><option value="1.5">1.5 s</option><option value="2.5">2.5 s</option></select></div>
+                <div class="set-row"><div class="grow"><div class="t">When locked</div><div class="s">Scanner behaviour on activity</div></div>
+                    <select class="select" id="set-resume" style="width:auto" onchange="setPref('resume', parseFloat(this.value))">
+                        <option value="0">Stay</option><option value="4">Resume 4 s</option><option value="10">Resume 10 s</option></select></div>
             </div>
 
-            <div class="menu-item" onclick="systemReboot()">
-                <div class="menu-item-left">
-                    <span class="menu-icon">🔄</span>
-                    <div class="menu-text">
-                        <span class="menu-title">Reboot</span>
-                        <span class="menu-subtitle">Restart system</span>
-                    </div>
-                </div>
+            <div class="section-label">Device</div>
+            <div class="list">
+                <button class="list-row" onclick="settingsHwCheck()"><span class="device-ic"><svg class="ic"><use href="#i-chip"/></svg></span><div class="grow"><div class="t">Hardware status</div><div class="s" id="set-hw">Tap to check connected modules</div></div><svg class="ic"><use href="#i-refresh"/></svg></button>
+                <button class="list-row" onclick="resetDongle()"><span class="device-ic"><svg class="ic"><use href="#i-refresh"/></svg></span><div class="grow"><div class="t">Reset RTL-SDR</div><div class="s">Use if the dongle stops responding</div></div><svg class="ic"><use href="#i-chev"/></svg></button>
+                <button class="list-row" onclick="window.location.href='/radio'"><span class="device-ic"><svg class="ic"><use href="#i-radio"/></svg></span><div class="grow"><div class="t">Edit radio presets</div><div class="s">Classic radio page</div></div><svg class="ic"><use href="#i-ext"/></svg></button>
+                <button class="list-row" onclick="window.location.href='/old'"><span class="device-ic"><svg class="ic"><use href="#i-ext"/></svg></span><div class="grow"><div class="t">Classic interface</div><div class="s">Previous PiFlip UI</div></div><svg class="ic"><use href="#i-ext"/></svg></button>
+                <button class="list-row" onclick="clearLocalData()"><span class="device-ic"><svg class="ic"><use href="#i-star"/></svg></span><div class="grow"><div class="t">Clear favorites &amp; recents</div><div class="s">Stored in this browser only</div></div><svg class="ic"><use href="#i-chev"/></svg></button>
             </div>
 
-            <div class="menu-item" onclick="systemShutdown()">
-                <div class="menu-item-left">
-                    <span class="menu-icon">🔴</span>
-                    <div class="menu-text">
-                        <span class="menu-title">Shutdown</span>
-                        <span class="menu-subtitle">Power off safely</span>
-                    </div>
-                </div>
+            <div class="section-label">System</div>
+            <div class="btn-row">
+                <button class="btn" onclick="systemReboot()"><svg class="ic"><use href="#i-refresh"/></svg>Reboot</button>
+                <button class="btn danger" onclick="systemShutdown()"><svg class="ic"><use href="#i-power"/></svg>Shut down</button>
             </div>
+            <p class="note" style="text-align:center;margin-top:24px">PiFlip · Raspberry Pi receiver</p>
         </div>
     </div>
 
@@ -1384,8 +1547,25 @@
     <!-- shared radio audio (outside #output so re-rendering the overlay keeps it) -->
     <audio id="sdr-audio" preload="none"></audio>
 
+    <!-- Mini player (radio / scanner running) -->
+    <div class="mini" id="mini" role="button" aria-label="Now playing">
+        <span class="eq" id="mini-eq"><i></i><i></i><i></i></span>
+        <div class="grow"><div class="mf" id="mini-f">---.---</div><div class="ms ellipsis" id="mini-s"></div></div>
+        <button class="icon-btn" id="mini-btn" aria-label="Stop"></button>
+    </div>
+
+    <!-- Bottom tab bar -->
+    <nav class="tabbar" aria-label="Main">
+        <button class="tab active" data-tab="home" onclick="showView('home')"><svg class="ic"><use href="#i-home"/></svg>Home</button>
+        <button class="tab" data-tab="radio" onclick="showView('radio')"><svg class="ic"><use href="#i-radio"/></svg>Radio<span class="badge" id="tab-badge-radio"></span></button>
+        <button class="tab" data-tab="scan" onclick="showView('scan')"><svg class="ic"><use href="#i-scan"/></svg>Scan<span class="badge" id="tab-badge-scan"></span></button>
+        <button class="tab" data-tab="catalog" onclick="showView('catalog')"><svg class="ic"><use href="#i-grid"/></svg>Catalog</button>
+        <button class="tab" data-tab="more" onclick="showView('more')"><svg class="ic"><use href="#i-more"/></svg>More</button>
+    </nav>
+
+
     <script>
-        let currentView = 'welcome-screen';
+        let currentView = 'home';
         let breadcrumbPath = [];
 
         // TX Indicator functions
@@ -1400,11 +1580,8 @@
         // Show/hide breadcrumb based on view
         function updateBreadcrumbVisibility() {
             const breadcrumb = document.getElementById('breadcrumb');
-            if (currentView === 'welcome-screen') {
-                breadcrumb.style.display = 'none';
-            } else {
-                breadcrumb.style.display = 'block';
-            }
+            // root views (tabs, settings, More) have no breadcrumb; More > sub-pages do
+            breadcrumb.style.display = (currentView === 'welcome-screen' || ROOT_VIEWS.has(currentView)) ? 'none' : 'block';
         }
 
         // Show submenu
@@ -1700,12 +1877,7 @@
 
         // Back to main menu
         function showMainMenu() {
-            document.getElementById(currentView).classList.add('hidden');
-            document.getElementById('main-menu').classList.remove('hidden');
-            currentView = 'main-menu';
-            breadcrumbPath = ['Main Menu'];
-            updateBreadcrumb();
-            updateBreadcrumbVisibility();
+            showView('more');
         }
 
         // Update breadcrumb
@@ -3618,601 +3790,864 @@ Loading emulation options...`);
             window.nfcScanIntervals = { animationInterval, scanInterval };
         }
 
-        // ==========================================
-        // Spectrum Waterfall
-        // ==========================================
+        // ==========================================================
+        // PiFlip listening app: nav, home, radio, scanner, catalog,
+        // sensors (rtl_433), spectrum (waterfall), settings.
+        // Vanilla JS; all data via the existing /api routes.
+        // ==========================================================
 
-        let waterfallCanvas = null;
-        let waterfallCtx = null;
-        let waterfallEventSource = null;
-        let waterfallData = [];
-        const waterfallMaxLines = 400; // Keep last 400 scans
-
-        async function showWaterfall() {
-            closeOutput();
-            const outputPanel = document.getElementById('output');
-            const closeBtn = outputPanel.querySelector('.output-close');
-
-            // Create waterfall UI
-            outputPanel.innerHTML = `
-                <div class="waterfall-container">
-                    <div class="waterfall-info">
-                        <span id="waterfall-freq-range">433.0 - 434.0 MHz</span>
-                        <span id="waterfall-status">Starting...</span>
-                    </div>
-                    <canvas id="waterfall-canvas" class="waterfall-canvas"></canvas>
-                    <div class="waterfall-controls">
-                        <select id="waterfall-band" onchange="changeWaterfallBand(this.value)"
-                            style="background:#1a1a1a;color:#FF6600;border:1px solid #FF6600;border-radius:8px;padding:12px;font-family:'Courier New',monospace;"></select>
-                        <button class="action-btn" onclick="stopWaterfall()" style="flex: 0 0 auto; min-width: 110px;">⏹️ STOP</button>
-                        <button class="action-btn secondary" onclick="saveWaterfall()" style="flex: 0 0 auto; min-width: 110px;">💾 SAVE</button>
-                        <span style="color: #888; font-size: 12px;">Tap the waterfall to listen on that frequency</span>
-                    </div>
-                </div>
-            `;
-            outputPanel.appendChild(closeBtn);
-            outputPanel.classList.add('active');
-
-            // Setup canvas
-            waterfallCanvas = document.getElementById('waterfall-canvas');
-            waterfallCtx = waterfallCanvas.getContext('2d');
-
-            // Set canvas size
-            waterfallCanvas.width = 512;  // Frequency bins
-            waterfallCanvas.height = 400; // History lines
-
-            // Click handler for tuning
-            waterfallCanvas.addEventListener('click', handleWaterfallClick);
-
-            // Band presets
-            await loadWaterfallBands();
-
-            // Start streaming
-            startWaterfallStream();
-        }
-
-        let waterfallBands = {};
-        let waterfallBand = 'ism433';
-        let waterfallRange = [433.0, 434.0];
-
-        async function loadWaterfallBands() {
-            try {
-                const r = await fetch('/api/waterfall/bands');
-                waterfallBands = (await r.json()).bands || {};
-            } catch (e) {
-                waterfallBands = {ism433: {name: '433 ISM', start: 433.0, stop: 434.0, mode: 'nfm'}};
-            }
-            if (window.pendingWaterfallBand && waterfallBands[window.pendingWaterfallBand]) {
-                waterfallBand = window.pendingWaterfallBand;
-            }
-            window.pendingWaterfallBand = null;
-            const sel = document.getElementById('waterfall-band');
-            if (!sel) return;
-            sel.innerHTML = Object.entries(waterfallBands).map(([k, b]) =>
-                `<option value="${k}" ${k === waterfallBand ? 'selected' : ''}>${sdrEsc(b.name)} (${b.start}-${b.stop})</option>`).join('');
-        }
-
-        function changeWaterfallBand(band) {
-            waterfallBand = band;
-            if (waterfallEventSource) { waterfallEventSource.close(); waterfallEventSource = null; }
-            startWaterfallStream();
-        }
-
-        function startWaterfallStream() {
-            waterfallData = [];
-            const b = waterfallBands[waterfallBand];
-            if (b) waterfallRange = [b.start, b.stop];
-            const rangeEl = document.getElementById('waterfall-freq-range');
-            if (rangeEl) rangeEl.textContent = `${waterfallRange[0].toFixed(1)} - ${waterfallRange[1].toFixed(1)} MHz` + (b ? ` · ${b.name}` : '');
-            const statusEl = document.getElementById('waterfall-status');
-            if (statusEl) statusEl.textContent = 'Starting...';
-
-            // Use EventSource for server-sent events
-            waterfallEventSource = new EventSource('/api/waterfall/stream?band=' + encodeURIComponent(waterfallBand));
-
-            waterfallEventSource.onmessage = function(event) {
-                const data = JSON.parse(event.data);
-                if (data.freq_range) waterfallRange = data.freq_range;
-                updateWaterfall(data.spectrum);
-                const el = document.getElementById('waterfall-status');
-                if (el) el.textContent = `✅ Live (${data.spectrum.length} bins)`;
-            };
-            waterfallEventSource.addEventListener('busy', function() {
-                const el = document.getElementById('waterfall-status');
-                if (el) el.textContent = '⏳ RTL-SDR busy, retrying…';
-            });
-            waterfallEventSource.addEventListener('released', function() {
-                const el = document.getElementById('waterfall-status');
-                if (el) el.textContent = '⏸️ Dongle taken by another tool';
-                if (waterfallEventSource) { waterfallEventSource.close(); waterfallEventSource = null; }
-            });
-
-            waterfallEventSource.onerror = function() {
-                const el = document.getElementById('waterfall-status');
-                if (el) el.textContent = '❌ Error - RTL-SDR busy?';
-            };
-        }
-
-        async function saveWaterfall() {
-            if (!waterfallData.length) { alert('No waterfall data yet'); return; }
-            const name = prompt('Save scan as:', 'waterfall_' + waterfallBand);
-            if (!name) return;
-            const last = waterfallData.slice(-100);
-            const scan = {status: 'success', band: waterfallBand,
-                start_mhz: waterfallRange[0], stop_mhz: waterfallRange[1],
-                frequencies: last[last.length - 1].map(p => p[0]),
-                waterfall: last.map(line => ({powers: line.map(p => p[1])}))};
-            try {
-                const r = await fetch('/api/spectrum/save', {method: 'POST', headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({scan_data: scan, name: name})});
-                const j = await r.json();
-                const el = document.getElementById('waterfall-status');
-                if (el) el.textContent = j.status === 'saved' ? '💾 Saved ' + name : '❌ ' + (j.message || j.error);
-            } catch (e) { alert('Save failed: ' + e.message); }
-        }
-
-        function updateWaterfall(spectrum) {
-            if (!waterfallCtx || !waterfallCanvas) return;
-
-            // Add new scan line to data
-            waterfallData.push(spectrum);
-
-            // Keep only last N lines
-            if (waterfallData.length > waterfallMaxLines) {
-                waterfallData.shift();
-            }
-
-            // Draw waterfall
-            drawWaterfall();
-        }
-
-        function drawWaterfall() {
-            const width = waterfallCanvas.width;
-            const height = waterfallCanvas.height;
-
-            // Clear canvas
-            waterfallCtx.fillStyle = '#000';
-            waterfallCtx.fillRect(0, 0, width, height);
-
-            // Draw each scan line
-            waterfallData.forEach((scan, lineIndex) => {
-                const y = height - 1 - lineIndex; // Scroll upward
-
-                scan.forEach((point, binIndex) => {
-                    const x = Math.floor((binIndex / scan.length) * width);
-                    const power = point[1]; // dB value
-
-                    // Map power to color
-                    const color = powerToColor(power);
-
-                    waterfallCtx.fillStyle = color;
-                    waterfallCtx.fillRect(x, y, Math.ceil(width / scan.length) + 1, 1);
-                });
-            });
-        }
-
-        function powerToColor(db) {
-            // Typical range: -40 (strong) to -90 (weak)
-            // Normalize to 0-1
-            const normalized = Math.max(0, Math.min(1, (db + 90) / 50));
-
-            // Create heat map color
-            let r, g, b;
-
-            if (normalized < 0.25) {
-                // Blue to cyan
-                r = 0;
-                g = Math.floor(normalized * 4 * 255);
-                b = 255;
-            } else if (normalized < 0.5) {
-                // Cyan to green
-                r = 0;
-                g = 255;
-                b = Math.floor((0.5 - normalized) * 4 * 255);
-            } else if (normalized < 0.75) {
-                // Green to yellow
-                r = Math.floor((normalized - 0.5) * 4 * 255);
-                g = 255;
-                b = 0;
-            } else {
-                // Yellow to red
-                r = 255;
-                g = Math.floor((1 - normalized) * 4 * 255);
-                b = 0;
-            }
-
-            return `rgb(${r},${g},${b})`;
-        }
-
-        function handleWaterfallClick(event) {
-            const rect = waterfallCanvas.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const freqPercent = x / rect.width;
-
-            // Calculate clicked frequency
-            const startFreq = waterfallRange[0];
-            const endFreq = waterfallRange[1];
-            const b = waterfallBands[waterfallBand] || {};
-            const mode = b.mode || 'nfm';
-            // snap to a sensible channel raster
-            const raster = mode === 'wfm' ? 0.1 : mode === 'am' ? 0.025 : 0.0125;
-            const clickedFreq = Math.round((startFreq + (freqPercent * (endFreq - startFreq))) / raster) * raster;
-
-            if (confirm(`Listen on ${clickedFreq.toFixed(4)} MHz (${mode.toUpperCase()})?`)) {
-                stopWaterfall();
-                sdrTune({name: clickedFreq.toFixed(4) + ' MHz', freqMHz: clickedFreq, mode: mode});
-            }
-        }
-
-        function stopWaterfall() {
-            if (waterfallEventSource) {
-                waterfallEventSource.close();
-                waterfallEventSource = null;
-            }
-            waterfallCanvas = null;
-            waterfallCtx = null;
-            waterfallData = [];
-        }
-
-        // Override closeOutput to stop waterfall
-        const originalCloseOutputWaterfall = closeOutput;
-        closeOutput = function() {
-            stopWaterfall();
-            originalCloseOutputWaterfall();
-        };
-
-        // ==========================================
-        // SDR: shared radio tuning, rtl_433 live, catalog, scanner
-        // ==========================================
-
-        let sdrPlaying = false;
-        let sdrStatusTimer = null;
-        let rtl433EventSource = null;
-        let scanEventSource = null;
-        let scanActive = false;
-        let catalogIndex = null;
-        let catalogCurrentType = null;
-
+        const $ = id => document.getElementById(id);
         function sdrEsc(v) {
             return String(v == null ? '' : v).replace(/[&<>"']/g, c =>
                 ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
         }
-
+        const esc = sdrEsc;
+        const icon = (n, cls) => `<svg class="ic ${cls || ''}"><use href="#i-${n}"/></svg>`;
+        // 3 decimals, 4th only when non-zero (GMRS 462.5625, railroad 160.215)
+        const fmtF = f => (f == null || isNaN(f)) ? '---.---' : Number(f).toFixed(4).replace(/(\.\d{3})0$/, '$1');
+        const MODE_LBL = {wfm: 'WFM', nfm: 'NFM', am: 'AM'};
+        const STEP = {wfm: 0.1, nfm: 0.0125, am: 0.025};
         function sdrNonce() { return Math.random().toString(36).slice(2) + Date.now().toString(36); }
-
-        function sdrRender(html) {
-            const outputPanel = document.getElementById('output');
-            const closeBtn = outputPanel.querySelector('.output-close');
-            outputPanel.innerHTML = `<div class="sdr-page">${html}</div>`;
-            outputPanel.appendChild(closeBtn);
-            outputPanel.classList.add('active');
-            outputPanel.scrollTop = 0;
-        }
-
-        function sdrNowBar() {
-            return `<div class="sdr-now" id="sdr-now">
-                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
-                    <div><div class="sdr-lcd" id="sdr-now-freq">---.---</div>
-                    <div id="sdr-now-name" style="color:#FF8833;font-size:13px;"></div>
-                    <div id="sdr-now-state" class="sdr-status" style="margin:4px 0 0 0;"></div></div>
-                    <button class="action-btn" style="flex:0 0 auto;min-width:110px;" onclick="sdrStopRadio()">⏹️ STOP</button>
-                </div></div>`;
-        }
-
-        function sdrAudioPlay(nonce) {
-            const aud = document.getElementById('sdr-audio');
-            aud.src = '/radio/stream.mp3?g=' + nonce;
-            const p = aud.play();
-            if (p && p.catch) p.catch(() => {});
-        }
-
-        function sdrAudioStop() {
-            const aud = document.getElementById('sdr-audio');
-            aud.pause(); aud.removeAttribute('src'); aud.load();
-        }
-
-        // Tune a catalog entry: analog -> radio; rtl_433 / ADS-B types -> their pages
-        async function sdrTune(e) {
-            if (e.route === 'rtl433') { showRtl433(e.band || '433.92M'); return; }
-            if (e.route === 'waterfall') { window.pendingWaterfallBand = e.band; showWaterfall(); return; }
-            if (e.digital || e.freqMHz == null) {
-                alert(e.name + '\n\nDigital / trunked: needs trunk-tracking (not tunable with rtl_fm).');
-                return;
-            }
-            if (!document.getElementById('sdr-now')) {
-                sdrRender(sdrNowBar() + '<div class="sdr-status">Tuned from waterfall.</div>');
-            }
-            const nonce = sdrNonce();
-            sdrAudioPlay(nonce);   // inside the user gesture (iOS autoplay rules)
-            sdrShowNow(e.freqMHz, e.name, 'Tuning…');
-            try {
-                const r = await fetch('/api/radio/start', {method: 'POST', headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({freq: e.freqMHz, mode: e.mode, name: String(e.name).slice(0, 40), nonce: nonce})});
-                const j = await r.json();
-                if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
-                sdrPlaying = true;
-                sdrPollStatus();
-            } catch (err) {
-                sdrAudioStop(); sdrPlaying = false;
-                sdrShowNow(e.freqMHz, e.name, '❌ ' + err.message);
-            }
-        }
-
-        function sdrShowNow(freq, name, state) {
-            const bar = document.getElementById('sdr-now');
-            if (!bar) return;
-            bar.classList.add('on');
-            if (freq != null) document.getElementById('sdr-now-freq').textContent = Number(freq).toFixed(4) + ' MHz';
-            if (name != null) document.getElementById('sdr-now-name').textContent = name;
-            if (state != null) document.getElementById('sdr-now-state').textContent = state;
-            document.querySelectorAll('.sdr-ch').forEach(el =>
-                el.classList.toggle('cur', freq != null && Math.abs(parseFloat(el.dataset.f) - freq) < 0.00005));
-        }
-
-        function sdrPollStatus() {
-            if (sdrStatusTimer) clearInterval(sdrStatusTimer);
-            sdrStatusTimer = setInterval(async () => {
-                if (!document.getElementById('sdr-now')) { clearInterval(sdrStatusTimer); sdrStatusTimer = null; return; }
-                try {
-                    const st = await (await fetch('/api/radio/status')).json();
-                    if (st.running) {
-                        const bars = '▮'.repeat(st.signal || 0) + '▯'.repeat(5 - (st.signal || 0));
-                        sdrShowNow(st.freq, st.name, `${st.state === 'starting' ? 'Tuning…' : '🔊 Playing'} · ${String(st.mode).toUpperCase()} · ${bars}`);
-                    } else if (sdrPlaying) {
-                        sdrPlaying = false; sdrAudioStop();
-                        sdrShowNow(null, null, st.error ? '❌ ' + st.error : '⏹️ Stopped' + (st.stopped_reason ? ' - ' + st.stopped_reason : ''));
-                    }
-                } catch (e) {}
-            }, 1500);
-        }
-
-        async function sdrStopRadio() {
-            sdrAudioStop(); sdrPlaying = false;
-            try { await fetch('/api/radio/stop', {method: 'POST'}); } catch (e) {}
-            sdrShowNow(null, null, '⏹️ Stopped');
-        }
-
         function sdrAgo(sec) {
             sec = Math.max(0, Math.round(sec));
             if (sec < 60) return sec + 's ago';
             if (sec < 3600) return Math.floor(sec / 60) + 'm ago';
             return Math.floor(sec / 3600) + 'h ago';
         }
-
-        // ---------------- rtl_433 live decoder ----------------
-        async function showRtl433(band) {
-            closeOutput();
-            band = band || '433.92M';
-            const opts = [['315M', '315 MHz'], ['433.92M', '433.92 MHz'], ['915M', '915 MHz']];
-            sdrRender(`<h3>🌡️ Live rtl_433 Decoder</h3>
-                <div class="sdr-bar">
-                    <select id="rtl433-band">${opts.map(([v, l]) => `<option value="${v}" ${v === band ? 'selected' : ''}>${l}</option>`).join('')}</select>
-                    <button class="action-btn" onclick="rtl433Start()">▶️ START</button>
-                    <button class="action-btn secondary" onclick="rtl433Stop()">⏹️ STOP</button>
-                    <button class="action-btn secondary" onclick="rtl433History()">📜 HISTORY</button>
-                </div>
-                <div class="sdr-status" id="rtl433-status">Stopped. Pick a band and press START.</div>
-                <table class="sdr-table"><thead><tr><th>Model</th><th>ID</th><th>Readings</th><th>RSSI</th><th>Last seen</th></tr></thead>
-                <tbody id="rtl433-rows"><tr><td colspan="5" style="color:#666">No devices yet</td></tr></tbody></table>
-                <div id="rtl433-history"></div>`);
-            rtl433Connect();
+        let toastTimer = null;
+        function toast(msg) {
+            let t = $('toast');
+            if (!t) { t = document.createElement('div'); t.id = 'toast'; t.className = 'toast'; document.body.appendChild(t); }
+            t.textContent = msg; t.classList.add('show');
+            clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+        }
+        async function api(path, body) {
+            const r = await fetch(path, body === undefined ? {} :
+                {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
+            const j = await r.json().catch(() => ({}));
+            if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+            return j;
         }
 
+        // ---------------- local prefs / favorites / recents (per-browser) ----------------
+        const store = {
+            get(k, d) { try { const v = localStorage.getItem('piflip.' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+            set(k, v) { try { localStorage.setItem('piflip.' + k, JSON.stringify(v)); } catch (e) {} }
+        };
+        const prefs = Object.assign({accent: 'amber', oled: false, gain: 40, dwell: 1.5, resume: 4}, store.get('prefs', {}));
+        function savePrefs() { store.set('prefs', prefs); applyPrefs(); }
+        function applyPrefs() {
+            const root = document.documentElement;
+            if (prefs.accent && prefs.accent !== 'amber') root.setAttribute('data-accent', prefs.accent); else root.removeAttribute('data-accent');
+            if (prefs.oled) root.setAttribute('data-oled', '1'); else root.removeAttribute('data-oled');
+        }
+        applyPrefs();
+        const chKey = e => Number(e.freqMHz).toFixed(5) + '|' + e.mode;
+        const getFavs = () => store.get('favs', []);
+        const isFav = e => e && e.freqMHz != null && getFavs().some(f => chKey(f) === chKey(e));
+        function toggleFav(e) {
+            let f = getFavs();
+            if (f.some(x => chKey(x) === chKey(e))) { f = f.filter(x => chKey(x) !== chKey(e)); toast('Removed from favorites'); }
+            else { f.unshift({name: e.name, freqMHz: e.freqMHz, mode: e.mode}); toast('★ Added to favorites'); }
+            store.set('favs', f.slice(0, 40));
+            refreshStars();
+        }
+        function pushRecent(e) {
+            const r = store.get('recents', []).filter(x => chKey(x) !== chKey(e));
+            r.unshift({name: e.name, freqMHz: e.freqMHz, mode: e.mode, ts: Date.now()});
+            store.set('recents', r.slice(0, 8));
+        }
+
+        // ---------------- navigation ----------------
+        const VIEWS = {home: 'home', radio: 'radio-view', scan: 'scan-view', catalog: 'catalog-view',
+            sensors: 'sensors-view', spectrum: 'spectrum-view', settings: 'settings', more: 'main-menu'};
+        const ROOT_VIEWS = new Set(Object.values(VIEWS));
+        const TAB_OF = {'home': 'home', 'radio-view': 'radio', 'scan-view': 'scan', 'catalog-view': 'catalog',
+            'sensors-view': 'home', 'spectrum-view': 'home'};
+        const TITLES = {'home': 'Home', 'radio-view': 'Radio', 'scan-view': 'Scanner', 'catalog-view': 'Catalog',
+            'sensors-view': 'Sensors', 'spectrum-view': 'Spectrum', 'settings': 'Settings', 'main-menu': 'More'};
+
+        function setTab(t) {
+            document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
+        }
+
+        function showView(name) {
+            const id = VIEWS[name] || name;
+            if (!document.getElementById(id)) return;
+            if (id !== currentView) {
+                leaveView(currentView);
+                const cur = document.getElementById(currentView);
+                if (cur) cur.classList.add('hidden');
+                document.getElementById(id).classList.remove('hidden');
+                currentView = id;
+            }
+            breadcrumbPath = ['More'];
+            updateBreadcrumb();
+            updateBreadcrumbVisibility();
+            setTab(TAB_OF[id] || 'more');
+            document.title = 'PiFlip · ' + (TITLES[id] || 'More');
+            window.scrollTo(0, 0);
+            enterView(id);
+            updateMini();
+        }
+
+        // legacy sub-menus (inside More) keep their own nav; just run hooks + tab state
+        const legacyShowSubMenu = showSubMenu;
+        showSubMenu = function(menuId) {
+            if (menuId === 'settings') { showView('settings'); return; }
+            leaveView(currentView);
+            legacyShowSubMenu(menuId);
+            setTab('more');
+            window.scrollTo(0, 0);
+            updateMini();
+        };
+
+        function enterView(id) {
+            if (id === 'home') renderHome();
+            else if (id === 'radio-view') { radioLoadPresets(); renderRadio(); }
+            else if (id === 'scan-view') scanPopulate();
+            else if (id === 'catalog-view') catalogLoad();
+            else if (id === 'sensors-view') rtl433Connect();
+            else if (id === 'spectrum-view') loadWaterfallBands().then(() => {
+                if (window.pendingWaterfallStart) { window.pendingWaterfallStart = false; startWaterfallStream(); }
+            });
+            else if (id === 'settings') renderSettings();
+            schedulePoll(50);
+        }
+        function leaveView(id) {
+            if (id === 'sensors-view' && rtl433EventSource) { rtl433EventSource.close(); rtl433EventSource = null; }
+            if (id === 'spectrum-view') stopWaterfall();
+        }
+
+        // legacy entry points used by menus in More > RTL-SDR Tools
+        function showWaterfall() { showView('spectrum'); }
+        function showRtl433(band) {
+            if (band) { rtl433SetBand(band); showView('sensors'); rtl433Start(); }
+            else showView('sensors');
+        }
+        function showCatalog() { catalogBack(); showView('catalog'); }
+        function showScanner(opts) {
+            if (opts && opts.catalog) scanPreselect = 'catalog:' + opts.catalog;
+            showView('scan');
+        }
+
+        // ---------------- live state polling ----------------
+        const R = {status: null, scan: null, dongle: null, hw: null, rtl433: null};
+        let pollTimer = null;
+        function schedulePoll(ms) {
+            clearTimeout(pollTimer);
+            pollTimer = setTimeout(pollStatus, ms);
+        }
+        async function pollStatus() {
+            if (!document.hidden) {
+                try {
+                    const [st, dg] = await Promise.all([api('/api/radio/status'), api('/api/dongle')]);
+                    R.status = st; R.dongle = dg;
+                    if (dg.active === 'scan' || (R.scan && R.scan.running)) {
+                        R.scan = await api('/api/radio/scan/status');
+                        if (R.scan.running && !scanEventSource) scanConnect();
+                    }
+                    if (currentView === 'home' && dg.active === 'rtl433') R.rtl433 = await api('/api/rtl433/status');
+                    syncAudio();
+                    renderLive();
+                } catch (e) {}
+            }
+            const fast = currentView === 'radio-view' || currentView === 'home' || currentView === 'scan-view';
+            schedulePoll(fast ? 1200 : 3000);
+        }
+        document.addEventListener('visibilitychange', () => { if (!document.hidden) schedulePoll(50); });
+
+        function renderLive() {
+            if (R.dongle && R.dongle.active) $('rtl-dot').className = 'status-dot active';
+            if (currentView === 'home') renderHome();
+            if (currentView === 'radio-view') renderRadio();
+            updateMini();
+        }
+
+        // ---------------- shared audio ----------------
+        let audNonce = null;
+        function sdrAudioPlay(nonce) {
+            const aud = $('sdr-audio');
+            audNonce = nonce;
+            aud.src = '/radio/stream.mp3?g=' + nonce;
+            const p = aud.play();
+            if (p && p.catch) p.catch(() => {});
+        }
+        function sdrAudioStop() {
+            const aud = $('sdr-audio');
+            audNonce = null;
+            aud.pause(); aud.removeAttribute('src'); aud.load();
+        }
+        function syncAudio() {
+            const st = R.status;
+            if (!st) return;
+            const hopping = R.scan && R.scan.running && R.scan.state !== 'locked';
+            if (!st.running && audNonce) sdrAudioStop();
+            else if (st.running && audNonce && st.nonce && st.nonce !== audNonce && !hopping) sdrAudioPlay(st.nonce);
+        }
+        function listenHere() {
+            const st = R.status;
+            if (st && st.running && st.nonce) { sdrAudioPlay(st.nonce); renderLive(); }
+        }
+
+        // Tune any channel: analog -> radio; rtl_433 / ADS-B types -> their pages
+        async function sdrTune(e) {
+            if (e.route === 'rtl433') { showRtl433(e.band || '433.92M'); return; }
+            if (e.route === 'waterfall') { window.pendingWaterfallBand = e.band; window.pendingWaterfallStart = true; showView('spectrum'); return; }
+            if (e.digital || e.freqMHz == null) { toast('Digital / trunked: needs trunk-tracking (not tunable)'); return; }
+            const nonce = sdrNonce();
+            sdrAudioPlay(nonce);          // inside the user gesture (iOS autoplay rules)
+            R.status = Object.assign({}, R.status || {}, {running: true, state: 'starting', freq: e.freqMHz, mode: e.mode, name: e.name, signal: 0, level: 0});
+            radioLastTuned = e;
+            renderLive();
+            try {
+                const st = await api('/api/radio/start', {freq: e.freqMHz, mode: e.mode, name: String(e.name || '').slice(0, 40),
+                    nonce: nonce, gain: prefs.gain});
+                R.status = st;
+                pushRecent(e);
+            } catch (err) {
+                sdrAudioStop();
+                R.status = Object.assign({}, R.status, {running: false, state: 'error', error: err.message});
+                toast('⚠️ ' + err.message);
+            }
+            renderLive(); refreshStars(); schedulePoll(600);
+        }
+        async function sdrStopRadio() {
+            sdrAudioStop();
+            try { R.status = await api('/api/radio/stop', {}); } catch (e) {}
+            renderLive();
+        }
+
+        // ---------------- mini player ----------------
+        function updateMini() {
+            const m = $('mini');
+            if (!m) return;
+            const st = R.status, sc = R.scan;
+            const scanning = sc && sc.running;
+            const show = currentView !== 'home' && ((scanning && currentView !== 'scan-view') || (st && st.running && !scanning && currentView !== 'radio-view'));
+            m.classList.toggle('on', !!show);
+            document.body.classList.toggle('has-mini', !!show);
+            $('tab-badge-radio').classList.toggle('on', !!(st && st.running && !scanning));
+            $('tab-badge-scan').classList.toggle('on', !!scanning);
+            if (!show) return;
+            if (scanning) {
+                const ch = sc.locked || sc.channel || {};
+                $('mini-f').textContent = fmtF(ch.freq);
+                $('mini-s').textContent = (sc.state === 'locked' ? '🔒 Locked · ' : 'Scanning · ') + (ch.name || '');
+                $('mini-eq').style.display = sc.state === 'locked' ? '' : 'none';
+                $('mini-btn').innerHTML = icon('stop');
+                $('mini-btn').onclick = ev => { ev.stopPropagation(); scanStop(); };
+                m.onclick = () => showView('scan');
+            } else {
+                $('mini-f').textContent = fmtF(st.freq);
+                const here = !!audNonce;
+                $('mini-s').textContent = (st.name && st.name !== fmtF(st.freq) + ' MHz' ? st.name + ' · ' : '') + (MODE_LBL[st.mode] || '') +
+                    (st.state === 'starting' ? ' · tuning…' : here ? '' : ' · tap ▶ to listen here');
+                $('mini-eq').style.display = here && st.state !== 'starting' ? '' : 'none';
+                $('mini-btn').innerHTML = here ? icon('stop') : icon('play');
+                $('mini-btn').onclick = ev => { ev.stopPropagation(); here ? sdrStopRadio() : listenHere(); };
+                m.onclick = () => showView('radio');
+            }
+        }
+
+        // ---------------- HOME ----------------
+        function setBars(elId, n) {
+            const el = $(elId);
+            if (el) el.querySelectorAll('i').forEach((b, i) => b.classList.toggle('on', i < n));
+        }
+        const OWNER_LBL = {radio: 'Radio', scan: 'Scanner', rtl433: 'Sensor decoder', spectrum: 'Spectrum', 'rtl-job': 'Tool job'};
+        function favCard(e, i, src) {
+            const cur = R.status && R.status.running && Math.abs(R.status.freq - e.freqMHz) < 0.00005;
+            return `<button class="fav ${cur ? 'cur' : ''}" onclick="homeTune('${src}',${i})">
+                <div class="fn">${esc(e.name)}</div><div class="ff">${fmtF(e.freqMHz)}</div><div class="fm">${MODE_LBL[e.mode] || ''}</div></button>`;
+        }
+        let homeFavSrc = [];
+        function homeTune(src, i) {
+            const list = src === 'r' ? store.get('recents', []) : homeFavSrc;
+            if (list[i]) sdrTune(list[i]);
+        }
+        function renderHome() {
+            const h = new Date().getHours();
+            $('home-greet').textContent = h < 5 ? 'Late-night listening' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
+            const st = R.status, sc = R.scan, dg = R.dongle || {};
+            const k = $('home-now-k'), fq = $('home-now-freq'), nm = $('home-now-name'), md = $('home-now-mode'), act = $('home-now-actions');
+            let actions = '';
+            if (sc && sc.running) {
+                const ch = sc.locked || sc.channel || {};
+                k.textContent = sc.state === 'locked' ? 'Scanner · locked' : 'Scanner · hopping';
+                fq.innerHTML = fmtF(ch.freq) + '<small>MHz</small>';
+                nm.textContent = (ch.name || '') + (sc.label ? ' · ' + sc.label : '');
+                md.textContent = sc.state === 'locked' ? 'LOCKED' : `${(sc.index || 0) + 1}/${sc.count || 0}`;
+                setBars('home-now-bars', sc.state === 'locked' ? 5 : 0);
+                actions = `<button class="btn primary" onclick="showView('scan')">${icon('scan', 'sm')}Open scanner</button>
+                           <button class="btn" onclick="scanStop()">${icon('stop', 'sm')}Stop</button>`;
+            } else if (st && st.running) {
+                k.textContent = st.state === 'starting' ? 'Tuning…' : (audNonce ? 'Now playing' : 'Playing on device');
+                fq.innerHTML = fmtF(st.freq) + '<small>MHz</small>';
+                nm.textContent = st.name && st.name !== fmtF(st.freq) + ' MHz' ? st.name : '';
+                md.textContent = MODE_LBL[st.mode] || '';
+                setBars('home-now-bars', st.signal || 0);
+                actions = (audNonce ? `<button class="btn" onclick="sdrStopRadio()">${icon('stop', 'sm')}Stop</button>`
+                                    : `<button class="btn primary" onclick="listenHere()">${icon('head', 'sm')}Listen here</button>
+                                       <button class="btn" onclick="sdrStopRadio()">${icon('stop', 'sm')}Stop</button>`) +
+                          `<button class="btn" onclick="showView('radio')">${icon('radio', 'sm')}Radio</button>`;
+            } else if (dg.active === 'rtl433') {
+                const s = (R.rtl433 && R.rtl433.status) || {};
+                k.textContent = 'Sensor decoder';
+                fq.innerHTML = esc(s.band || '') + '<small>band</small>';
+                nm.textContent = s.running ? `${s.device_count || 0} devices · ${s.total || 0} decodes` : 'Starting…';
+                md.textContent = 'RTL_433'; setBars('home-now-bars', 0);
+                actions = `<button class="btn primary" onclick="showView('sensors')">${icon('thermo', 'sm')}Open sensors</button>
+                           <button class="btn" onclick="rtl433Stop().then(()=>schedulePoll(200))">${icon('stop', 'sm')}Stop</button>`;
+            } else {
+                k.textContent = dg.active === 'spectrum' ? 'Spectrum running' : 'Now';
+                fq.innerHTML = '— — —<small>MHz</small>';
+                nm.textContent = 'Nothing playing';
+                md.textContent = 'IDLE'; setBars('home-now-bars', 0);
+                const last = store.get('recents', [])[0];
+                actions = `<button class="btn primary" onclick="showView('radio')">${icon('radio', 'sm')}Open radio</button>` +
+                    (last ? `<button class="btn" onclick="homeTune('r',0)">${icon('play', 'sm')}${esc(last.name).slice(0, 18)}</button>` : '');
+            }
+            if (act.dataset.html !== actions) { act.innerHTML = actions; act.dataset.html = actions; }
+
+            // favorites (fallback: radio presets)
+            let favs = getFavs(), favNote = '';
+            if (!favs.length && radioPresets.length) {
+                favs = radioPresets.filter(p => p.freq != null).slice(0, 8).map(p => ({name: p.name, freqMHz: p.freq, mode: p.mode}));
+                favNote = 'presets';
+            }
+            homeFavSrc = favs;
+            const favHtml = favs.length ? favs.map((e, i) => favCard(e, i, 'f')).join('')
+                : `<div class="empty" style="flex:1">Tap ☆ on any channel to pin it here</div>`;
+            if ($('home-favs').dataset.html !== favHtml) { $('home-favs').innerHTML = favHtml; $('home-favs').dataset.html = favHtml; }
+            if (!favs.length && !radioPresetsLoaded) radioLoadPresets().then(() => { if (currentView === 'home') renderHome(); });
+
+            const rec = store.get('recents', []);
+            const recHtml = rec.length ? rec.slice(0, 5).map((e, i) => `<button class="list-row" onclick="homeTune('r',${i})">
+                    <div class="grow"><div class="t ellipsis">${esc(e.name)}</div><div class="s">${sdrAgo((Date.now() - e.ts) / 1000)}</div></div>
+                    <div class="f">${fmtF(e.freqMHz)}<small>${MODE_LBL[e.mode] || ''}</small></div></button>`).join('')
+                : '<div class="empty">Channels you tune show up here</div>';
+            if ($('home-recents').dataset.html !== recHtml) { $('home-recents').innerHTML = recHtml; $('home-recents').dataset.html = recHtml; }
+
+            // device
+            const present = (R.hw && R.hw.rtl_sdr) || !!dg.active || (st && st.running);
+            $('home-dev-sub').textContent = !R.hw && !dg.active ? 'Checking…' :
+                present ? (dg.active ? 'In use by ' + (OWNER_LBL[dg.active] || dg.active) : 'Connected · idle') : 'Not detected (plug in the dongle)';
+            const chip = $('home-dev-chip');
+            chip.className = 'chip ' + (dg.active ? 'accent' : present ? 'ok' : 'bad');
+            chip.innerHTML = `<span class="dot ${dg.active ? 'pulse' : ''}"></span>${dg.active ? 'BUSY' : present ? 'READY' : 'OFFLINE'}`;
+            if (R.hw) $('home-mod-sub').textContent = `NFC ${R.hw.nfc ? '✓' : '—'} · CC1101 ${R.hw.cc1101 ? '✓' : '—'}`;
+        }
+
+        // ---------------- RADIO ----------------
+        let radioMode = 'wfm', radioPresets = [], radioPresetsLoaded = false, radioLastTuned = null;
+        document.querySelectorAll('#rv-seg button').forEach(b => b.onclick = () => {
+            radioSetMode(b.dataset.m);
+            const st = R.status;
+            if (st && st.running && !(R.scan && R.scan.running)) sdrTune({name: '', freqMHz: st.freq, mode: radioMode});
+        });
+        function radioSetMode(m) {
+            radioMode = m;
+            document.querySelectorAll('#rv-seg button').forEach(b => b.classList.toggle('sel', b.dataset.m === m));
+        }
+        $('rv-input').addEventListener('keydown', e => { if (e.key === 'Enter') radioTuneInput(); });
+        function radioInputFreq() {
+            const v = parseFloat(String($('rv-input').value).replace(',', '.'));
+            return isFinite(v) ? v : null;
+        }
+        function radioTuneInput() {
+            const f = radioInputFreq();
+            if (f == null) { toast('Enter a frequency in MHz'); return; }
+            $('rv-input').blur();
+            sdrTune({name: fmtF(f) + ' MHz', freqMHz: f, mode: radioMode});
+        }
+        function radioPlayToggle() {
+            const st = R.status;
+            if (st && st.running) {
+                if (!audNonce && st.nonce) { listenHere(); return; }
+                sdrStopRadio(); return;
+            }
+            const f = radioInputFreq();
+            if (f != null) return radioTuneInput();
+            const last = radioLastTuned || store.get('recents', [])[0];
+            if (last) sdrTune(last); else toast('Enter a frequency or pick a preset');
+        }
+        function radioNudge(dir) {
+            const st = R.status;
+            let f = radioInputFreq();
+            if (st && st.running) f = st.freq;
+            if (f == null) f = radioMode === 'wfm' ? 100.0 : 146.52;
+            const mode = (st && st.running) ? st.mode : radioMode;
+            f = Math.round((f + dir * STEP[mode]) * 10000) / 10000;
+            $('rv-input').value = String(f);
+            if (st && st.running) sdrTune({name: fmtF(f) + ' MHz', freqMHz: f, mode: mode});
+            else renderRadio();
+        }
+        function radioCurrentEntry() {
+            const st = R.status;
+            if (st && st.running) return {name: st.name || fmtF(st.freq) + ' MHz', freqMHz: st.freq, mode: st.mode};
+            const f = radioInputFreq();
+            return f != null ? {name: fmtF(f) + ' MHz', freqMHz: f, mode: radioMode} : null;
+        }
+        function radioToggleStar() {
+            const e = radioCurrentEntry();
+            if (!e) { toast('Tune something first'); return; }
+            toggleFav(e);
+        }
+        function renderRadio() {
+            const st = R.status || {};
+            const on = !!st.running;
+            const f = on ? st.freq : radioInputFreq();
+            $('rv-freq').innerHTML = fmtF(f) + '<small>MHz</small>';
+            $('rv-name').textContent = on && st.name && st.name !== fmtF(st.freq) + ' MHz' ? st.name : '';
+            $('rv-mode').textContent = MODE_LBL[on ? st.mode : radioMode] || '';
+            if (on && st.mode && st.mode !== radioMode) radioSetMode(st.mode);
+            if (on && document.activeElement !== $('rv-input')) $('rv-input').value = String(st.freq);
+            setBars('rv-bars', on ? (st.signal || 0) : 0);
+            $('rv-meter').style.width = on ? Math.round((st.level || 0) * 100) + '%' : '0';
+            const pb = $('rv-play');
+            const listening = on && !!audNonce;
+            pb.classList.toggle('on', listening || (on && st.state === 'starting'));
+            pb.innerHTML = listening || (on && st.state === 'starting') ? icon('stop') : icon('play');
+            pb.setAttribute('aria-label', listening ? 'Stop' : 'Play');
+            const bars = st.signal || 0;
+            let s = '';
+            if (R.scan && R.scan.running) s = 'Scanner is using the radio. Tuning here stops the scan.';
+            else if (on) s = st.state === 'starting' ? 'Tuning…' : (audNonce ? 'Playing' : 'Playing on the device, not in this browser') +
+                ' · ' + (bars >= 4 ? 'strong' : bars >= 2 ? 'fair' : bars >= 1 ? 'weak' : 'no signal') + (st.listeners > 1 ? ' · ' + st.listeners + ' listeners' : '');
+            else if (st.error) s = '⚠️ ' + st.error;
+            else s = st.stopped_reason && !['stopped by user', 'retune'].includes(st.stopped_reason) ? 'Stopped: ' + st.stopped_reason : 'Stopped';
+            $('rv-status').textContent = s;
+            $('rv-status').style.color = st.error && !on ? 'var(--bad)' : '';
+            const cur = radioCurrentEntry();
+            $('rv-star').classList.toggle('on', isFav(cur));
+            document.querySelectorAll('#rv-presets .list-row').forEach(el =>
+                el.classList.toggle('cur', on && Math.abs(parseFloat(el.dataset.f) - st.freq) < 0.00005 && el.dataset.m === st.mode));
+        }
+        async function radioLoadPresets() {
+            if (radioPresetsLoaded) return;
+            try {
+                radioPresets = (await api('/api/radio/presets')).presets || [];
+                radioPresetsLoaded = true;
+            } catch (e) { return; }
+            const groups = [...new Set(radioPresets.map(p => p.group))];
+            $('rv-presets').innerHTML = groups.map(g => `<div class="small muted" style="margin:14px 2px 6px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">${esc(g)}</div>
+                <div class="list">${radioPresets.map((p, i) => p.group !== g ? '' : `
+                    <button class="list-row ${p.freq == null ? 'dis' : ''}" data-f="${p.freq == null ? '' : p.freq}" data-m="${p.mode}" onclick="radioPreset(${i})">
+                        <div class="grow"><div class="t ellipsis">${esc(p.name)}</div><div class="s">${p.freq == null ? 'Set a frequency in Edit' : MODE_LBL[p.mode]}</div></div>
+                        <div class="f">${p.freq == null ? '—' : fmtF(p.freq)}</div></button>`).join('')}</div>`).join('') ||
+                '<div class="empty">No presets yet</div>';
+            renderRadio();
+        }
+        function radioPreset(i) {
+            const p = radioPresets[i];
+            if (!p || p.freq == null) { window.location.href = '/radio'; return; }
+            sdrTune({name: p.name, freqMHz: p.freq, mode: p.mode});
+        }
+
+        // ---------------- SCANNER ----------------
+        let scanEventSource = null, scanPopulated = false, scanPreselect = null, scanLastNonce = null;
+        async function scanPopulate() {
+            const sel = $('scan-src');
+            if (!scanPopulated) {
+                let groups = [];
+                try { groups = (await api('/api/radio/scan/groups')).groups || []; } catch (e) {}
+                await catalogEnsureIndex();
+                const types = catalogIndex ? catalogIndex.types.filter(t => !['ism', 'adsb'].includes(t.id)) : [];
+                sel.innerHTML = `<optgroup label="Radio presets"><option value="group:All">All presets</option>${groups.map(g => `<option value="group:${esc(g)}">${esc(g)}</option>`).join('')}</optgroup>
+                    <optgroup label="Catalog">${types.map(t => `<option value="catalog:${t.id}">${esc(t.name)} (${t.count})</option>`).join('')}</optgroup>`;
+                $('scan-dwell').value = String(prefs.dwell);
+                $('scan-resume').value = String(prefs.resume);
+                scanPopulated = true;
+            }
+            if (scanPreselect) { sel.value = scanPreselect; scanPreselect = null; }
+            if (!scanEventSource) scanConnect();
+        }
+        function scanConnect() {
+            if (scanEventSource) scanEventSource.close();
+            scanEventSource = new EventSource('/api/radio/scan/stream');
+            scanEventSource.onmessage = ev => {
+                const st = JSON.parse(ev.data);
+                R.scan = st;
+                if (st.state === 'locked' && st.nonce && st.nonce !== scanLastNonce) { scanLastNonce = st.nonce; sdrAudioPlay(st.nonce); }
+                else if (st.state !== 'locked' && scanLastNonce) { scanLastNonce = null; sdrAudioStop(); }
+                renderScan(st);
+                updateMini();
+                if (currentView === 'home') renderHome();
+                // close the stream once idle and not looking at the scanner
+                if (!st.running && currentView !== 'scan-view' && scanEventSource) { scanEventSource.close(); scanEventSource = null; }
+            };
+        }
+        function renderScan(st) {
+            if (!$('sv-freq')) return;
+            const ch = st.locked || st.channel;
+            const locked = st.state === 'locked';
+            $('sv-k').textContent = locked ? 'Locked' : st.state === 'scanning' ? 'Scanning' + (st.label ? ' · ' + st.label : '') :
+                st.state === 'stopping' ? 'Stopping…' : 'Idle';
+            if (ch) { $('sv-freq').innerHTML = fmtF(ch.freq) + '<small>MHz</small>'; $('sv-name').textContent = ch.name + ' · ' + (MODE_LBL[ch.mode] || ''); }
+            else if (!st.running) $('sv-name').textContent = 'Pick a list and press Scan';
+            const chip = $('sv-chip');
+            chip.textContent = locked ? '🔒 LOCKED' : st.running ? `${(st.index || 0) + 1} / ${st.count}` : 'READY';
+            const m = locked && st.live ? st.live : st.metric;
+            $('sv-metric').textContent = st.error ? '⚠️ ' + st.error : m ? Object.entries(m).map(([k, v]) => k.replace('_', ' ') + ' ' + v).join(' · ') : '';
+            $('sv-prog').style.width = st.running && st.count ? (((st.index || 0) + 1) / st.count * 100) + '%' : '0';
+            const pb = $('sv-play');
+            pb.classList.toggle('on', !!st.running);
+            pb.innerHTML = st.running ? icon('stop') : icon('scan');
+            pb.setAttribute('aria-label', st.running ? 'Stop scan' : 'Start scan');
+        }
+        function scanToggle() { (R.scan && R.scan.running) ? scanStop() : scanStart(); }
+        async function scanStart() {
+            const src = $('scan-src').value || 'group:All';
+            const i = src.indexOf(':');
+            const body = {method: $('scan-method').value, dwell: parseFloat($('scan-dwell').value),
+                resume_after: parseFloat($('scan-resume').value), gain: prefs.gain};
+            body[src.slice(0, i)] = src.slice(i + 1);
+            // unlock <audio> inside this gesture so a locked channel can start playing later
+            const aud = $('sdr-audio');
+            try { aud.muted = true; const p = aud.play(); if (p && p.catch) p.catch(() => {}); aud.pause(); aud.muted = false; } catch (e) {}
+            $('sv-k').textContent = 'Starting…';
+            try {
+                R.scan = await api('/api/radio/scan/start', body);
+                renderScan(R.scan);
+                if (!scanEventSource) scanConnect();
+            } catch (e) { toast('⚠️ ' + e.message); $('sv-k').textContent = 'Idle'; }
+        }
+        async function scanSkip() { try { await api('/api/radio/scan/skip', {}); } catch (e) {} }
+        async function scanStop() {
+            sdrAudioStop(); scanLastNonce = null;
+            try { await api('/api/radio/scan/stop', {}); } catch (e) {}
+            schedulePoll(300);
+        }
+
+        // ---------------- CATALOG ----------------
+        let catalogIndex = null, catalogCurrentType = null, catalogAll = null;
+        async function catalogEnsureIndex() {
+            if (!catalogIndex) { try { catalogIndex = await api('/api/frequencies'); } catch (e) {} }
+            return catalogIndex;
+        }
+        async function catalogLoad() {
+            await catalogEnsureIndex();
+            if (!catalogIndex) { $('cv-t1').innerHTML = '<div class="empty">Could not load the catalog</div>'; return; }
+            const tile = t => `<button class="tile" onclick="showCatalogType('${t.id}')">
+                <span class="well">${t.icon}</span><span class="t">${esc(t.name)}</span><span class="s">${t.count} channels</span></button>`;
+            $('cv-t1').innerHTML = catalogIndex.types.filter(t => t.tier === 1).map(tile).join('');
+            $('cv-t2').innerHTML = catalogIndex.types.filter(t => t.tier === 2).map(tile).join('');
+        }
+        function catalogBack() {
+            $('cv-list').classList.add('hidden'); $('cv-types').classList.remove('hidden');
+            catalogCurrentType = null; window.scrollTo(0, 0);
+        }
+        function catalogRow(e, onclick) {
+            const locked = e.digital && !e.route;
+            const sub = [e.channel ? 'Ch ' + e.channel : '', e.notes].filter(Boolean).join(' · ');
+            const cur = R.status && R.status.running && e.freqMHz != null && Math.abs(R.status.freq - e.freqMHz) < 0.00005;
+            const star = !e.route && !locked && e.freqMHz != null;
+            return `<div class="list-row ${locked ? 'dis' : ''} ${cur ? 'cur' : ''}" data-f="${e.freqMHz == null ? '' : e.freqMHz}" onclick="${onclick}">
+                <div class="grow"><div class="t ellipsis">${locked ? icon('lock', 'sm') + ' ' : ''}${esc(e.name)}</div><div class="s ellipsis">${esc(sub)}</div></div>
+                <div class="f">${e.freqMHz == null ? 'trunked' : fmtF(e.freqMHz)}<small>${e.route ? (e.route === 'rtl433' ? 'SENSORS' : 'SPECTRUM') : (locked ? 'DIGITAL' : MODE_LBL[e.mode] || '')}</small></div>
+                ${star ? `<button class="star-btn ${isFav(e) ? 'on' : ''}" data-k="${chKey(e)}" onclick="event.stopPropagation();${onclick.replace('Tap', 'Star')}" aria-label="Favorite">${icon('star', 'sm')}</button>` : ''}
+            </div>`;
+        }
+        async function showCatalogType(id) {
+            if (currentView !== 'catalog-view') showView('catalog');
+            let t;
+            try { t = await api('/api/frequencies/' + encodeURIComponent(id)); } catch (e) { toast(e.message); return; }
+            catalogCurrentType = t;
+            const tunable = t.entries.filter(e => !e.digital && e.freqMHz != null && !e.route).length;
+            $('cv-title').textContent = t.icon + ' ' + t.name;
+            $('cv-sub').textContent = `${t.entries.length} channels` + (t.tier === 2 ? ' · local, cited' : '');
+            $('cv-scan').style.display = tunable > 1 ? '' : 'none';
+            $('cv-fq').value = '';
+            catalogFilter('');
+            $('cv-types').classList.add('hidden'); $('cv-list').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+        function catalogFilter(q) {
+            const t = catalogCurrentType;
+            if (!t) return;
+            q = q.trim().toLowerCase();
+            const rows = t.entries.map((e, i) => [e, i]).filter(([e]) => !q ||
+                (e.name + ' ' + (e.notes || '') + ' ' + (e.freqMHz || '') + ' ' + (e.channel || '')).toLowerCase().includes(q));
+            $('cv-rows').innerHTML = rows.length ? rows.map(([e, i]) => catalogRow(e, `catalogTap(${i})`)).join('')
+                : '<div class="empty">No matches</div>';
+        }
+        function catalogTap(i) { if (catalogCurrentType) sdrTune(catalogCurrentType.entries[i]); }
+        function catalogStar(i) { if (catalogCurrentType) toggleFav(catalogCurrentType.entries[i]); }
+        function catalogScanList() { if (catalogCurrentType) showScanner({catalog: catalogCurrentType.id}); }
+        let searchTimer = null;
+        function catalogSearch(q) {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(async () => {
+                q = q.trim().toLowerCase();
+                $('cv-grids').classList.toggle('hidden', !!q);
+                if (!q) { $('cv-search-results').innerHTML = ''; return; }
+                if (!catalogAll) {
+                    catalogAll = [];
+                    for (const t of catalogIndex.types) {
+                        try { (await api('/api/frequencies/' + t.id)).entries.forEach(e => catalogAll.push(Object.assign({type: t.name}, e))); } catch (e) {}
+                    }
+                }
+                const hits = catalogAll.filter(e => (e.name + ' ' + e.type + ' ' + (e.notes || '') + ' ' + (e.freqMHz || '')).toLowerCase().includes(q)).slice(0, 60);
+                window.catalogHits = hits;
+                $('cv-search-results').innerHTML = hits.length ? hits.map((e, i) => catalogRow(Object.assign({}, e, {notes: e.type}), `catalogHitTap(${i})`)).join('')
+                    : '<div class="empty">No matches</div>';
+            }, 180);
+        }
+        function catalogHitTap(i) { const e = (window.catalogHits || [])[i]; if (e) sdrTune(e); }
+        function catalogHitStar(i) { const e = (window.catalogHits || [])[i]; if (e) toggleFav(e); }
+        function refreshStars() {
+            const favs = new Set(getFavs().map(chKey));
+            document.querySelectorAll('.star-btn[data-k]').forEach(b => b.classList.toggle('on', favs.has(b.dataset.k)));
+            if (currentView === 'radio-view') renderRadio();
+            if (currentView === 'home') renderHome();
+            if (currentView === 'catalog-view') {
+                const f = R.status && R.status.running ? R.status.freq : null;
+                document.querySelectorAll('#cv-rows .list-row, #cv-search-results .list-row').forEach(el =>
+                    el.classList.toggle('cur', f != null && el.dataset.f !== '' && Math.abs(parseFloat(el.dataset.f) - f) < 0.00005));
+            }
+        }
+
+        // ---------------- SENSORS (rtl_433) ----------------
+        let rtl433EventSource = null, rtl433Band = '433.92M', rtl433Seen = {};
+        document.querySelectorAll('#rtl433-seg button').forEach(b => b.onclick = () => rtl433SetBand(b.dataset.b));
+        function rtl433SetBand(b) {
+            rtl433Band = b;
+            document.querySelectorAll('#rtl433-seg button').forEach(x => x.classList.toggle('sel', x.dataset.b === b));
+        }
         function rtl433Connect() {
             if (rtl433EventSource) rtl433EventSource.close();
             rtl433EventSource = new EventSource('/api/rtl433/stream');
             rtl433EventSource.onmessage = ev => rtl433RenderSnap(JSON.parse(ev.data));
-            rtl433EventSource.onerror = () => {
-                const el = document.getElementById('rtl433-status');
-                if (el) el.textContent = '⚠️ Stream reconnecting…';
-            };
+            rtl433EventSource.onerror = () => { $('rtl433-status').textContent = 'Reconnecting…'; };
         }
-
+        const READ_FMT = {
+            temperature_C: ['Temp', v => v + ' °C'], temperature_F: ['Temp', v => v + ' °F'], humidity: ['Humidity', v => v + ' %'],
+            pressure_kPa: ['Pressure', v => v + ' kPa'], pressure_PSI: ['Pressure', v => v + ' psi'], wind_avg_km_h: ['Wind', v => v + ' km/h'],
+            wind_max_km_h: ['Gust', v => v + ' km/h'], wind_dir_deg: ['Wind dir', v => v + '°'], rain_mm: ['Rain', v => v + ' mm'],
+            battery_ok: ['Battery', v => (v ? 'OK' : 'LOW')], light_lux: ['Light', v => v + ' lx'], uv: ['UV', v => v]
+        };
         function rtl433FmtReadings(r) {
-            return Object.entries(r || {}).map(([k, v]) =>
-                `${sdrEsc(k)}=${sdrEsc(typeof v === 'object' ? JSON.stringify(v) : v)}`).join(' · ');
+            return Object.entries(r || {}).slice(0, 10).map(([k, v]) => {
+                const f = READ_FMT[k];
+                const val = typeof v === 'object' ? JSON.stringify(v) : v;
+                return `<span class="reading"><span>${esc(f ? f[0] : k.replace(/_/g, ' '))}</span><b>${esc(f ? f[1](val) : val)}</b></span>`;
+            }).join('');
         }
-
         function rtl433RenderSnap(snap) {
             const st = snap.status || {};
-            const el = document.getElementById('rtl433-status');
-            if (!el) return;
-            el.innerHTML = st.running
-                ? `✅ Listening on ${sdrEsc(st.band)} · ${st.total} decodes · ${st.device_count} devices · up ${Math.round(st.uptime)}s`
-                : (st.error ? '❌ ' + sdrEsc(st.error) : '⏹️ Stopped' + (st.stopped_reason ? ' - ' + sdrEsc(st.stopped_reason) : ''));
-            const rows = document.getElementById('rtl433-rows');
+            const chip = $('rtl433-chip');
+            chip.className = 'chip ' + (st.running ? 'ok' : st.error ? 'bad' : '');
+            chip.innerHTML = st.running ? '<span class="dot pulse"></span>LIVE' : st.error ? 'ERROR' : 'STOPPED';
+            $('rtl433-status').textContent = st.running ? `${st.band} · ${st.total} decodes · up ${Math.round(st.uptime)}s`
+                : (st.error ? st.error : st.stopped_reason ? 'Stopped: ' + st.stopped_reason : 'Pick a band and press Start.');
+            if (st.running && st.band && st.band !== rtl433Band) rtl433SetBand(st.band);
             const devs = snap.devices || [];
+            $('rtl433-count').textContent = devs.length ? devs.length + ' seen' : '';
             if (!devs.length) {
-                rows.innerHTML = `<tr><td colspan="5" style="color:#666">${st.running ? 'Waiting for transmissions…' : 'No devices yet'}</td></tr>`;
+                $('rtl433-rows').innerHTML = `<div class="empty">${st.running ? 'Listening… sensors transmit every 30–60 s' : 'No devices yet'}</div>`;
                 return;
             }
-            rows.innerHTML = devs.map(d => `<tr>
-                <td>${sdrEsc(d.model)}${d.channel != null ? '<br><span style="color:#777">ch ' + sdrEsc(d.channel) + '</span>' : ''}</td>
-                <td>${sdrEsc(d.id)}</td>
-                <td class="rd">${rtl433FmtReadings(d.readings)}</td>
-                <td>${d.rssi != null ? Number(d.rssi).toFixed(1) : '-'}${d.snr != null ? '<br><span style="color:#777">snr ' + Number(d.snr).toFixed(1) + '</span>' : ''}</td>
-                <td>${sdrAgo(snap.now - d.last_seen)}<br><span style="color:#777">×${d.count}</span></td></tr>`).join('');
-        }
-
-        async function rtl433Start() {
-            const band = document.getElementById('rtl433-band').value;
-            document.getElementById('rtl433-status').textContent = 'Starting rtl_433…';
-            try {
-                const r = await fetch('/api/rtl433/start', {method: 'POST', headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({band: band})});
-                const j = await r.json();
-                if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
-                if (!rtl433EventSource) rtl433Connect();
-            } catch (e) { document.getElementById('rtl433-status').textContent = '❌ ' + e.message; }
-        }
-
-        async function rtl433Stop() {
-            try { await fetch('/api/rtl433/stop', {method: 'POST'}); } catch (e) {}
-        }
-
-        async function rtl433History() {
-            const box = document.getElementById('rtl433-history');
-            try {
-                const j = await (await fetch('/api/rtl433/history?since=-86400&limit=100')).json();
-                const rows = j.decodes || [];
-                box.innerHTML = `<h3 style="margin-top:20px;">📜 Last 24h (${rows.length})</h3>` + (rows.length ? `<table class="sdr-table">
-                    <thead><tr><th>When</th><th>Model</th><th>ID</th><th>RSSI</th></tr></thead><tbody>` +
-                    rows.map(x => `<tr><td>${new Date(x.ts * 1000).toLocaleString()}</td><td>${sdrEsc(x.model)}</td>
-                        <td>${sdrEsc(x.dev_id)}</td><td>${x.rssi != null ? Number(x.rssi).toFixed(1) : '-'}</td></tr>`).join('') +
-                    '</tbody></table>' : '<div class="sdr-status">No decodes logged yet.</div>');
-            } catch (e) { box.textContent = '❌ ' + e.message; }
-        }
-
-        // ---------------- frequency catalog ----------------
-        async function showCatalog() {
-            closeOutput();
-            sdrRender(sdrNowBar() + '<h3>🗂️ Frequency Catalog</h3><div class="sdr-status">Loading…</div>');
-            try {
-                if (!catalogIndex) catalogIndex = await (await fetch('/api/frequencies')).json();
-            } catch (e) { sdrRender('❌ Could not load catalog: ' + sdrEsc(e.message)); return; }
-            catalogCurrentType = null;
-            const tile = t => `<div class="sdr-tile" onclick="showCatalogType('${t.id}')">
-                <div class="ic">${t.icon}</div><div class="nm">${sdrEsc(t.name)}</div><div class="ct">${t.count} channels</div></div>`;
-            const t1 = catalogIndex.types.filter(t => t.tier === 1), t2 = catalogIndex.types.filter(t => t.tier === 2);
-            sdrRender(sdrNowBar() + `<h3>🗂️ Frequency Catalog</h3>
-                <div class="sdr-status">Offline. Pick a type, then tap a channel to listen.</div>
-                <div class="sdr-grid">${t1.map(tile).join('')}</div>
-                <h3 style="margin-top:20px;">📍 Local: Cincinnati / Hamilton Co.</h3>
-                <div class="sdr-status">From cited public sources (RepeaterBook, AirNav, RadioReference, Wikipedia). See SOURCES.md.</div>
-                <div class="sdr-grid">${t2.map(tile).join('')}</div>`);
-            if (sdrPlaying) sdrPollStatus();
-        }
-
-        async function showCatalogType(id) {
-            let t;
-            try { t = await (await fetch('/api/frequencies/' + encodeURIComponent(id))).json(); }
-            catch (e) { alert(e.message); return; }
-            catalogCurrentType = t;
-            const tunable = t.entries.filter(e => !e.digital && e.freqMHz != null && !e.route).length;
-            const rows = t.entries.map((e, i) => {
-                const dig = e.digital && !e.route;
-                const sub = [e.channel ? 'Ch ' + e.channel : '', e.notes].filter(Boolean).join(' · ');
-                return `<div class="sdr-ch ${dig ? 'dig' : ''}" data-f="${e.freqMHz == null ? '' : e.freqMHz}" onclick="catalogTap(${i})">
-                    <div class="l"><div class="n">${sdrEsc(e.name)}${dig ? ' 🔒' : ''}</div><div class="x">${sdrEsc(sub)}</div></div>
-                    <div class="f">${e.freqMHz == null ? 'trunked' : Number(e.freqMHz).toFixed(4)}<small>${e.route ? '→ ' + sdrEsc(e.route) : sdrEsc(String(e.mode).toUpperCase())}</small></div></div>`;
+            $('rtl433-rows').innerHTML = devs.map(d => {
+                const fresh = rtl433Seen[d.key] !== undefined && rtl433Seen[d.key] !== d.count;
+                rtl433Seen[d.key] = d.count;
+                return `<div class="sensor ${fresh ? 'fresh' : ''}">
+                    <div class="hd"><div class="model ellipsis">${esc(d.model)}</div><div class="ago">${sdrAgo(snap.now - d.last_seen)}</div></div>
+                    <div class="ids">ID ${esc(d.id)}${d.channel != null ? ' · ch ' + esc(d.channel) : ''} · ×${d.count}${d.rssi != null ? ' · RSSI ' + Number(d.rssi).toFixed(1) : ''}${d.snr != null ? ' · SNR ' + Number(d.snr).toFixed(1) : ''}</div>
+                    <div class="readings">${rtl433FmtReadings(d.readings)}</div></div>`;
             }).join('');
-            sdrRender(sdrNowBar() + `<div class="sdr-bar">
-                    <button class="action-btn secondary" onclick="showCatalog()">‹ TYPES</button>
-                    ${tunable > 1 ? `<button class="action-btn" onclick="showScanner({catalog:'${t.id}'})">🔎 SCAN LIST</button>` : ''}
-                </div>
-                <h3>${t.icon} ${sdrEsc(t.name)} (${t.entries.length})</h3>
-                ${t.tier === 2 ? '<div class="sdr-status">🔒 = digital/trunked, needs trunk-tracking (not tunable with rtl_fm).</div>' : ''}
-                ${rows}`);
-            if (sdrPlaying) sdrPollStatus();
         }
-
-        function catalogTap(i) {
-            if (!catalogCurrentType) return;
-            sdrTune(catalogCurrentType.entries[i]);
-        }
-
-        // ---------------- scanner ----------------
-        async function showScanner(opts) {
-            closeOutput();
-            opts = opts || {};
-            sdrRender('<h3>🔎 Radio Scanner</h3><div class="sdr-status">Loading…</div>');
-            let groups = [], types = [];
+        async function rtl433Start() {
+            $('rtl433-status').textContent = 'Starting rtl_433…';
             try {
-                groups = (await (await fetch('/api/radio/scan/groups')).json()).groups || [];
-                if (!catalogIndex) catalogIndex = await (await fetch('/api/frequencies')).json();
-                types = catalogIndex.types.filter(t => !['ism', 'adsb'].includes(t.id));
-            } catch (e) {}
-            const sel = opts.catalog ? 'catalog:' + opts.catalog : (groups.length ? 'group:' + groups[0] : '');
-            const o = (v, l) => `<option value="${v}" ${v === sel ? 'selected' : ''}>${sdrEsc(l)}</option>`;
-            sdrRender(`<h3>🔎 Radio Scanner</h3>
-                <div class="sdr-bar">
-                    <select id="scan-src">
-                        <optgroup label="Radio presets">${o('group:All', 'All presets')}${groups.map(g => o('group:' + g, g)).join('')}</optgroup>
-                        <optgroup label="Catalog">${types.map(t => o('catalog:' + t.id, t.name + ' (' + t.count + ')')).join('')}</optgroup>
-                    </select>
-                    <select id="scan-method"><option value="audio">Detect: audio clarity</option><option value="rf">Detect: RF power</option></select>
-                    <select id="scan-dwell"><option value="1.0">1.0 s dwell</option><option value="1.5" selected>1.5 s dwell</option><option value="2.5">2.5 s dwell</option></select>
-                    <select id="scan-resume"><option value="0">Stay locked</option><option value="4" selected>Resume after 4 s quiet</option><option value="10">Resume after 10 s quiet</option></select>
-                </div>
-                <div class="sdr-bar">
-                    <button class="action-btn" onclick="scanStart()">▶️ SCAN</button>
-                    <button class="action-btn secondary" onclick="scanSkip()">⏭️ SKIP</button>
-                    <button class="action-btn secondary" onclick="scanStop()">⏹️ STOP</button>
-                </div>
-                <div class="sdr-now on" style="position:static;">
-                    <div class="sdr-lcd" id="scan-freq">---.----</div>
-                    <div id="scan-name" style="color:#FF8833;font-size:14px;"></div>
-                    <div id="scan-state" class="sdr-status" style="margin:4px 0 0 0;">Idle</div>
-                </div>
-                <div class="sdr-status">Hops each channel, stops on the first with a signal. Audio plays while locked. Digital/trunked entries are skipped.</div>`);
-            scanConnect();
+                await api('/api/rtl433/start', {band: rtl433Band, gain: prefs.gain || 40});
+                if (!rtl433EventSource && currentView === 'sensors-view') rtl433Connect();
+                sdrAudioStop();
+            } catch (e) { $('rtl433-status').textContent = '⚠️ ' + e.message; }
+            schedulePoll(300);
+        }
+        async function rtl433Stop() { try { await api('/api/rtl433/stop', {}); } catch (e) {} }
+        async function rtl433History() {
+            const box = $('rtl433-history');
+            box.innerHTML = '<div class="empty">Loading…</div>';
+            try {
+                const rows = (await api('/api/rtl433/history?since=-86400&limit=100')).decodes || [];
+                box.innerHTML = rows.length ? rows.map(x => `<div class="list-row" style="cursor:default;min-height:52px">
+                    <div class="grow"><div class="t ellipsis" style="font-size:14px">${esc(x.model)}</div><div class="s">ID ${esc(x.dev_id)} · ${new Date(x.ts * 1000).toLocaleString()}</div></div>
+                    <div class="f" style="font-size:13px">${x.rssi != null ? Number(x.rssi).toFixed(1) : '–'}<small>RSSI</small></div></div>`).join('')
+                    : '<div class="empty">No decodes logged in the last 24 h</div>';
+            } catch (e) { box.innerHTML = `<div class="empty">⚠️ ${esc(e.message)}</div>`; }
         }
 
-        function scanConnect() {
-            if (scanEventSource) scanEventSource.close();
-            let lastNonce = null;
-            scanEventSource = new EventSource('/api/radio/scan/stream');
-            scanEventSource.onmessage = ev => {
-                const st = JSON.parse(ev.data);
-                const f = document.getElementById('scan-freq');
-                if (!f) return;
-                const ch = st.locked || st.channel;
-                if (ch) { f.textContent = Number(ch.freq).toFixed(4); document.getElementById('scan-name').textContent = ch.name + ' · ' + String(ch.mode).toUpperCase(); }
-                const m = st.metric ? Object.entries(st.metric).map(([k, v]) => k + ' ' + v).join(', ') : '';
-                let txt;
-                if (st.state === 'locked') {
-                    txt = `<span class="sdr-lock">🔒 LOCKED</span> · ${st.live ? 'clarity ' + st.live.clarity : m}`;
-                    if (st.nonce && st.nonce !== lastNonce) { lastNonce = st.nonce; sdrAudioPlay(st.nonce); }
-                } else if (st.state === 'scanning') {
-                    txt = `<span class="sdr-hop">📡 Scanning</span> ${st.index + 1}/${st.count} · hops ${st.hops}${m ? ' · last: ' + m : ''}`;
-                    if (lastNonce) { lastNonce = null; sdrAudioStop(); }
-                } else {
-                    txt = st.state === 'stopping' ? 'Stopping…' : 'Idle' + (st.stop_reason ? ' - ' + st.stop_reason : '');
-                    if (lastNonce) { lastNonce = null; sdrAudioStop(); }
-                }
-                if (st.error) txt += ' · ❌ ' + sdrEsc(st.error);
-                document.getElementById('scan-state').innerHTML = txt;
-                scanActive = !!st.running;
+        // ---------------- SPECTRUM (waterfall) ----------------
+        let waterfallCanvas = null, waterfallCtx = null, waterfallEventSource = null, waterfallData = [];
+        const waterfallMaxLines = 400;
+        let waterfallBands = {}, waterfallBand = 'ism433', waterfallRange = [433.0, 434.0];
+        async function loadWaterfallBands() {
+            if (!Object.keys(waterfallBands).length) {
+                try { waterfallBands = (await api('/api/waterfall/bands')).bands || {}; }
+                catch (e) { waterfallBands = {ism433: {name: '433 ISM', start: 433.0, stop: 434.0, mode: 'nfm'}}; }
+            }
+            if (window.pendingWaterfallBand && waterfallBands[window.pendingWaterfallBand]) waterfallBand = window.pendingWaterfallBand;
+            window.pendingWaterfallBand = null;
+            $('waterfall-band').innerHTML = Object.entries(waterfallBands).map(([k, b]) =>
+                `<option value="${k}" ${k === waterfallBand ? 'selected' : ''}>${esc(b.name)} · ${b.start}–${b.stop} MHz</option>`).join('');
+            waterfallSetRange();
+            waterfallCanvas = $('waterfall-canvas');
+            waterfallCtx = waterfallCanvas.getContext('2d');
+            if (!waterfallCanvas.dataset.bound) {
+                waterfallCanvas.addEventListener('click', handleWaterfallClick);
+                waterfallCanvas.dataset.bound = '1';
+            }
+            if (!waterfallEventSource) { waterfallCtx.fillStyle = '#000'; waterfallCtx.fillRect(0, 0, waterfallCanvas.width, waterfallCanvas.height); }
+        }
+        function waterfallSetRange() {
+            const b = waterfallBands[waterfallBand];
+            if (b) waterfallRange = [b.start, b.stop];
+            $('waterfall-freq-range').textContent = `${waterfallRange[0].toFixed(1)} – ${waterfallRange[1].toFixed(1)} MHz` + (b ? ' · ' + b.name : '');
+            $('wf-lo').textContent = waterfallRange[0].toFixed(2);
+            $('wf-mid').textContent = ((waterfallRange[0] + waterfallRange[1]) / 2).toFixed(2);
+            $('wf-hi').textContent = waterfallRange[1].toFixed(2);
+        }
+        function changeWaterfallBand(band) {
+            waterfallBand = band;
+            waterfallSetRange();
+            if (waterfallEventSource) { waterfallEventSource.close(); waterfallEventSource = null; startWaterfallStream(); }
+        }
+        function wfStatus(t) { const el = $('waterfall-status'); if (el) el.textContent = t; }
+        function startWaterfallStream() {
+            if (!waterfallCtx) { loadWaterfallBands().then(startWaterfallStream); return; }
+            if (waterfallEventSource) waterfallEventSource.close();
+            waterfallData = [];
+            waterfallSetRange();
+            wfStatus('Starting…');
+            sdrAudioStop();
+            waterfallEventSource = new EventSource('/api/waterfall/stream?band=' + encodeURIComponent(waterfallBand));
+            waterfallEventSource.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                if (data.freq_range) waterfallRange = data.freq_range;
+                updateWaterfall(data.spectrum);
+                wfStatus(`● Live · ${data.spectrum.length} bins`);
             };
+            waterfallEventSource.addEventListener('busy', () => wfStatus('Dongle busy, retrying…'));
+            waterfallEventSource.addEventListener('released', () => {
+                wfStatus('Paused: dongle taken by another tool');
+                if (waterfallEventSource) { waterfallEventSource.close(); waterfallEventSource = null; }
+            });
+            waterfallEventSource.onerror = () => wfStatus('Connection error. Is the RTL-SDR busy?');
+            $('wf-start').classList.add('hidden');
+            schedulePoll(800);
         }
-
-        async function scanStart() {
-            const src = document.getElementById('scan-src').value;
-            const [kind, val] = [src.slice(0, src.indexOf(':')), src.slice(src.indexOf(':') + 1)];
-            const body = {method: document.getElementById('scan-method').value,
-                dwell: parseFloat(document.getElementById('scan-dwell').value),
-                resume_after: parseFloat(document.getElementById('scan-resume').value)};
-            body[kind] = val;
-            // unlock the <audio> element inside this user gesture so locked channels can play later
-            const aud = document.getElementById('sdr-audio');
-            try { aud.muted = true; const p = aud.play(); if (p && p.catch) p.catch(() => {}); aud.pause(); aud.muted = false; } catch (e) {}
-            document.getElementById('scan-state').textContent = 'Starting…';
+        function updateWaterfall(spectrum) {
+            if (!waterfallCtx || !waterfallCanvas) return;
+            waterfallData.push(spectrum);
+            if (waterfallData.length > waterfallMaxLines) waterfallData.shift();
+            drawWaterfall();
+        }
+        function drawWaterfall() {
+            // scroll the existing image up one row and paint only the newest line (cheap on a Pi 3)
+            const w = waterfallCanvas.width, h = waterfallCanvas.height;
+            const scan = waterfallData[waterfallData.length - 1];
+            if (!scan || !scan.length) return;
+            waterfallCtx.drawImage(waterfallCanvas, 0, 1, w, h - 1, 0, 0, w, h - 1);
+            const cw = Math.ceil(w / scan.length) + 1;
+            scan.forEach((point, i) => {
+                waterfallCtx.fillStyle = powerToColor(point[1]);
+                waterfallCtx.fillRect(Math.floor((i / scan.length) * w), h - 1, cw, 1);
+            });
+        }
+        function powerToColor(db) {
+            // -90 (weak) .. -40 (strong) -> navy, blue, cyan, green, yellow, red
+            const n = Math.max(0, Math.min(1, (db + 90) / 50));
+            const stops = [[4, 6, 30], [20, 60, 170], [0, 190, 230], [60, 225, 120], [255, 214, 70], [255, 70, 60]];
+            const x = n * (stops.length - 1), i = Math.min(stops.length - 2, Math.floor(x)), t = x - i;
+            const a = stops[i], b = stops[i + 1];
+            return `rgb(${Math.round(a[0] + (b[0] - a[0]) * t)},${Math.round(a[1] + (b[1] - a[1]) * t)},${Math.round(a[2] + (b[2] - a[2]) * t)})`;
+        }
+        function handleWaterfallClick(event) {
+            const rect = waterfallCanvas.getBoundingClientRect();
+            const pct = (event.clientX - rect.left) / rect.width;
+            const b = waterfallBands[waterfallBand] || {};
+            const mode = b.mode || 'nfm';
+            const raster = mode === 'wfm' ? 0.1 : mode === 'am' ? 0.025 : 0.0125;
+            const f = Math.round((waterfallRange[0] + pct * (waterfallRange[1] - waterfallRange[0])) / raster) * raster;
+            if (confirm(`Listen on ${f.toFixed(4)} MHz (${mode.toUpperCase()})?\n\nThis stops the waterfall.`)) {
+                stopWaterfall();
+                sdrTune({name: f.toFixed(4) + ' MHz', freqMHz: f, mode: mode});
+                showView('radio');
+            }
+        }
+        function stopWaterfall() {
+            if (waterfallEventSource) { waterfallEventSource.close(); waterfallEventSource = null; wfStatus('Stopped'); }
+            const b = $('wf-start'); if (b) b.classList.remove('hidden');
+        }
+        async function saveWaterfall() {
+            if (!waterfallData.length) { toast('No waterfall data yet'); return; }
+            const name = prompt('Save scan as:', 'waterfall_' + waterfallBand);
+            if (!name) return;
+            const last = waterfallData.slice(-100);
+            const scan = {status: 'success', band: waterfallBand, start_mhz: waterfallRange[0], stop_mhz: waterfallRange[1],
+                frequencies: last[last.length - 1].map(p => p[0]), waterfall: last.map(line => ({powers: line.map(p => p[1])}))};
             try {
-                const r = await fetch('/api/radio/scan/start', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
-                const j = await r.json();
-                if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
-                scanActive = true;
-            } catch (e) { document.getElementById('scan-state').textContent = '❌ ' + e.message; }
+                const j = await api('/api/spectrum/save', {scan_data: scan, name: name});
+                toast(j.status === 'saved' ? '💾 Saved ' + name : '⚠️ ' + (j.message || j.error));
+            } catch (e) { toast('⚠️ Save failed: ' + e.message); }
         }
 
-        async function scanSkip() { try { await fetch('/api/radio/scan/skip', {method: 'POST'}); } catch (e) {} }
-        async function scanStop() {
-            sdrAudioStop();
-            try { await fetch('/api/radio/scan/stop', {method: 'POST'}); } catch (e) {}
+        // ---------------- SETTINGS ----------------
+        const ACCENTS = {amber: '#ff8a1f', cyan: '#3fd0ff', green: '#3ee08f', violet: '#a98bff', red: '#ff5d6c'};
+        function renderSettings() {
+            $('set-swatches').innerHTML = Object.entries(ACCENTS).map(([k, c]) =>
+                `<button class="swatch ${prefs.accent === k ? 'sel' : ''}" style="background:${c}" aria-label="${k}" onclick="prefs.accent='${k}';savePrefs();renderSettings()"></button>`).join('');
+            $('set-oled').classList.toggle('active', !!prefs.oled);
+            $('set-gain').value = prefs.gain;
+            $('set-gain-v').textContent = prefs.gain ? prefs.gain + ' dB' : 'Auto';
+            $('set-dwell').value = String(prefs.dwell);
+            $('set-resume').value = String(prefs.resume);
+        }
+        function setPref(k, v) {
+            prefs[k] = v; savePrefs();
+            if (k === 'dwell' && $('scan-dwell')) $('scan-dwell').value = String(v);
+            if (k === 'resume' && $('scan-resume')) $('scan-resume').value = String(v);
+            renderSettings();
+        }
+        async function settingsHwCheck() {
+            $('set-hw').textContent = 'Checking…';
+            try {
+                const hw = await api('/api/status');
+                R.hw = hw;
+                const busy = R.dongle && R.dongle.active;
+                $('set-hw').textContent = `RTL-SDR ${hw.rtl_sdr || busy ? '✓' + (busy ? ' (in use)' : '') : '✗'} · NFC ${hw.nfc ? '✓' : '✗'} · CC1101 ${hw.cc1101 ? '✓' : '✗'}`;
+                $('rtl-dot').className = 'status-dot ' + (hw.rtl_sdr || busy ? 'active' : 'inactive');
+            } catch (e) { $('set-hw').textContent = '⚠️ ' + e.message; }
+        }
+        async function resetDongle() {
+            if (!confirm('Reset the RTL-SDR?\n\nStops anything using it and re-initialises the USB device.')) return;
+            toast('Resetting RTL-SDR…');
+            try { const j = await api('/api/spectrum/reset', {}); toast(j.message || 'Done'); } catch (e) { toast('⚠️ ' + e.message); }
+            schedulePoll(300);
+        }
+        function clearLocalData() {
+            if (!confirm('Clear favorites and recents on this device?')) return;
+            store.set('favs', []); store.set('recents', []); toast('Cleared'); refreshStars();
         }
 
-        // Closing the overlay tears down SDR streams and frees the dongle
-        const originalCloseOutputSdr = closeOutput;
-        closeOutput = function() {
-            if (rtl433EventSource) { rtl433EventSource.close(); rtl433EventSource = null; }
-            if (scanEventSource) { scanEventSource.close(); scanEventSource = null; }
-            if (scanActive) { scanActive = false; fetch('/api/radio/scan/stop', {method: 'POST'}).catch(() => {}); }
-            if (sdrStatusTimer) { clearInterval(sdrStatusTimer); sdrStatusTimer = null; }
-            if (sdrPlaying) { sdrPlaying = false; fetch('/api/radio/stop', {method: 'POST'}).catch(() => {}); }
-            sdrAudioStop();
-            originalCloseOutputSdr();
-        };
-
+        // ---------------- init ----------------
+        async function initApp() {
+            currentView = 'home';
+            setTab('home');
+            try {
+                const hw = await api('/api/status');
+                R.hw = hw;
+                // legacy status dots + RTL-SDR menu visibility
+                $('nfc-dot').className = 'status-dot ' + (hw.nfc ? 'active' : 'inactive');
+                $('rtl-dot').className = 'status-dot ' + (hw.rtl_sdr ? 'active' : 'inactive');
+                $('cc1101-dot').className = 'status-dot ' + (hw.cc1101 ? 'active' : 'inactive');
+                ['rtl-sdr-menu-item', 'radio-menu-item'].forEach(id => { const el = $(id); if (el) el.style.display = hw.rtl_sdr ? 'flex' : 'none'; });
+            } catch (e) {}
+            enterView('home');
+            pollStatus();
+        }
 
         // ==========================================
         // End Enhanced Functions
@@ -4329,19 +4764,7 @@ Loading emulation options...`);
         }
 
         // Initialize
-        window.onload = async function() {
-            // Hide breadcrumb on welcome screen
-            document.getElementById('breadcrumb').style.display = 'none';
-
-            // Check hardware for welcome screen
-            await checkWelcomeHardware();
-
-            // Also check for status bar
-            await checkHardwareStatus();
-
-            // Auto-hide welcome screen after 3 seconds (optional)
-            // setTimeout(hideWelcomeScreen, 3000);
-        };
+        window.onload = initApp;
 
         // ═══════════════════════════════════════════════════════════════
         // BLUETOOTH FUNCTIONS
