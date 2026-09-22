@@ -422,6 +422,40 @@
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #0a0a0a; }
         ::-webkit-scrollbar-thumb { background: #FF6600; border-radius: 4px; }
+
+        /* SDR pages (rtl_433, catalog, scanner) */
+        .sdr-page { white-space: normal; font-family: 'Courier New', monospace; color: #ddd; }
+        .sdr-page h3 { margin: 0 0 10px 0; }
+        .sdr-bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+        .sdr-bar select, .sdr-bar input { background: #1a1a1a; color: #FF6600; border: 1px solid #FF6600;
+            border-radius: 8px; padding: 12px; font-family: 'Courier New', monospace; font-size: 14px; }
+        .sdr-bar .action-btn { flex: 0 0 auto; min-width: 110px; }
+        .sdr-status { font-size: 13px; color: #888; margin: 6px 0 12px 0; }
+        .sdr-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .sdr-table th { text-align: left; color: #FF6600; border-bottom: 1px solid #FF6600; padding: 6px 4px; }
+        .sdr-table td { border-bottom: 1px solid #222; padding: 6px 4px; vertical-align: top; }
+        .sdr-table td.rd { color: #aaa; font-size: 12px; word-break: break-word; }
+        .sdr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+        .sdr-tile { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 14px 10px;
+            cursor: pointer; text-align: center; }
+        .sdr-tile:active { border-color: #FF6600; }
+        .sdr-tile .ic { font-size: 26px; }
+        .sdr-tile .nm { color: #FF6600; font-weight: bold; margin-top: 6px; font-size: 13px; }
+        .sdr-tile .ct { color: #888; font-size: 11px; margin-top: 3px; }
+        .sdr-ch { display: flex; justify-content: space-between; gap: 10px; align-items: center; background: #1a1a1a;
+            border: 1px solid #333; border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; cursor: pointer; }
+        .sdr-ch.cur { border-color: #0f0; }
+        .sdr-ch.dig { opacity: .45; cursor: default; }
+        .sdr-ch .l { min-width: 0; }
+        .sdr-ch .n { color: #FF8833; font-weight: bold; font-size: 14px; }
+        .sdr-ch .x { color: #777; font-size: 11px; margin-top: 2px; }
+        .sdr-ch .f { color: #0f0; font-size: 15px; white-space: nowrap; text-align: right; }
+        .sdr-ch .f small { color: #888; display: block; font-size: 11px; }
+        .sdr-now { position: sticky; top: -60px; background: #111; border: 1px solid #FF6600; border-radius: 8px;
+            padding: 10px 12px; margin-bottom: 12px; display: none; z-index: 2; }
+        .sdr-now.on { display: block; }
+        .sdr-lcd { font-size: 28px; color: #0f0; }
+        .sdr-lock { color: #0f0; } .sdr-hop { color: #ff0; }
     </style>
 </head>
 <body>
@@ -497,6 +531,17 @@
                     <div class="menu-text">
                         <span class="menu-title">Radio</span>
                         <span class="menu-subtitle">Listen: FM, weather, airband</span>
+                    </div>
+                </div>
+                <span class="menu-arrow">›</span>
+            </div>
+
+            <div class="menu-item" onclick="showCatalog()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">🗂️</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Frequency Catalog</span>
+                        <span class="menu-subtitle">Browse &amp; tune named channels</span>
                     </div>
                 </div>
                 <span class="menu-arrow">›</span>
@@ -710,6 +755,36 @@
                     <div class="menu-text">
                         <span class="menu-title">Spectrum Waterfall</span>
                         <span class="menu-subtitle">Real-time display</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="showRtl433()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">🌡️</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Live rtl_433 Decoder</span>
+                        <span class="menu-subtitle">Sensors, remotes, TPMS (live)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="showCatalog()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">🗂️</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Frequency Catalog</span>
+                        <span class="menu-subtitle">NOAA, marine, rail, ham, local</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-item" onclick="showScanner()">
+                <div class="menu-item-left">
+                    <span class="menu-icon">🔎</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Radio Scanner</span>
+                        <span class="menu-subtitle">Hop channels, stop on signal</span>
                     </div>
                 </div>
             </div>
@@ -1310,6 +1385,8 @@
     <div class="output-panel" id="output">
         <button class="output-close" onclick="closeOutput()">✕ CLOSE</button>
     </div>
+    <!-- shared radio audio (outside #output so re-rendering the overlay keeps it) -->
+    <audio id="sdr-audio" preload="none"></audio>
 
     <script>
         let currentView = 'welcome-screen';
@@ -1354,6 +1431,7 @@
                 'guardian-menu': 'NFC Guardian',
                 'catalog-menu': 'Card Catalog',
                 'wallet-menu': 'Wallet Tester',
+                'rtl-sdr-menu': 'RTL-SDR Tools',
             };
 
             breadcrumbPath.push(menuNames[menuId]);
@@ -3568,8 +3646,11 @@ Loading emulation options...`);
                     </div>
                     <canvas id="waterfall-canvas" class="waterfall-canvas"></canvas>
                     <div class="waterfall-controls">
-                        <button class="action-btn" onclick="stopWaterfall()" style="flex: 0 0 auto; min-width: 150px;">⏹️ STOP</button>
-                        <span style="color: #888; font-size: 12px;">Click on waterfall to tune to frequency</span>
+                        <select id="waterfall-band" onchange="changeWaterfallBand(this.value)"
+                            style="background:#1a1a1a;color:#FF6600;border:1px solid #FF6600;border-radius:8px;padding:12px;font-family:'Courier New',monospace;"></select>
+                        <button class="action-btn" onclick="stopWaterfall()" style="flex: 0 0 auto; min-width: 110px;">⏹️ STOP</button>
+                        <button class="action-btn secondary" onclick="saveWaterfall()" style="flex: 0 0 auto; min-width: 110px;">💾 SAVE</button>
+                        <span style="color: #888; font-size: 12px;">Tap the waterfall to listen on that frequency</span>
                     </div>
                 </div>
             `;
@@ -3587,25 +3668,91 @@ Loading emulation options...`);
             // Click handler for tuning
             waterfallCanvas.addEventListener('click', handleWaterfallClick);
 
+            // Band presets
+            await loadWaterfallBands();
+
             // Start streaming
+            startWaterfallStream();
+        }
+
+        let waterfallBands = {};
+        let waterfallBand = 'ism433';
+        let waterfallRange = [433.0, 434.0];
+
+        async function loadWaterfallBands() {
+            try {
+                const r = await fetch('/api/waterfall/bands');
+                waterfallBands = (await r.json()).bands || {};
+            } catch (e) {
+                waterfallBands = {ism433: {name: '433 ISM', start: 433.0, stop: 434.0, mode: 'nfm'}};
+            }
+            if (window.pendingWaterfallBand && waterfallBands[window.pendingWaterfallBand]) {
+                waterfallBand = window.pendingWaterfallBand;
+            }
+            window.pendingWaterfallBand = null;
+            const sel = document.getElementById('waterfall-band');
+            if (!sel) return;
+            sel.innerHTML = Object.entries(waterfallBands).map(([k, b]) =>
+                `<option value="${k}" ${k === waterfallBand ? 'selected' : ''}>${sdrEsc(b.name)} (${b.start}-${b.stop})</option>`).join('');
+        }
+
+        function changeWaterfallBand(band) {
+            waterfallBand = band;
+            if (waterfallEventSource) { waterfallEventSource.close(); waterfallEventSource = null; }
             startWaterfallStream();
         }
 
         function startWaterfallStream() {
             waterfallData = [];
+            const b = waterfallBands[waterfallBand];
+            if (b) waterfallRange = [b.start, b.stop];
+            const rangeEl = document.getElementById('waterfall-freq-range');
+            if (rangeEl) rangeEl.textContent = `${waterfallRange[0].toFixed(1)} - ${waterfallRange[1].toFixed(1)} MHz` + (b ? ` · ${b.name}` : '');
+            const statusEl = document.getElementById('waterfall-status');
+            if (statusEl) statusEl.textContent = 'Starting...';
 
             // Use EventSource for server-sent events
-            waterfallEventSource = new EventSource('/api/waterfall/stream?start=433000000&end=434000000');
+            waterfallEventSource = new EventSource('/api/waterfall/stream?band=' + encodeURIComponent(waterfallBand));
 
             waterfallEventSource.onmessage = function(event) {
                 const data = JSON.parse(event.data);
+                if (data.freq_range) waterfallRange = data.freq_range;
                 updateWaterfall(data.spectrum);
-                document.getElementById('waterfall-status').textContent = `✅ Live (${data.spectrum.length} bins)`;
+                const el = document.getElementById('waterfall-status');
+                if (el) el.textContent = `✅ Live (${data.spectrum.length} bins)`;
             };
+            waterfallEventSource.addEventListener('busy', function() {
+                const el = document.getElementById('waterfall-status');
+                if (el) el.textContent = '⏳ RTL-SDR busy, retrying…';
+            });
+            waterfallEventSource.addEventListener('released', function() {
+                const el = document.getElementById('waterfall-status');
+                if (el) el.textContent = '⏸️ Dongle taken by another tool';
+                if (waterfallEventSource) { waterfallEventSource.close(); waterfallEventSource = null; }
+            });
 
             waterfallEventSource.onerror = function() {
-                document.getElementById('waterfall-status').textContent = '❌ Error - RTL-SDR busy?';
+                const el = document.getElementById('waterfall-status');
+                if (el) el.textContent = '❌ Error - RTL-SDR busy?';
             };
+        }
+
+        async function saveWaterfall() {
+            if (!waterfallData.length) { alert('No waterfall data yet'); return; }
+            const name = prompt('Save scan as:', 'waterfall_' + waterfallBand);
+            if (!name) return;
+            const last = waterfallData.slice(-100);
+            const scan = {status: 'success', band: waterfallBand,
+                start_mhz: waterfallRange[0], stop_mhz: waterfallRange[1],
+                frequencies: last[last.length - 1].map(p => p[0]),
+                waterfall: last.map(line => ({powers: line.map(p => p[1])}))};
+            try {
+                const r = await fetch('/api/spectrum/save', {method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({scan_data: scan, name: name})});
+                const j = await r.json();
+                const el = document.getElementById('waterfall-status');
+                if (el) el.textContent = j.status === 'saved' ? '💾 Saved ' + name : '❌ ' + (j.message || j.error);
+            } catch (e) { alert('Save failed: ' + e.message); }
         }
 
         function updateWaterfall(spectrum) {
@@ -3687,14 +3834,17 @@ Loading emulation options...`);
             const freqPercent = x / rect.width;
 
             // Calculate clicked frequency
-            const startFreq = 433.0;
-            const endFreq = 434.0;
-            const clickedFreq = startFreq + (freqPercent * (endFreq - startFreq));
+            const startFreq = waterfallRange[0];
+            const endFreq = waterfallRange[1];
+            const b = waterfallBands[waterfallBand] || {};
+            const mode = b.mode || 'nfm';
+            // snap to a sensible channel raster
+            const raster = mode === 'wfm' ? 0.1 : mode === 'am' ? 0.025 : 0.0125;
+            const clickedFreq = Math.round((startFreq + (freqPercent * (endFreq - startFreq))) / raster) * raster;
 
-            if (confirm(`Tune to ${clickedFreq.toFixed(3)} MHz?`)) {
+            if (confirm(`Listen on ${clickedFreq.toFixed(4)} MHz (${mode.toUpperCase()})?`)) {
                 stopWaterfall();
-                // TODO: Add capture at this frequency
-                showOutput(`📻 Frequency selected: ${clickedFreq.toFixed(3)} MHz\n\nUse CC1101 Capture to record this frequency.`);
+                sdrTune({name: clickedFreq.toFixed(4) + ' MHz', freqMHz: clickedFreq, mode: mode});
             }
         }
 
@@ -3714,6 +3864,359 @@ Loading emulation options...`);
             stopWaterfall();
             originalCloseOutputWaterfall();
         };
+
+        // ==========================================
+        // SDR: shared radio tuning, rtl_433 live, catalog, scanner
+        // ==========================================
+
+        let sdrPlaying = false;
+        let sdrStatusTimer = null;
+        let rtl433EventSource = null;
+        let scanEventSource = null;
+        let scanActive = false;
+        let catalogIndex = null;
+        let catalogCurrentType = null;
+
+        function sdrEsc(v) {
+            return String(v == null ? '' : v).replace(/[&<>"']/g, c =>
+                ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+        }
+
+        function sdrNonce() { return Math.random().toString(36).slice(2) + Date.now().toString(36); }
+
+        function sdrRender(html) {
+            const outputPanel = document.getElementById('output');
+            const closeBtn = outputPanel.querySelector('.output-close');
+            outputPanel.innerHTML = `<div class="sdr-page">${html}</div>`;
+            outputPanel.appendChild(closeBtn);
+            outputPanel.classList.add('active');
+            outputPanel.scrollTop = 0;
+        }
+
+        function sdrNowBar() {
+            return `<div class="sdr-now" id="sdr-now">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <div><div class="sdr-lcd" id="sdr-now-freq">---.---</div>
+                    <div id="sdr-now-name" style="color:#FF8833;font-size:13px;"></div>
+                    <div id="sdr-now-state" class="sdr-status" style="margin:4px 0 0 0;"></div></div>
+                    <button class="action-btn" style="flex:0 0 auto;min-width:110px;" onclick="sdrStopRadio()">⏹️ STOP</button>
+                </div></div>`;
+        }
+
+        function sdrAudioPlay(nonce) {
+            const aud = document.getElementById('sdr-audio');
+            aud.src = '/radio/stream.mp3?g=' + nonce;
+            const p = aud.play();
+            if (p && p.catch) p.catch(() => {});
+        }
+
+        function sdrAudioStop() {
+            const aud = document.getElementById('sdr-audio');
+            aud.pause(); aud.removeAttribute('src'); aud.load();
+        }
+
+        // Tune a catalog entry: analog -> radio; rtl_433 / ADS-B types -> their pages
+        async function sdrTune(e) {
+            if (e.route === 'rtl433') { showRtl433(e.band || '433.92M'); return; }
+            if (e.route === 'waterfall') { window.pendingWaterfallBand = e.band; showWaterfall(); return; }
+            if (e.digital || e.freqMHz == null) {
+                alert(e.name + '\n\nDigital / trunked: needs trunk-tracking (not tunable with rtl_fm).');
+                return;
+            }
+            if (!document.getElementById('sdr-now')) {
+                sdrRender(sdrNowBar() + '<div class="sdr-status">Tuned from waterfall.</div>');
+            }
+            const nonce = sdrNonce();
+            sdrAudioPlay(nonce);   // inside the user gesture (iOS autoplay rules)
+            sdrShowNow(e.freqMHz, e.name, 'Tuning…');
+            try {
+                const r = await fetch('/api/radio/start', {method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({freq: e.freqMHz, mode: e.mode, name: String(e.name).slice(0, 40), nonce: nonce})});
+                const j = await r.json();
+                if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+                sdrPlaying = true;
+                sdrPollStatus();
+            } catch (err) {
+                sdrAudioStop(); sdrPlaying = false;
+                sdrShowNow(e.freqMHz, e.name, '❌ ' + err.message);
+            }
+        }
+
+        function sdrShowNow(freq, name, state) {
+            const bar = document.getElementById('sdr-now');
+            if (!bar) return;
+            bar.classList.add('on');
+            if (freq != null) document.getElementById('sdr-now-freq').textContent = Number(freq).toFixed(4) + ' MHz';
+            if (name != null) document.getElementById('sdr-now-name').textContent = name;
+            if (state != null) document.getElementById('sdr-now-state').textContent = state;
+            document.querySelectorAll('.sdr-ch').forEach(el =>
+                el.classList.toggle('cur', freq != null && Math.abs(parseFloat(el.dataset.f) - freq) < 0.00005));
+        }
+
+        function sdrPollStatus() {
+            if (sdrStatusTimer) clearInterval(sdrStatusTimer);
+            sdrStatusTimer = setInterval(async () => {
+                if (!document.getElementById('sdr-now')) { clearInterval(sdrStatusTimer); sdrStatusTimer = null; return; }
+                try {
+                    const st = await (await fetch('/api/radio/status')).json();
+                    if (st.running) {
+                        const bars = '▮'.repeat(st.signal || 0) + '▯'.repeat(5 - (st.signal || 0));
+                        sdrShowNow(st.freq, st.name, `${st.state === 'starting' ? 'Tuning…' : '🔊 Playing'} · ${String(st.mode).toUpperCase()} · ${bars}`);
+                    } else if (sdrPlaying) {
+                        sdrPlaying = false; sdrAudioStop();
+                        sdrShowNow(null, null, st.error ? '❌ ' + st.error : '⏹️ Stopped' + (st.stopped_reason ? ' - ' + st.stopped_reason : ''));
+                    }
+                } catch (e) {}
+            }, 1500);
+        }
+
+        async function sdrStopRadio() {
+            sdrAudioStop(); sdrPlaying = false;
+            try { await fetch('/api/radio/stop', {method: 'POST'}); } catch (e) {}
+            sdrShowNow(null, null, '⏹️ Stopped');
+        }
+
+        function sdrAgo(sec) {
+            sec = Math.max(0, Math.round(sec));
+            if (sec < 60) return sec + 's ago';
+            if (sec < 3600) return Math.floor(sec / 60) + 'm ago';
+            return Math.floor(sec / 3600) + 'h ago';
+        }
+
+        // ---------------- rtl_433 live decoder ----------------
+        async function showRtl433(band) {
+            closeOutput();
+            band = band || '433.92M';
+            const opts = [['315M', '315 MHz'], ['433.92M', '433.92 MHz'], ['915M', '915 MHz']];
+            sdrRender(`<h3>🌡️ Live rtl_433 Decoder</h3>
+                <div class="sdr-bar">
+                    <select id="rtl433-band">${opts.map(([v, l]) => `<option value="${v}" ${v === band ? 'selected' : ''}>${l}</option>`).join('')}</select>
+                    <button class="action-btn" onclick="rtl433Start()">▶️ START</button>
+                    <button class="action-btn secondary" onclick="rtl433Stop()">⏹️ STOP</button>
+                    <button class="action-btn secondary" onclick="rtl433History()">📜 HISTORY</button>
+                </div>
+                <div class="sdr-status" id="rtl433-status">Stopped. Pick a band and press START.</div>
+                <table class="sdr-table"><thead><tr><th>Model</th><th>ID</th><th>Readings</th><th>RSSI</th><th>Last seen</th></tr></thead>
+                <tbody id="rtl433-rows"><tr><td colspan="5" style="color:#666">No devices yet</td></tr></tbody></table>
+                <div id="rtl433-history"></div>`);
+            rtl433Connect();
+        }
+
+        function rtl433Connect() {
+            if (rtl433EventSource) rtl433EventSource.close();
+            rtl433EventSource = new EventSource('/api/rtl433/stream');
+            rtl433EventSource.onmessage = ev => rtl433RenderSnap(JSON.parse(ev.data));
+            rtl433EventSource.onerror = () => {
+                const el = document.getElementById('rtl433-status');
+                if (el) el.textContent = '⚠️ Stream reconnecting…';
+            };
+        }
+
+        function rtl433FmtReadings(r) {
+            return Object.entries(r || {}).map(([k, v]) =>
+                `${sdrEsc(k)}=${sdrEsc(typeof v === 'object' ? JSON.stringify(v) : v)}`).join(' · ');
+        }
+
+        function rtl433RenderSnap(snap) {
+            const st = snap.status || {};
+            const el = document.getElementById('rtl433-status');
+            if (!el) return;
+            el.innerHTML = st.running
+                ? `✅ Listening on ${sdrEsc(st.band)} · ${st.total} decodes · ${st.device_count} devices · up ${Math.round(st.uptime)}s`
+                : (st.error ? '❌ ' + sdrEsc(st.error) : '⏹️ Stopped' + (st.stopped_reason ? ' - ' + sdrEsc(st.stopped_reason) : ''));
+            const rows = document.getElementById('rtl433-rows');
+            const devs = snap.devices || [];
+            if (!devs.length) {
+                rows.innerHTML = `<tr><td colspan="5" style="color:#666">${st.running ? 'Waiting for transmissions…' : 'No devices yet'}</td></tr>`;
+                return;
+            }
+            rows.innerHTML = devs.map(d => `<tr>
+                <td>${sdrEsc(d.model)}${d.channel != null ? '<br><span style="color:#777">ch ' + sdrEsc(d.channel) + '</span>' : ''}</td>
+                <td>${sdrEsc(d.id)}</td>
+                <td class="rd">${rtl433FmtReadings(d.readings)}</td>
+                <td>${d.rssi != null ? Number(d.rssi).toFixed(1) : '-'}${d.snr != null ? '<br><span style="color:#777">snr ' + Number(d.snr).toFixed(1) + '</span>' : ''}</td>
+                <td>${sdrAgo(snap.now - d.last_seen)}<br><span style="color:#777">×${d.count}</span></td></tr>`).join('');
+        }
+
+        async function rtl433Start() {
+            const band = document.getElementById('rtl433-band').value;
+            document.getElementById('rtl433-status').textContent = 'Starting rtl_433…';
+            try {
+                const r = await fetch('/api/rtl433/start', {method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({band: band})});
+                const j = await r.json();
+                if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+                if (!rtl433EventSource) rtl433Connect();
+            } catch (e) { document.getElementById('rtl433-status').textContent = '❌ ' + e.message; }
+        }
+
+        async function rtl433Stop() {
+            try { await fetch('/api/rtl433/stop', {method: 'POST'}); } catch (e) {}
+        }
+
+        async function rtl433History() {
+            const box = document.getElementById('rtl433-history');
+            try {
+                const j = await (await fetch('/api/rtl433/history?since=-86400&limit=100')).json();
+                const rows = j.decodes || [];
+                box.innerHTML = `<h3 style="margin-top:20px;">📜 Last 24h (${rows.length})</h3>` + (rows.length ? `<table class="sdr-table">
+                    <thead><tr><th>When</th><th>Model</th><th>ID</th><th>RSSI</th></tr></thead><tbody>` +
+                    rows.map(x => `<tr><td>${new Date(x.ts * 1000).toLocaleString()}</td><td>${sdrEsc(x.model)}</td>
+                        <td>${sdrEsc(x.dev_id)}</td><td>${x.rssi != null ? Number(x.rssi).toFixed(1) : '-'}</td></tr>`).join('') +
+                    '</tbody></table>' : '<div class="sdr-status">No decodes logged yet.</div>');
+            } catch (e) { box.textContent = '❌ ' + e.message; }
+        }
+
+        // ---------------- frequency catalog ----------------
+        async function showCatalog() {
+            closeOutput();
+            sdrRender(sdrNowBar() + '<h3>🗂️ Frequency Catalog</h3><div class="sdr-status">Loading…</div>');
+            try {
+                if (!catalogIndex) catalogIndex = await (await fetch('/api/frequencies')).json();
+            } catch (e) { sdrRender('❌ Could not load catalog: ' + sdrEsc(e.message)); return; }
+            catalogCurrentType = null;
+            const tile = t => `<div class="sdr-tile" onclick="showCatalogType('${t.id}')">
+                <div class="ic">${t.icon}</div><div class="nm">${sdrEsc(t.name)}</div><div class="ct">${t.count} channels</div></div>`;
+            const t1 = catalogIndex.types.filter(t => t.tier === 1), t2 = catalogIndex.types.filter(t => t.tier === 2);
+            sdrRender(sdrNowBar() + `<h3>🗂️ Frequency Catalog</h3>
+                <div class="sdr-status">Offline. Pick a type, then tap a channel to listen.</div>
+                <div class="sdr-grid">${t1.map(tile).join('')}</div>
+                <h3 style="margin-top:20px;">📍 Local: Cincinnati / Hamilton Co.</h3>
+                <div class="sdr-status">From cited public sources (RepeaterBook, AirNav, RadioReference, Wikipedia). See SOURCES.md.</div>
+                <div class="sdr-grid">${t2.map(tile).join('')}</div>`);
+            if (sdrPlaying) sdrPollStatus();
+        }
+
+        async function showCatalogType(id) {
+            let t;
+            try { t = await (await fetch('/api/frequencies/' + encodeURIComponent(id))).json(); }
+            catch (e) { alert(e.message); return; }
+            catalogCurrentType = t;
+            const tunable = t.entries.filter(e => !e.digital && e.freqMHz != null && !e.route).length;
+            const rows = t.entries.map((e, i) => {
+                const dig = e.digital && !e.route;
+                const sub = [e.channel ? 'Ch ' + e.channel : '', e.notes].filter(Boolean).join(' · ');
+                return `<div class="sdr-ch ${dig ? 'dig' : ''}" data-f="${e.freqMHz == null ? '' : e.freqMHz}" onclick="catalogTap(${i})">
+                    <div class="l"><div class="n">${sdrEsc(e.name)}${dig ? ' 🔒' : ''}</div><div class="x">${sdrEsc(sub)}</div></div>
+                    <div class="f">${e.freqMHz == null ? 'trunked' : Number(e.freqMHz).toFixed(4)}<small>${e.route ? '→ ' + sdrEsc(e.route) : sdrEsc(String(e.mode).toUpperCase())}</small></div></div>`;
+            }).join('');
+            sdrRender(sdrNowBar() + `<div class="sdr-bar">
+                    <button class="action-btn secondary" onclick="showCatalog()">‹ TYPES</button>
+                    ${tunable > 1 ? `<button class="action-btn" onclick="showScanner({catalog:'${t.id}'})">🔎 SCAN LIST</button>` : ''}
+                </div>
+                <h3>${t.icon} ${sdrEsc(t.name)} (${t.entries.length})</h3>
+                ${t.tier === 2 ? '<div class="sdr-status">🔒 = digital/trunked, needs trunk-tracking (not tunable with rtl_fm).</div>' : ''}
+                ${rows}`);
+            if (sdrPlaying) sdrPollStatus();
+        }
+
+        function catalogTap(i) {
+            if (!catalogCurrentType) return;
+            sdrTune(catalogCurrentType.entries[i]);
+        }
+
+        // ---------------- scanner ----------------
+        async function showScanner(opts) {
+            closeOutput();
+            opts = opts || {};
+            sdrRender('<h3>🔎 Radio Scanner</h3><div class="sdr-status">Loading…</div>');
+            let groups = [], types = [];
+            try {
+                groups = (await (await fetch('/api/radio/scan/groups')).json()).groups || [];
+                if (!catalogIndex) catalogIndex = await (await fetch('/api/frequencies')).json();
+                types = catalogIndex.types.filter(t => !['ism', 'adsb'].includes(t.id));
+            } catch (e) {}
+            const sel = opts.catalog ? 'catalog:' + opts.catalog : (groups.length ? 'group:' + groups[0] : '');
+            const o = (v, l) => `<option value="${v}" ${v === sel ? 'selected' : ''}>${sdrEsc(l)}</option>`;
+            sdrRender(`<h3>🔎 Radio Scanner</h3>
+                <div class="sdr-bar">
+                    <select id="scan-src">
+                        <optgroup label="Radio presets">${o('group:All', 'All presets')}${groups.map(g => o('group:' + g, g)).join('')}</optgroup>
+                        <optgroup label="Catalog">${types.map(t => o('catalog:' + t.id, t.name + ' (' + t.count + ')')).join('')}</optgroup>
+                    </select>
+                    <select id="scan-method"><option value="audio">Detect: audio clarity</option><option value="rf">Detect: RF power</option></select>
+                    <select id="scan-dwell"><option value="1.0">1.0 s dwell</option><option value="1.5" selected>1.5 s dwell</option><option value="2.5">2.5 s dwell</option></select>
+                    <select id="scan-resume"><option value="0">Stay locked</option><option value="4" selected>Resume after 4 s quiet</option><option value="10">Resume after 10 s quiet</option></select>
+                </div>
+                <div class="sdr-bar">
+                    <button class="action-btn" onclick="scanStart()">▶️ SCAN</button>
+                    <button class="action-btn secondary" onclick="scanSkip()">⏭️ SKIP</button>
+                    <button class="action-btn secondary" onclick="scanStop()">⏹️ STOP</button>
+                </div>
+                <div class="sdr-now on" style="position:static;">
+                    <div class="sdr-lcd" id="scan-freq">---.----</div>
+                    <div id="scan-name" style="color:#FF8833;font-size:14px;"></div>
+                    <div id="scan-state" class="sdr-status" style="margin:4px 0 0 0;">Idle</div>
+                </div>
+                <div class="sdr-status">Hops each channel, stops on the first with a signal. Audio plays while locked. Digital/trunked entries are skipped.</div>`);
+            scanConnect();
+        }
+
+        function scanConnect() {
+            if (scanEventSource) scanEventSource.close();
+            let lastNonce = null;
+            scanEventSource = new EventSource('/api/radio/scan/stream');
+            scanEventSource.onmessage = ev => {
+                const st = JSON.parse(ev.data);
+                const f = document.getElementById('scan-freq');
+                if (!f) return;
+                const ch = st.locked || st.channel;
+                if (ch) { f.textContent = Number(ch.freq).toFixed(4); document.getElementById('scan-name').textContent = ch.name + ' · ' + String(ch.mode).toUpperCase(); }
+                const m = st.metric ? Object.entries(st.metric).map(([k, v]) => k + ' ' + v).join(', ') : '';
+                let txt;
+                if (st.state === 'locked') {
+                    txt = `<span class="sdr-lock">🔒 LOCKED</span> · ${st.live ? 'clarity ' + st.live.clarity : m}`;
+                    if (st.nonce && st.nonce !== lastNonce) { lastNonce = st.nonce; sdrAudioPlay(st.nonce); }
+                } else if (st.state === 'scanning') {
+                    txt = `<span class="sdr-hop">📡 Scanning</span> ${st.index + 1}/${st.count} · hops ${st.hops}${m ? ' · last: ' + m : ''}`;
+                    if (lastNonce) { lastNonce = null; sdrAudioStop(); }
+                } else {
+                    txt = st.state === 'stopping' ? 'Stopping…' : 'Idle' + (st.stop_reason ? ' - ' + st.stop_reason : '');
+                    if (lastNonce) { lastNonce = null; sdrAudioStop(); }
+                }
+                if (st.error) txt += ' · ❌ ' + sdrEsc(st.error);
+                document.getElementById('scan-state').innerHTML = txt;
+                scanActive = !!st.running;
+            };
+        }
+
+        async function scanStart() {
+            const src = document.getElementById('scan-src').value;
+            const [kind, val] = [src.slice(0, src.indexOf(':')), src.slice(src.indexOf(':') + 1)];
+            const body = {method: document.getElementById('scan-method').value,
+                dwell: parseFloat(document.getElementById('scan-dwell').value),
+                resume_after: parseFloat(document.getElementById('scan-resume').value)};
+            body[kind] = val;
+            // unlock the <audio> element inside this user gesture so locked channels can play later
+            const aud = document.getElementById('sdr-audio');
+            try { aud.muted = true; const p = aud.play(); if (p && p.catch) p.catch(() => {}); aud.pause(); aud.muted = false; } catch (e) {}
+            document.getElementById('scan-state').textContent = 'Starting…';
+            try {
+                const r = await fetch('/api/radio/scan/start', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
+                const j = await r.json();
+                if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+                scanActive = true;
+            } catch (e) { document.getElementById('scan-state').textContent = '❌ ' + e.message; }
+        }
+
+        async function scanSkip() { try { await fetch('/api/radio/scan/skip', {method: 'POST'}); } catch (e) {} }
+        async function scanStop() {
+            sdrAudioStop();
+            try { await fetch('/api/radio/scan/stop', {method: 'POST'}); } catch (e) {}
+        }
+
+        // Closing the overlay tears down SDR streams and frees the dongle
+        const originalCloseOutputSdr = closeOutput;
+        closeOutput = function() {
+            if (rtl433EventSource) { rtl433EventSource.close(); rtl433EventSource = null; }
+            if (scanEventSource) { scanEventSource.close(); scanEventSource = null; }
+            if (scanActive) { scanActive = false; fetch('/api/radio/scan/stop', {method: 'POST'}).catch(() => {}); }
+            if (sdrStatusTimer) { clearInterval(sdrStatusTimer); sdrStatusTimer = null; }
+            if (sdrPlaying) { sdrPlaying = false; fetch('/api/radio/stop', {method: 'POST'}).catch(() => {}); }
+            sdrAudioStop();
+            originalCloseOutputSdr();
+        };
+
 
         // ==========================================
         // End Enhanced Functions
