@@ -1,0 +1,4006 @@
+{
+ "version": 1,
+ "description": "PiFlip offline frequency catalog. Tier 1 = standardized US channel plans; Tier 2 = Cincinnati/Hamilton County OH from cited public sources (see SOURCES.md).",
+ "local_sources": [
+  {
+   "title": "RepeaterBook county lists (Hamilton, Butler, Clermont, Warren OH; Boone, Kenton, Campbell KY; Dearborn IN)",
+   "url": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+   "accessed": "2026-09-21",
+   "covers": "ham repeaters (one URL per county, loc= and state_id= vary: OH=39, KY=21, IN=18)"
+  },
+  {
+   "title": "Media in Cincinnati - Wikipedia",
+   "url": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+   "accessed": "2026-09-21",
+   "covers": "FM broadcast"
+  },
+  {
+   "title": "AirNav KCVG",
+   "url": "https://www.airnav.com/airport/KCVG",
+   "accessed": "2026-09-21",
+   "covers": "CVG airband"
+  },
+  {
+   "title": "AirNav KLUK",
+   "url": "https://www.airnav.com/airport/KLUK",
+   "accessed": "2026-09-21",
+   "covers": "Lunken airband"
+  },
+  {
+   "title": "RadioReference Hamilton County OH",
+   "url": "https://www.radioreference.com/db/browse/ctid/2070",
+   "accessed": "2026-09-21",
+   "covers": "public safety / services, MARCS"
+  }
+ ],
+ "local_gaps": "Repeater offsets: RepeaterBook list view shows only +/- sign; magnitudes filled with band-standard (0.6/1.6/5/25 MHz), 6m offset left null. Campbell KY and Dearborn IN tone columns were ambiguous in the fetched text (146.2 and 123.0 appeared in offset column) - verify. Pure DMR/D-STAR/P25/Fusion-only repeaters skipped (e.g. K8BIG 145.35 D-STAR, 147.09 P25, 443.9 DMR; WB8CRS 443.4 DMR; N8MFN 442.65 D-STAR; KD8VLU 442.9625 DMR; W8BLV 444.3625 DMR; WB8ZVL 443.15 P25; 444.425 Fusion; KA4OBT 442.7625 DMR; K4TCD 440.6 DMR). FM: radio-locator returned only the search form; FCC FM Query not fetched; Wikipedia 'List of radio stations in Ohio' extraction was unreliable so it was not used - list is from Media_in_Cincinnati only (formats may be dated). Airband: military UHF (360.85, 363.15, 254.25, 257.8, 243.0) omitted (outside typical usage/AM UHF); FAA chart supplement and LiveATC not checked. Public safety: RadioReference county page fetched OK; Cincinnati police/fire/county dispatch are on MARCS-IP P25 (one entry). Individual MARCS talkgroups/site freqs not listed. Northern KY (Kenton/Boone/Campbell) public safety not researched. RR data was extracted by a summarizer; spot-check tones.",
+ "types": [
+  {
+   "id": "noaa",
+   "name": "NOAA Weather",
+   "icon": "🌦️",
+   "tier": 1,
+   "count": 7,
+   "entries": [
+    {
+     "name": "NOAA WX2",
+     "freqMHz": 162.4,
+     "mode": "nfm",
+     "notes": "NOAA Weather Radio / SAME alerts",
+     "source": "https://www.weather.gov/nwr/",
+     "channel": "WX2"
+    },
+    {
+     "name": "NOAA WX4",
+     "freqMHz": 162.425,
+     "mode": "nfm",
+     "notes": "NOAA Weather Radio / SAME alerts",
+     "source": "https://www.weather.gov/nwr/",
+     "channel": "WX4"
+    },
+    {
+     "name": "NOAA WX5",
+     "freqMHz": 162.45,
+     "mode": "nfm",
+     "notes": "NOAA Weather Radio / SAME alerts",
+     "source": "https://www.weather.gov/nwr/",
+     "channel": "WX5"
+    },
+    {
+     "name": "NOAA WX3",
+     "freqMHz": 162.475,
+     "mode": "nfm",
+     "notes": "NOAA Weather Radio / SAME alerts",
+     "source": "https://www.weather.gov/nwr/",
+     "channel": "WX3"
+    },
+    {
+     "name": "NOAA WX6",
+     "freqMHz": 162.5,
+     "mode": "nfm",
+     "notes": "NOAA Weather Radio / SAME alerts",
+     "source": "https://www.weather.gov/nwr/",
+     "channel": "WX6"
+    },
+    {
+     "name": "NOAA WX7",
+     "freqMHz": 162.525,
+     "mode": "nfm",
+     "notes": "NOAA Weather Radio / SAME alerts",
+     "source": "https://www.weather.gov/nwr/",
+     "channel": "WX7"
+    },
+    {
+     "name": "NOAA WX1",
+     "freqMHz": 162.55,
+     "mode": "nfm",
+     "notes": "NOAA Weather Radio / SAME alerts",
+     "source": "https://www.weather.gov/nwr/",
+     "channel": "WX1"
+    }
+   ]
+  },
+  {
+   "id": "marine",
+   "name": "Marine VHF",
+   "icon": "⚓",
+   "tier": 1,
+   "count": 52,
+   "entries": [
+    {
+     "name": "Marine Ch 01A",
+     "freqMHz": 156.05,
+     "mode": "nfm",
+     "notes": "Port operations/commercial, VTS (selected areas)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "01A"
+    },
+    {
+     "name": "Marine Ch 03A",
+     "freqMHz": 156.15,
+     "mode": "nfm",
+     "notes": "US Government / Coast Guard",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "03A"
+    },
+    {
+     "name": "Marine Ch 05A",
+     "freqMHz": 156.25,
+     "mode": "nfm",
+     "notes": "Port operations, VTS (selected areas)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "05A"
+    },
+    {
+     "name": "Marine Ch 06",
+     "freqMHz": 156.3,
+     "mode": "nfm",
+     "notes": "Intership safety",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "06"
+    },
+    {
+     "name": "Marine Ch 07A",
+     "freqMHz": 156.35,
+     "mode": "nfm",
+     "notes": "Commercial",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "07A"
+    },
+    {
+     "name": "Marine Ch 08",
+     "freqMHz": 156.4,
+     "mode": "nfm",
+     "notes": "Commercial (intership)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "08"
+    },
+    {
+     "name": "Marine Ch 09",
+     "freqMHz": 156.45,
+     "mode": "nfm",
+     "notes": "Boater calling; commercial & non-commercial",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "09"
+    },
+    {
+     "name": "Marine Ch 10",
+     "freqMHz": 156.5,
+     "mode": "nfm",
+     "notes": "Commercial",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "10"
+    },
+    {
+     "name": "Marine Ch 11",
+     "freqMHz": 156.55,
+     "mode": "nfm",
+     "notes": "Commercial; VTS (selected areas)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "11"
+    },
+    {
+     "name": "Marine Ch 12",
+     "freqMHz": 156.6,
+     "mode": "nfm",
+     "notes": "Port operations; VTS (selected areas)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "12"
+    },
+    {
+     "name": "Marine Ch 13",
+     "freqMHz": 156.65,
+     "mode": "nfm",
+     "notes": "Bridge-to-bridge navigation safety (1 W); locks & bridges",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "13"
+    },
+    {
+     "name": "Marine Ch 14",
+     "freqMHz": 156.7,
+     "mode": "nfm",
+     "notes": "Port operations; VTS (selected areas)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "14"
+    },
+    {
+     "name": "Marine Ch 15",
+     "freqMHz": 156.75,
+     "mode": "nfm",
+     "notes": "Environmental (receive only)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "15"
+    },
+    {
+     "name": "Marine Ch 16",
+     "freqMHz": 156.8,
+     "mode": "nfm",
+     "notes": "International distress, safety and calling",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "16"
+    },
+    {
+     "name": "Marine Ch 17",
+     "freqMHz": 156.85,
+     "mode": "nfm",
+     "notes": "State & local government maritime control",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "17"
+    },
+    {
+     "name": "Marine Ch 18A",
+     "freqMHz": 156.9,
+     "mode": "nfm",
+     "notes": "Commercial",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "18A"
+    },
+    {
+     "name": "Marine Ch 19A",
+     "freqMHz": 156.95,
+     "mode": "nfm",
+     "notes": "Commercial",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "19A"
+    },
+    {
+     "name": "Marine Ch 20",
+     "freqMHz": 161.6,
+     "mode": "nfm",
+     "notes": "Port operations (duplex); duplex - ship 157.000 / coast 161.600 (tuned: coast side)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "20"
+    },
+    {
+     "name": "Marine Ch 20A",
+     "freqMHz": 157.0,
+     "mode": "nfm",
+     "notes": "Port operations",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "20A"
+    },
+    {
+     "name": "Marine Ch 21A",
+     "freqMHz": 157.05,
+     "mode": "nfm",
+     "notes": "US Coast Guard only",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "21A"
+    },
+    {
+     "name": "Marine Ch 22A",
+     "freqMHz": 157.1,
+     "mode": "nfm",
+     "notes": "Coast Guard liaison & maritime safety info broadcasts",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "22A"
+    },
+    {
+     "name": "Marine Ch 23A",
+     "freqMHz": 157.15,
+     "mode": "nfm",
+     "notes": "US Coast Guard only",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "23A"
+    },
+    {
+     "name": "Marine Ch 24",
+     "freqMHz": 161.8,
+     "mode": "nfm",
+     "notes": "Public correspondence (marine operator); duplex - ship 157.200 / coast 161.800 (tuned: coast side)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "24"
+    },
+    {
+     "name": "Marine Ch 25",
+     "freqMHz": 161.85,
+     "mode": "nfm",
+     "notes": "Public correspondence (marine operator); duplex - ship 157.250 / coast 161.850 (tuned: coast side)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "25"
+    },
+    {
+     "name": "Marine Ch 26",
+     "freqMHz": 161.9,
+     "mode": "nfm",
+     "notes": "Public correspondence (marine operator); duplex - ship 157.300 / coast 161.900 (tuned: coast side)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "26"
+    },
+    {
+     "name": "Marine Ch 27",
+     "freqMHz": 161.95,
+     "mode": "nfm",
+     "notes": "Public correspondence (marine operator); duplex - ship 157.350 / coast 161.950 (tuned: coast side)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "27"
+    },
+    {
+     "name": "Marine Ch 28",
+     "freqMHz": 162.0,
+     "mode": "nfm",
+     "notes": "Public correspondence (marine operator); duplex - ship 157.400 / coast 162.000 (tuned: coast side)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "28"
+    },
+    {
+     "name": "Marine Ch 63A",
+     "freqMHz": 156.175,
+     "mode": "nfm",
+     "notes": "Port operations, VTS (selected areas)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "63A"
+    },
+    {
+     "name": "Marine Ch 65A",
+     "freqMHz": 156.275,
+     "mode": "nfm",
+     "notes": "Port operations",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "65A"
+    },
+    {
+     "name": "Marine Ch 66A",
+     "freqMHz": 156.325,
+     "mode": "nfm",
+     "notes": "Port operations",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "66A"
+    },
+    {
+     "name": "Marine Ch 67",
+     "freqMHz": 156.375,
+     "mode": "nfm",
+     "notes": "Commercial; bridge-to-bridge (Lower Mississippi)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "67"
+    },
+    {
+     "name": "Marine Ch 68",
+     "freqMHz": 156.425,
+     "mode": "nfm",
+     "notes": "Non-commercial (recreational)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "68"
+    },
+    {
+     "name": "Marine Ch 69",
+     "freqMHz": 156.475,
+     "mode": "nfm",
+     "notes": "Non-commercial (recreational)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "69"
+    },
+    {
+     "name": "Marine Ch 70",
+     "freqMHz": 156.525,
+     "mode": "nfm",
+     "notes": "Digital Selective Calling (DSC data - no voice)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "70",
+     "digital": true
+    },
+    {
+     "name": "Marine Ch 71",
+     "freqMHz": 156.575,
+     "mode": "nfm",
+     "notes": "Non-commercial (recreational)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "71"
+    },
+    {
+     "name": "Marine Ch 72",
+     "freqMHz": 156.625,
+     "mode": "nfm",
+     "notes": "Non-commercial (intership)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "72"
+    },
+    {
+     "name": "Marine Ch 73",
+     "freqMHz": 156.675,
+     "mode": "nfm",
+     "notes": "Port operations",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "73"
+    },
+    {
+     "name": "Marine Ch 74",
+     "freqMHz": 156.725,
+     "mode": "nfm",
+     "notes": "Port operations",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "74"
+    },
+    {
+     "name": "Marine Ch 77",
+     "freqMHz": 156.875,
+     "mode": "nfm",
+     "notes": "Port operations (intership)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "77"
+    },
+    {
+     "name": "Marine Ch 78A",
+     "freqMHz": 156.925,
+     "mode": "nfm",
+     "notes": "Non-commercial (recreational)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "78A"
+    },
+    {
+     "name": "Marine Ch 79A",
+     "freqMHz": 156.975,
+     "mode": "nfm",
+     "notes": "Commercial (non-commercial Great Lakes only)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "79A"
+    },
+    {
+     "name": "Marine Ch 80A",
+     "freqMHz": 157.025,
+     "mode": "nfm",
+     "notes": "Commercial (non-commercial Great Lakes only)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "80A"
+    },
+    {
+     "name": "Marine Ch 81A",
+     "freqMHz": 157.075,
+     "mode": "nfm",
+     "notes": "US Government only (environmental protection)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "81A"
+    },
+    {
+     "name": "Marine Ch 82A",
+     "freqMHz": 157.125,
+     "mode": "nfm",
+     "notes": "US Government only",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "82A"
+    },
+    {
+     "name": "Marine Ch 83A",
+     "freqMHz": 157.175,
+     "mode": "nfm",
+     "notes": "US Coast Guard only",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "83A"
+    },
+    {
+     "name": "Marine Ch 84",
+     "freqMHz": 161.825,
+     "mode": "nfm",
+     "notes": "Public correspondence (marine operator); duplex - ship 157.225 / coast 161.825 (tuned: coast side)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "84"
+    },
+    {
+     "name": "Marine Ch 85",
+     "freqMHz": 161.875,
+     "mode": "nfm",
+     "notes": "Public correspondence (marine operator); duplex - ship 157.275 / coast 161.875 (tuned: coast side)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "85"
+    },
+    {
+     "name": "Marine Ch 86",
+     "freqMHz": 161.925,
+     "mode": "nfm",
+     "notes": "Public correspondence (marine operator); duplex - ship 157.325 / coast 161.925 (tuned: coast side)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "86"
+    },
+    {
+     "name": "Marine Ch 87A",
+     "freqMHz": 157.375,
+     "mode": "nfm",
+     "notes": "Commercial (intership)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "87A"
+    },
+    {
+     "name": "Marine Ch 88A",
+     "freqMHz": 157.425,
+     "mode": "nfm",
+     "notes": "Commercial (intership)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "88A"
+    },
+    {
+     "name": "Marine Ch AIS1",
+     "freqMHz": 161.975,
+     "mode": "nfm",
+     "notes": "AIS ship tracking (ch 87B, data - no voice)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "AIS1",
+     "digital": true
+    },
+    {
+     "name": "Marine Ch AIS2",
+     "freqMHz": 162.025,
+     "mode": "nfm",
+     "notes": "AIS ship tracking (ch 88B, data - no voice)",
+     "source": "https://www.navcen.uscg.gov/us-vhf-channel-information",
+     "channel": "AIS2",
+     "digital": true
+    }
+   ]
+  },
+  {
+   "id": "gmrs",
+   "name": "GMRS",
+   "icon": "📟",
+   "tier": 1,
+   "count": 22,
+   "entries": [
+    {
+     "name": "GMRS 1",
+     "freqMHz": 462.5625,
+     "mode": "nfm",
+     "notes": "Shared with FRS 1-7; GMRS up to 5 W",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "1"
+    },
+    {
+     "name": "GMRS 2",
+     "freqMHz": 462.5875,
+     "mode": "nfm",
+     "notes": "Shared with FRS 1-7; GMRS up to 5 W",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "2"
+    },
+    {
+     "name": "GMRS 3",
+     "freqMHz": 462.6125,
+     "mode": "nfm",
+     "notes": "Shared with FRS 1-7; GMRS up to 5 W",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "3"
+    },
+    {
+     "name": "GMRS 4",
+     "freqMHz": 462.6375,
+     "mode": "nfm",
+     "notes": "Shared with FRS 1-7; GMRS up to 5 W",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "4"
+    },
+    {
+     "name": "GMRS 5",
+     "freqMHz": 462.6625,
+     "mode": "nfm",
+     "notes": "Shared with FRS 1-7; GMRS up to 5 W",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "5"
+    },
+    {
+     "name": "GMRS 6",
+     "freqMHz": 462.6875,
+     "mode": "nfm",
+     "notes": "Shared with FRS 1-7; GMRS up to 5 W",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "6"
+    },
+    {
+     "name": "GMRS 7",
+     "freqMHz": 462.7125,
+     "mode": "nfm",
+     "notes": "Shared with FRS 1-7; GMRS up to 5 W",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "7"
+    },
+    {
+     "name": "GMRS 8",
+     "freqMHz": 467.5625,
+     "mode": "nfm",
+     "notes": "Interstitial, 0.5 W max (shared with FRS 8-14)",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "8"
+    },
+    {
+     "name": "GMRS 9",
+     "freqMHz": 467.5875,
+     "mode": "nfm",
+     "notes": "Interstitial, 0.5 W max (shared with FRS 8-14)",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "9"
+    },
+    {
+     "name": "GMRS 10",
+     "freqMHz": 467.6125,
+     "mode": "nfm",
+     "notes": "Interstitial, 0.5 W max (shared with FRS 8-14)",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "10"
+    },
+    {
+     "name": "GMRS 11",
+     "freqMHz": 467.6375,
+     "mode": "nfm",
+     "notes": "Interstitial, 0.5 W max (shared with FRS 8-14)",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "11"
+    },
+    {
+     "name": "GMRS 12",
+     "freqMHz": 467.6625,
+     "mode": "nfm",
+     "notes": "Interstitial, 0.5 W max (shared with FRS 8-14)",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "12"
+    },
+    {
+     "name": "GMRS 13",
+     "freqMHz": 467.6875,
+     "mode": "nfm",
+     "notes": "Interstitial, 0.5 W max (shared with FRS 8-14)",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "13"
+    },
+    {
+     "name": "GMRS 14",
+     "freqMHz": 467.7125,
+     "mode": "nfm",
+     "notes": "Interstitial, 0.5 W max (shared with FRS 8-14)",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "14"
+    },
+    {
+     "name": "GMRS 15",
+     "freqMHz": 462.55,
+     "mode": "nfm",
+     "notes": "GMRS main/repeater output; repeater input 467.5500 (+5 MHz)",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "15"
+    },
+    {
+     "name": "GMRS 16",
+     "freqMHz": 462.575,
+     "mode": "nfm",
+     "notes": "GMRS main/repeater output; repeater input 467.5750 (+5 MHz)",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "16"
+    },
+    {
+     "name": "GMRS 17",
+     "freqMHz": 462.6,
+     "mode": "nfm",
+     "notes": "GMRS main/repeater output; repeater input 467.6000 (+5 MHz)",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "17"
+    },
+    {
+     "name": "GMRS 18",
+     "freqMHz": 462.625,
+     "mode": "nfm",
+     "notes": "GMRS main/repeater output; repeater input 467.6250 (+5 MHz)",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "18"
+    },
+    {
+     "name": "GMRS 19",
+     "freqMHz": 462.65,
+     "mode": "nfm",
+     "notes": "GMRS main/repeater output; repeater input 467.6500 (+5 MHz)",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "19"
+    },
+    {
+     "name": "GMRS 20",
+     "freqMHz": 462.675,
+     "mode": "nfm",
+     "notes": "GMRS main/repeater output; repeater input 467.6750 (+5 MHz)",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "20"
+    },
+    {
+     "name": "GMRS 21",
+     "freqMHz": 462.7,
+     "mode": "nfm",
+     "notes": "GMRS main/repeater output; repeater input 467.7000 (+5 MHz)",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "21"
+    },
+    {
+     "name": "GMRS 22",
+     "freqMHz": 462.725,
+     "mode": "nfm",
+     "notes": "GMRS main/repeater output; repeater input 467.7250 (+5 MHz)",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.1763",
+     "channel": "22"
+    }
+   ]
+  },
+  {
+   "id": "frs",
+   "name": "FRS",
+   "icon": "🎙️",
+   "tier": 1,
+   "count": 22,
+   "entries": [
+    {
+     "name": "FRS 1",
+     "freqMHz": 462.5625,
+     "mode": "nfm",
+     "notes": "up to 2 W; shared with GMRS 1",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "1"
+    },
+    {
+     "name": "FRS 2",
+     "freqMHz": 462.5875,
+     "mode": "nfm",
+     "notes": "up to 2 W; shared with GMRS 2",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "2"
+    },
+    {
+     "name": "FRS 3",
+     "freqMHz": 462.6125,
+     "mode": "nfm",
+     "notes": "up to 2 W; shared with GMRS 3",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "3"
+    },
+    {
+     "name": "FRS 4",
+     "freqMHz": 462.6375,
+     "mode": "nfm",
+     "notes": "up to 2 W; shared with GMRS 4",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "4"
+    },
+    {
+     "name": "FRS 5",
+     "freqMHz": 462.6625,
+     "mode": "nfm",
+     "notes": "up to 2 W; shared with GMRS 5",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "5"
+    },
+    {
+     "name": "FRS 6",
+     "freqMHz": 462.6875,
+     "mode": "nfm",
+     "notes": "up to 2 W; shared with GMRS 6",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "6"
+    },
+    {
+     "name": "FRS 7",
+     "freqMHz": 462.7125,
+     "mode": "nfm",
+     "notes": "up to 2 W; shared with GMRS 7",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "7"
+    },
+    {
+     "name": "FRS 8",
+     "freqMHz": 467.5625,
+     "mode": "nfm",
+     "notes": "0.5 W max; shared with GMRS 8",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "8"
+    },
+    {
+     "name": "FRS 9",
+     "freqMHz": 467.5875,
+     "mode": "nfm",
+     "notes": "0.5 W max; shared with GMRS 9",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "9"
+    },
+    {
+     "name": "FRS 10",
+     "freqMHz": 467.6125,
+     "mode": "nfm",
+     "notes": "0.5 W max; shared with GMRS 10",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "10"
+    },
+    {
+     "name": "FRS 11",
+     "freqMHz": 467.6375,
+     "mode": "nfm",
+     "notes": "0.5 W max; shared with GMRS 11",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "11"
+    },
+    {
+     "name": "FRS 12",
+     "freqMHz": 467.6625,
+     "mode": "nfm",
+     "notes": "0.5 W max; shared with GMRS 12",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "12"
+    },
+    {
+     "name": "FRS 13",
+     "freqMHz": 467.6875,
+     "mode": "nfm",
+     "notes": "0.5 W max; shared with GMRS 13",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "13"
+    },
+    {
+     "name": "FRS 14",
+     "freqMHz": 467.7125,
+     "mode": "nfm",
+     "notes": "0.5 W max; shared with GMRS 14",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "14"
+    },
+    {
+     "name": "FRS 15",
+     "freqMHz": 462.55,
+     "mode": "nfm",
+     "notes": "up to 2 W; shared with GMRS 15",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "15"
+    },
+    {
+     "name": "FRS 16",
+     "freqMHz": 462.575,
+     "mode": "nfm",
+     "notes": "up to 2 W; shared with GMRS 16",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "16"
+    },
+    {
+     "name": "FRS 17",
+     "freqMHz": 462.6,
+     "mode": "nfm",
+     "notes": "up to 2 W; shared with GMRS 17",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "17"
+    },
+    {
+     "name": "FRS 18",
+     "freqMHz": 462.625,
+     "mode": "nfm",
+     "notes": "up to 2 W; shared with GMRS 18",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "18"
+    },
+    {
+     "name": "FRS 19",
+     "freqMHz": 462.65,
+     "mode": "nfm",
+     "notes": "up to 2 W; shared with GMRS 19",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "19"
+    },
+    {
+     "name": "FRS 20",
+     "freqMHz": 462.675,
+     "mode": "nfm",
+     "notes": "up to 2 W; shared with GMRS 20",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "20"
+    },
+    {
+     "name": "FRS 21",
+     "freqMHz": 462.7,
+     "mode": "nfm",
+     "notes": "up to 2 W; shared with GMRS 21",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "21"
+    },
+    {
+     "name": "FRS 22",
+     "freqMHz": 462.725,
+     "mode": "nfm",
+     "notes": "up to 2 W; shared with GMRS 22",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.563",
+     "channel": "22"
+    }
+   ]
+  },
+  {
+   "id": "murs",
+   "name": "MURS",
+   "icon": "📻",
+   "tier": 1,
+   "count": 5,
+   "entries": [
+    {
+     "name": "MURS 1",
+     "freqMHz": 151.82,
+     "mode": "nfm",
+     "notes": "11.25 kHz narrowband",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.2763",
+     "channel": "1"
+    },
+    {
+     "name": "MURS 2",
+     "freqMHz": 151.88,
+     "mode": "nfm",
+     "notes": "11.25 kHz narrowband",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.2763",
+     "channel": "2"
+    },
+    {
+     "name": "MURS 3",
+     "freqMHz": 151.94,
+     "mode": "nfm",
+     "notes": "11.25 kHz narrowband",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.2763",
+     "channel": "3"
+    },
+    {
+     "name": "MURS 4",
+     "freqMHz": 154.57,
+     "mode": "nfm",
+     "notes": "\"Blue Dot\" - 20 kHz allowed",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.2763",
+     "channel": "4"
+    },
+    {
+     "name": "MURS 5",
+     "freqMHz": 154.6,
+     "mode": "nfm",
+     "notes": "\"Green Dot\" - 20 kHz allowed",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.2763",
+     "channel": "5"
+    }
+   ]
+  },
+  {
+   "id": "railroad",
+   "name": "Railroad (AAR)",
+   "icon": "🚂",
+   "tier": 1,
+   "count": 91,
+   "entries": [
+    {
+     "name": "AAR 07",
+     "freqMHz": 160.215,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "07"
+    },
+    {
+     "name": "AAR 08",
+     "freqMHz": 160.23,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "08"
+    },
+    {
+     "name": "AAR 09",
+     "freqMHz": 160.245,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "09"
+    },
+    {
+     "name": "AAR 10",
+     "freqMHz": 160.26,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "10"
+    },
+    {
+     "name": "AAR 11",
+     "freqMHz": 160.275,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "11"
+    },
+    {
+     "name": "AAR 12",
+     "freqMHz": 160.29,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "12"
+    },
+    {
+     "name": "AAR 13",
+     "freqMHz": 160.305,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "13"
+    },
+    {
+     "name": "AAR 14",
+     "freqMHz": 160.32,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "14"
+    },
+    {
+     "name": "AAR 15",
+     "freqMHz": 160.335,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "15"
+    },
+    {
+     "name": "AAR 16",
+     "freqMHz": 160.35,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "16"
+    },
+    {
+     "name": "AAR 17",
+     "freqMHz": 160.365,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "17"
+    },
+    {
+     "name": "AAR 18",
+     "freqMHz": 160.38,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "18"
+    },
+    {
+     "name": "AAR 19",
+     "freqMHz": 160.395,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "19"
+    },
+    {
+     "name": "AAR 20",
+     "freqMHz": 160.41,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "20"
+    },
+    {
+     "name": "AAR 21",
+     "freqMHz": 160.425,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "21"
+    },
+    {
+     "name": "AAR 22",
+     "freqMHz": 160.44,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "22"
+    },
+    {
+     "name": "AAR 23",
+     "freqMHz": 160.455,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "23"
+    },
+    {
+     "name": "AAR 24",
+     "freqMHz": 160.47,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "24"
+    },
+    {
+     "name": "AAR 25",
+     "freqMHz": 160.485,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "25"
+    },
+    {
+     "name": "AAR 26",
+     "freqMHz": 160.5,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "26"
+    },
+    {
+     "name": "AAR 27",
+     "freqMHz": 160.515,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "27"
+    },
+    {
+     "name": "AAR 28",
+     "freqMHz": 160.53,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "28"
+    },
+    {
+     "name": "AAR 29",
+     "freqMHz": 160.545,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "29"
+    },
+    {
+     "name": "AAR 30",
+     "freqMHz": 160.56,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "30"
+    },
+    {
+     "name": "AAR 31",
+     "freqMHz": 160.575,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "31"
+    },
+    {
+     "name": "AAR 32",
+     "freqMHz": 160.59,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "32"
+    },
+    {
+     "name": "AAR 33",
+     "freqMHz": 160.605,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "33"
+    },
+    {
+     "name": "AAR 34",
+     "freqMHz": 160.62,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "34"
+    },
+    {
+     "name": "AAR 35",
+     "freqMHz": 160.635,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "35"
+    },
+    {
+     "name": "AAR 36",
+     "freqMHz": 160.65,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "36"
+    },
+    {
+     "name": "AAR 37",
+     "freqMHz": 160.665,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "37"
+    },
+    {
+     "name": "AAR 38",
+     "freqMHz": 160.68,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "38"
+    },
+    {
+     "name": "AAR 39",
+     "freqMHz": 160.695,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "39"
+    },
+    {
+     "name": "AAR 40",
+     "freqMHz": 160.71,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "40"
+    },
+    {
+     "name": "AAR 41",
+     "freqMHz": 160.725,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "41"
+    },
+    {
+     "name": "AAR 42",
+     "freqMHz": 160.74,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "42"
+    },
+    {
+     "name": "AAR 43",
+     "freqMHz": 160.755,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "43"
+    },
+    {
+     "name": "AAR 44",
+     "freqMHz": 160.77,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "44"
+    },
+    {
+     "name": "AAR 45",
+     "freqMHz": 160.785,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "45"
+    },
+    {
+     "name": "AAR 46",
+     "freqMHz": 160.8,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "46"
+    },
+    {
+     "name": "AAR 47",
+     "freqMHz": 160.815,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "47"
+    },
+    {
+     "name": "AAR 48",
+     "freqMHz": 160.83,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "48"
+    },
+    {
+     "name": "AAR 49",
+     "freqMHz": 160.845,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "49"
+    },
+    {
+     "name": "AAR 50",
+     "freqMHz": 160.86,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "50"
+    },
+    {
+     "name": "AAR 51",
+     "freqMHz": 160.875,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "51"
+    },
+    {
+     "name": "AAR 52",
+     "freqMHz": 160.89,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "52"
+    },
+    {
+     "name": "AAR 53",
+     "freqMHz": 160.905,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "53"
+    },
+    {
+     "name": "AAR 54",
+     "freqMHz": 160.92,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "54"
+    },
+    {
+     "name": "AAR 55",
+     "freqMHz": 160.935,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "55"
+    },
+    {
+     "name": "AAR 56",
+     "freqMHz": 160.95,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "56"
+    },
+    {
+     "name": "AAR 57",
+     "freqMHz": 160.965,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "57"
+    },
+    {
+     "name": "AAR 58",
+     "freqMHz": 160.98,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "58"
+    },
+    {
+     "name": "AAR 59",
+     "freqMHz": 160.995,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "59"
+    },
+    {
+     "name": "AAR 60",
+     "freqMHz": 161.01,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "60"
+    },
+    {
+     "name": "AAR 61",
+     "freqMHz": 161.025,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "61"
+    },
+    {
+     "name": "AAR 62",
+     "freqMHz": 161.04,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "62"
+    },
+    {
+     "name": "AAR 63",
+     "freqMHz": 161.055,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "63"
+    },
+    {
+     "name": "AAR 64",
+     "freqMHz": 161.07,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "64"
+    },
+    {
+     "name": "AAR 65",
+     "freqMHz": 161.085,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "65"
+    },
+    {
+     "name": "AAR 66",
+     "freqMHz": 161.1,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "66"
+    },
+    {
+     "name": "AAR 67",
+     "freqMHz": 161.115,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "67"
+    },
+    {
+     "name": "AAR 68",
+     "freqMHz": 161.13,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "68"
+    },
+    {
+     "name": "AAR 69",
+     "freqMHz": 161.145,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "69"
+    },
+    {
+     "name": "AAR 70",
+     "freqMHz": 161.16,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "70"
+    },
+    {
+     "name": "AAR 71",
+     "freqMHz": 161.175,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "71"
+    },
+    {
+     "name": "AAR 72",
+     "freqMHz": 161.19,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "72"
+    },
+    {
+     "name": "AAR 73",
+     "freqMHz": 161.205,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "73"
+    },
+    {
+     "name": "AAR 74",
+     "freqMHz": 161.22,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "74"
+    },
+    {
+     "name": "AAR 75",
+     "freqMHz": 161.235,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "75"
+    },
+    {
+     "name": "AAR 76",
+     "freqMHz": 161.25,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "76"
+    },
+    {
+     "name": "AAR 77",
+     "freqMHz": 161.265,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "77"
+    },
+    {
+     "name": "AAR 78",
+     "freqMHz": 161.28,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "78"
+    },
+    {
+     "name": "AAR 79",
+     "freqMHz": 161.295,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "79"
+    },
+    {
+     "name": "AAR 80",
+     "freqMHz": 161.31,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "80"
+    },
+    {
+     "name": "AAR 81",
+     "freqMHz": 161.325,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "81"
+    },
+    {
+     "name": "AAR 82",
+     "freqMHz": 161.34,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "82"
+    },
+    {
+     "name": "AAR 83",
+     "freqMHz": 161.355,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "83"
+    },
+    {
+     "name": "AAR 84",
+     "freqMHz": 161.37,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "84"
+    },
+    {
+     "name": "AAR 85",
+     "freqMHz": 161.385,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "85"
+    },
+    {
+     "name": "AAR 86",
+     "freqMHz": 161.4,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "86"
+    },
+    {
+     "name": "AAR 87",
+     "freqMHz": 161.415,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "87"
+    },
+    {
+     "name": "AAR 88",
+     "freqMHz": 161.43,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "88"
+    },
+    {
+     "name": "AAR 89",
+     "freqMHz": 161.445,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "89"
+    },
+    {
+     "name": "AAR 90",
+     "freqMHz": 161.46,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "90"
+    },
+    {
+     "name": "AAR 91",
+     "freqMHz": 161.475,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "91"
+    },
+    {
+     "name": "AAR 92",
+     "freqMHz": 161.49,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "92"
+    },
+    {
+     "name": "AAR 93",
+     "freqMHz": 161.505,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "93"
+    },
+    {
+     "name": "AAR 94",
+     "freqMHz": 161.52,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "94"
+    },
+    {
+     "name": "AAR 95",
+     "freqMHz": 161.535,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "95"
+    },
+    {
+     "name": "AAR 96",
+     "freqMHz": 161.55,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "96"
+    },
+    {
+     "name": "AAR 97",
+     "freqMHz": 161.565,
+     "mode": "nfm",
+     "notes": "Railroad road/yard channel",
+     "source": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-90 (AAR railroad channel plan)",
+     "channel": "97"
+    }
+   ]
+  },
+  {
+   "id": "cb",
+   "name": "CB Radio",
+   "icon": "🚚",
+   "tier": 1,
+   "count": 40,
+   "entries": [
+    {
+     "name": "CB 1",
+     "freqMHz": 26.965,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "1"
+    },
+    {
+     "name": "CB 2",
+     "freqMHz": 26.975,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "2"
+    },
+    {
+     "name": "CB 3",
+     "freqMHz": 26.985,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "3"
+    },
+    {
+     "name": "CB 4",
+     "freqMHz": 27.005,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "4"
+    },
+    {
+     "name": "CB 5",
+     "freqMHz": 27.015,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "5"
+    },
+    {
+     "name": "CB 6",
+     "freqMHz": 27.025,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "6"
+    },
+    {
+     "name": "CB 7",
+     "freqMHz": 27.035,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "7"
+    },
+    {
+     "name": "CB 8",
+     "freqMHz": 27.055,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "8"
+    },
+    {
+     "name": "CB 9",
+     "freqMHz": 27.065,
+     "mode": "am",
+     "notes": "Emergency & traveler assistance; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "9"
+    },
+    {
+     "name": "CB 10",
+     "freqMHz": 27.075,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "10"
+    },
+    {
+     "name": "CB 11",
+     "freqMHz": 27.085,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "11"
+    },
+    {
+     "name": "CB 12",
+     "freqMHz": 27.105,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "12"
+    },
+    {
+     "name": "CB 13",
+     "freqMHz": 27.115,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "13"
+    },
+    {
+     "name": "CB 14",
+     "freqMHz": 27.125,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "14"
+    },
+    {
+     "name": "CB 15",
+     "freqMHz": 27.135,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "15"
+    },
+    {
+     "name": "CB 16",
+     "freqMHz": 27.155,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "16"
+    },
+    {
+     "name": "CB 17",
+     "freqMHz": 27.165,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "17"
+    },
+    {
+     "name": "CB 18",
+     "freqMHz": 27.175,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "18"
+    },
+    {
+     "name": "CB 19",
+     "freqMHz": 27.185,
+     "mode": "am",
+     "notes": "Highway / truckers; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "19"
+    },
+    {
+     "name": "CB 20",
+     "freqMHz": 27.205,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "20"
+    },
+    {
+     "name": "CB 21",
+     "freqMHz": 27.215,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "21"
+    },
+    {
+     "name": "CB 22",
+     "freqMHz": 27.225,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "22"
+    },
+    {
+     "name": "CB 23",
+     "freqMHz": 27.255,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "23"
+    },
+    {
+     "name": "CB 24",
+     "freqMHz": 27.235,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "24"
+    },
+    {
+     "name": "CB 25",
+     "freqMHz": 27.245,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "25"
+    },
+    {
+     "name": "CB 26",
+     "freqMHz": 27.265,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "26"
+    },
+    {
+     "name": "CB 27",
+     "freqMHz": 27.275,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "27"
+    },
+    {
+     "name": "CB 28",
+     "freqMHz": 27.285,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "28"
+    },
+    {
+     "name": "CB 29",
+     "freqMHz": 27.295,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "29"
+    },
+    {
+     "name": "CB 30",
+     "freqMHz": 27.305,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "30"
+    },
+    {
+     "name": "CB 31",
+     "freqMHz": 27.315,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "31"
+    },
+    {
+     "name": "CB 32",
+     "freqMHz": 27.325,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "32"
+    },
+    {
+     "name": "CB 33",
+     "freqMHz": 27.335,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "33"
+    },
+    {
+     "name": "CB 34",
+     "freqMHz": 27.345,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "34"
+    },
+    {
+     "name": "CB 35",
+     "freqMHz": 27.355,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "35"
+    },
+    {
+     "name": "CB 36",
+     "freqMHz": 27.365,
+     "mode": "am",
+     "notes": "SSB common (radio decodes AM only); HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "36"
+    },
+    {
+     "name": "CB 37",
+     "freqMHz": 27.375,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "37"
+    },
+    {
+     "name": "CB 38",
+     "freqMHz": 27.385,
+     "mode": "am",
+     "notes": "LSB calling (AM only here); HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "38"
+    },
+    {
+     "name": "CB 39",
+     "freqMHz": 27.395,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "39"
+    },
+    {
+     "name": "CB 40",
+     "freqMHz": 27.405,
+     "mode": "am",
+     "notes": "Citizens Band AM; HF - V4 uses its built-in upconverter below 28.8 MHz",
+     "source": "https://www.ecfr.gov/current/title-47/part-95/section-95.963",
+     "channel": "40"
+    }
+   ]
+  },
+  {
+   "id": "ham",
+   "name": "Ham Calling / Simplex",
+   "icon": "📡",
+   "tier": 1,
+   "count": 17,
+   "entries": [
+    {
+     "name": "2m National Simplex Calling",
+     "freqMHz": 146.52,
+     "mode": "nfm",
+     "notes": "National FM simplex calling frequency",
+     "source": "https://www.arrl.org/band-plan"
+    },
+    {
+     "name": "2m Simplex 146.550",
+     "freqMHz": 146.55,
+     "mode": "nfm",
+     "notes": "Common FM simplex",
+     "source": "https://www.arrl.org/band-plan"
+    },
+    {
+     "name": "2m Simplex 146.580",
+     "freqMHz": 146.58,
+     "mode": "nfm",
+     "notes": "Common FM simplex",
+     "source": "https://www.arrl.org/band-plan"
+    },
+    {
+     "name": "2m Simplex 146.460",
+     "freqMHz": 146.46,
+     "mode": "nfm",
+     "notes": "FM simplex (regional plans vary)",
+     "source": "https://www.arrl.org/band-plan"
+    },
+    {
+     "name": "2m Simplex 146.490",
+     "freqMHz": 146.49,
+     "mode": "nfm",
+     "notes": "FM simplex (regional plans vary)",
+     "source": "https://www.arrl.org/band-plan"
+    },
+    {
+     "name": "2m Simplex 147.420",
+     "freqMHz": 147.42,
+     "mode": "nfm",
+     "notes": "FM simplex (regional plans vary)",
+     "source": "https://www.arrl.org/band-plan"
+    },
+    {
+     "name": "2m Simplex 147.450",
+     "freqMHz": 147.45,
+     "mode": "nfm",
+     "notes": "FM simplex (regional plans vary)",
+     "source": "https://www.arrl.org/band-plan"
+    },
+    {
+     "name": "2m Simplex 147.480",
+     "freqMHz": 147.48,
+     "mode": "nfm",
+     "notes": "FM simplex (regional plans vary)",
+     "source": "https://www.arrl.org/band-plan"
+    },
+    {
+     "name": "2m Simplex 147.510",
+     "freqMHz": 147.51,
+     "mode": "nfm",
+     "notes": "FM simplex (regional plans vary)",
+     "source": "https://www.arrl.org/band-plan"
+    },
+    {
+     "name": "2m Simplex 147.540",
+     "freqMHz": 147.54,
+     "mode": "nfm",
+     "notes": "FM simplex (regional plans vary)",
+     "source": "https://www.arrl.org/band-plan"
+    },
+    {
+     "name": "2m APRS",
+     "freqMHz": 144.39,
+     "mode": "nfm",
+     "notes": "North American APRS packet (data bursts)",
+     "source": "https://www.arrl.org/band-plan"
+    },
+    {
+     "name": "ISS Voice Downlink",
+     "freqMHz": 145.8,
+     "mode": "nfm",
+     "notes": "International Space Station FM voice (passes only)",
+     "source": "https://www.arrl.org/band-plan"
+    },
+    {
+     "name": "70cm National Simplex Calling",
+     "freqMHz": 446.0,
+     "mode": "nfm",
+     "notes": "National FM simplex calling frequency",
+     "source": "https://www.arrl.org/band-plan"
+    },
+    {
+     "name": "70cm Simplex 446.500",
+     "freqMHz": 446.5,
+     "mode": "nfm",
+     "notes": "FM simplex (regional plans vary)",
+     "source": "https://www.arrl.org/band-plan"
+    },
+    {
+     "name": "6m FM Simplex Calling",
+     "freqMHz": 52.525,
+     "mode": "nfm",
+     "notes": "National 6m FM simplex calling",
+     "source": "https://www.arrl.org/band-plan"
+    },
+    {
+     "name": "1.25m FM Simplex Calling",
+     "freqMHz": 223.5,
+     "mode": "nfm",
+     "notes": "National 1.25m FM simplex calling",
+     "source": "https://www.arrl.org/band-plan"
+    },
+    {
+     "name": "10m FM Simplex Calling",
+     "freqMHz": 29.6,
+     "mode": "nfm",
+     "notes": "10m FM calling (HF, via V4 upconverter)",
+     "source": "https://www.arrl.org/band-plan"
+    }
+   ]
+  },
+  {
+   "id": "ism",
+   "name": "rtl_433 ISM Sensors",
+   "icon": "🌡️",
+   "tier": 1,
+   "count": 4,
+   "entries": [
+    {
+     "name": "315 MHz ISM",
+     "freqMHz": 315.0,
+     "mode": "nfm",
+     "notes": "US car key fobs, TPMS, garage remotes",
+     "source": "https://github.com/merbanan/rtl_433",
+     "route": "rtl433",
+     "band": "315M"
+    },
+    {
+     "name": "345 MHz",
+     "freqMHz": 345.0,
+     "mode": "nfm",
+     "notes": "Honeywell/2GIG security sensors (not a PiFlip rtl_433 band preset)",
+     "source": "https://github.com/merbanan/rtl_433",
+     "route": "rtl433"
+    },
+    {
+     "name": "433.92 MHz ISM",
+     "freqMHz": 433.92,
+     "mode": "nfm",
+     "notes": "Weather stations, remotes, sensors",
+     "source": "https://github.com/merbanan/rtl_433",
+     "route": "rtl433",
+     "band": "433.92M"
+    },
+    {
+     "name": "915 MHz ISM",
+     "freqMHz": 915.0,
+     "mode": "nfm",
+     "notes": "US ISM sensors, meters",
+     "source": "https://github.com/merbanan/rtl_433",
+     "route": "rtl433",
+     "band": "915M"
+    }
+   ]
+  },
+  {
+   "id": "adsb",
+   "name": "ADS-B / UAT",
+   "icon": "✈️",
+   "tier": 1,
+   "count": 2,
+   "entries": [
+    {
+     "name": "ADS-B 1090ES",
+     "freqMHz": 1090.0,
+     "mode": "am",
+     "notes": "Aircraft transponders (Mode S/ADS-B). Decoding needs dump1090; opens the waterfall on the ADS-B band",
+     "source": "https://www.faa.gov/air_traffic/technology/adsb",
+     "route": "waterfall",
+     "band": "adsb",
+     "digital": true
+    },
+    {
+     "name": "UAT 978",
+     "freqMHz": 978.0,
+     "mode": "am",
+     "notes": "US general-aviation ADS-B (UAT). Decoding needs dump978; opens the waterfall",
+     "source": "https://www.faa.gov/air_traffic/technology/adsb",
+     "route": "waterfall",
+     "band": "adsb",
+     "digital": true
+    }
+   ]
+  },
+  {
+   "id": "wwv",
+   "name": "WWV / WWVH Time",
+   "icon": "⏱️",
+   "tier": 1,
+   "count": 5,
+   "entries": [
+    {
+     "name": "WWV 2.5 MHz",
+     "freqMHz": 2.5,
+     "mode": "am",
+     "notes": "WWV (Fort Collins) + WWVH (Kauai) time signal; HF via V4 upconverter",
+     "source": "https://www.nist.gov/pml/time-and-frequency-division/time-distribution/radio-station-wwv"
+    },
+    {
+     "name": "WWV 5 MHz",
+     "freqMHz": 5.0,
+     "mode": "am",
+     "notes": "WWV + WWVH time signal; HF via V4 upconverter",
+     "source": "https://www.nist.gov/pml/time-and-frequency-division/time-distribution/radio-station-wwv"
+    },
+    {
+     "name": "WWV 10 MHz",
+     "freqMHz": 10.0,
+     "mode": "am",
+     "notes": "WWV + WWVH time signal; HF via V4 upconverter",
+     "source": "https://www.nist.gov/pml/time-and-frequency-division/time-distribution/radio-station-wwv"
+    },
+    {
+     "name": "WWV 15 MHz",
+     "freqMHz": 15.0,
+     "mode": "am",
+     "notes": "WWV + WWVH time signal; HF via V4 upconverter",
+     "source": "https://www.nist.gov/pml/time-and-frequency-division/time-distribution/radio-station-wwv"
+    },
+    {
+     "name": "WWV 20 MHz",
+     "freqMHz": 20.0,
+     "mode": "am",
+     "notes": "WWV only time signal; HF via V4 upconverter",
+     "source": "https://www.nist.gov/pml/time-and-frequency-division/time-distribution/radio-station-wwv"
+    }
+   ]
+  },
+  {
+   "id": "local_repeaters",
+   "name": "Cincinnati Ham Repeaters",
+   "icon": "🗼",
+   "tier": 2,
+   "count": 74,
+   "entries": [
+    {
+     "name": "WW4KY Highland Heights",
+     "freqMHz": 53.33,
+     "mode": "nfm",
+     "notes": "Output 53.3300, tone 123.0. Campbell Co. KY. RepeaterBook mode: FM (6m). Offset sign '-' from listing; magnitude is band-standard (not shown in list view). 6m offset magnitude not verified. Tone value parsed from listing column; verify.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=21&type=county&loc=Campbell",
+     "callsign": "WW4KY",
+     "location": "Highland Heights, KY",
+     "offsetMHz": null,
+     "pl": "123.0"
+    },
+    {
+     "name": "W8BRQ Mason",
+     "freqMHz": 145.13,
+     "mode": "nfm",
+     "notes": "Output 145.1300, offset -0.6 MHz (input 144.5300), tone 123.0. Warren Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Warren",
+     "callsign": "W8BRQ",
+     "location": "Mason, OH",
+     "offsetMHz": -0.6,
+     "pl": "123.0"
+    },
+    {
+     "name": "W8ESS Cincinnati",
+     "freqMHz": 145.19,
+     "mode": "nfm",
+     "notes": "Output 145.1900, offset -0.6 MHz (input 144.5900), tone 123.0. Hamilton Co. OH. RepeaterBook mode: FMP-25 (NAC 293). Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "W8ESS",
+     "location": "Cincinnati, OH",
+     "offsetMHz": -0.6,
+     "pl": "123.0"
+    },
+    {
+     "name": "W8CCI Oxford",
+     "freqMHz": 145.21,
+     "mode": "nfm",
+     "notes": "Output 145.2100, offset -0.6 MHz (input 144.6100), tone 118.8. Butler Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "W8CCI",
+     "location": "Oxford, OH",
+     "offsetMHz": -0.6,
+     "pl": "118.8"
+    },
+    {
+     "name": "WB8ZVL Franklin",
+     "freqMHz": 145.29,
+     "mode": "nfm",
+     "notes": "Output 145.2900, offset -0.6 MHz (input 144.6900), tone 118.8. Warren Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Warren",
+     "callsign": "WB8ZVL",
+     "location": "Franklin, OH",
+     "offsetMHz": -0.6,
+     "pl": "118.8"
+    },
+    {
+     "name": "N8SIM Cincinnati",
+     "freqMHz": 145.31,
+     "mode": "nfm",
+     "notes": "Output 145.3100, offset -0.6 MHz (input 144.7100), tone 123.0. Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "N8SIM",
+     "location": "Cincinnati, OH",
+     "offsetMHz": -0.6,
+     "pl": "123.0"
+    },
+    {
+     "name": "K8YOJ Cincinnati",
+     "freqMHz": 145.37,
+     "mode": "nfm",
+     "notes": "Output 145.3700, offset -0.6 MHz (input 144.7700), tone 123.0. Hamilton Co. OH. RepeaterBook mode: FMP-25 (NAC 293). Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "K8YOJ",
+     "location": "Cincinnati, OH",
+     "offsetMHz": -0.6,
+     "pl": "123.0"
+    },
+    {
+     "name": "WC8VOA West Chester",
+     "freqMHz": 145.39,
+     "mode": "nfm",
+     "notes": "Output 145.3900, offset -0.6 MHz (input 144.7900). Butler Co. OH. RepeaterBook mode: FM/EchoLink/Fusion. Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic. No tone listed.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "WC8VOA",
+     "location": "West Chester (VOA museum), OH",
+     "offsetMHz": -0.6,
+     "pl": null
+    },
+    {
+     "name": "WW4KY Walton",
+     "freqMHz": 145.42,
+     "mode": "nfm",
+     "notes": "Output 145.4200, offset -0.6 MHz (input 144.8200). Boone Co. KY. RepeaterBook mode: FM/D-STAR mixed (carrier squelch). Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=21&type=county&loc=Boone",
+     "callsign": "WW4KY",
+     "location": "Walton, KY",
+     "offsetMHz": -0.6,
+     "pl": null
+    },
+    {
+     "name": "W8MRC Cincinnati",
+     "freqMHz": 145.45,
+     "mode": "nfm",
+     "notes": "Output 145.4500, offset -0.6 MHz (input 144.8500), tone 123.0. Hamilton Co. OH. RepeaterBook mode: FM/Fusion/WIRES-X. Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "W8MRC",
+     "location": "Cincinnati, OH",
+     "offsetMHz": -0.6,
+     "pl": "123.0"
+    },
+    {
+     "name": "W8CYE Springboro",
+     "freqMHz": 145.49,
+     "mode": "nfm",
+     "notes": "Output 145.4900, offset -0.6 MHz (input 144.8900), tone 123.0. Warren Co. OH. RepeaterBook mode: FM/EchoLink/Fusion. Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Warren",
+     "callsign": "W8CYE",
+     "location": "Springboro, OH",
+     "offsetMHz": -0.6,
+     "pl": "123.0"
+    },
+    {
+     "name": "W8BLV Middletown",
+     "freqMHz": 146.61,
+     "mode": "nfm",
+     "notes": "Output 146.6100, offset -0.6 MHz (input 146.0100), tone 77.0. Butler Co. OH. RepeaterBook mode: FM/EchoLink. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "W8BLV",
+     "location": "Middletown, OH",
+     "offsetMHz": -0.6,
+     "pl": "77.0"
+    },
+    {
+     "name": "K8SCH Edgewood",
+     "freqMHz": 146.625,
+     "mode": "nfm",
+     "notes": "Output 146.6250, offset -0.6 MHz (input 146.0250), tone 123.0. Kenton Co. KY. RepeaterBook mode: FM/Fusion. Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=21&type=county&loc=Kenton",
+     "callsign": "K8SCH",
+     "location": "Edgewood (St Elizabeth Hospital South), KY",
+     "offsetMHz": -0.6,
+     "pl": "123.0"
+    },
+    {
+     "name": "W8EMA Felicity",
+     "freqMHz": 146.655,
+     "mode": "nfm",
+     "notes": "Output 146.6550, offset -0.6 MHz (input 146.0550). Clermont Co. OH. RepeaterBook mode: FM (carrier squelch). Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Clermont",
+     "callsign": "W8EMA",
+     "location": "Felicity, OH",
+     "offsetMHz": -0.6,
+     "pl": null
+    },
+    {
+     "name": "K8SCH Cincinnati",
+     "freqMHz": 146.67,
+     "mode": "nfm",
+     "notes": "Output 146.6700, offset -0.6 MHz (input 146.0700), tone 123.0. Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "K8SCH",
+     "location": "Cincinnati, OH",
+     "offsetMHz": -0.6,
+     "pl": "123.0"
+    },
+    {
+     "name": "W8WRK Fairfield",
+     "freqMHz": 146.7,
+     "mode": "nfm",
+     "notes": "Output 146.7000, offset -0.6 MHz (input 146.1000), tone 123.0. Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "W8WRK",
+     "location": "Fairfield, OH",
+     "offsetMHz": -0.6,
+     "pl": "123.0"
+    },
+    {
+     "name": "N8COZ Middletown",
+     "freqMHz": 146.715,
+     "mode": "nfm",
+     "notes": "Output 146.7150, offset -0.6 MHz (input 146.1150). Butler Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view). No tone listed.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "N8COZ",
+     "location": "Middletown, OH",
+     "offsetMHz": -0.6,
+     "pl": null
+    },
+    {
+     "name": "WB4VOA Taylor Mill",
+     "freqMHz": 146.79,
+     "mode": "nfm",
+     "notes": "Output 146.7900, offset -0.6 MHz (input 146.1900), tone 123.0. Campbell Co. KY. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Tone value parsed from listing column; verify.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=21&type=county&loc=Campbell",
+     "callsign": "WB4VOA",
+     "location": "Taylor Mill, KY",
+     "offsetMHz": -0.6,
+     "pl": "123.0"
+    },
+    {
+     "name": "K8YOJ Cincinnati",
+     "freqMHz": 146.85,
+     "mode": "nfm",
+     "notes": "Output 146.8500, offset -0.6 MHz (input 146.2500), tone 123.0. Hamilton Co. OH. RepeaterBook mode: FMP-25 (NAC 293). Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "K8YOJ",
+     "location": "Cincinnati, OH",
+     "offsetMHz": -0.6,
+     "pl": "123.0"
+    },
+    {
+     "name": "WC8EMA Lebanon",
+     "freqMHz": 146.865,
+     "mode": "nfm",
+     "notes": "Output 146.8650, offset -0.6 MHz (input 146.2650), tone 118.8. Warren Co. OH. RepeaterBook mode: FM/AllStar. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Warren",
+     "callsign": "WC8EMA",
+     "location": "Lebanon, OH",
+     "offsetMHz": -0.6,
+     "pl": "118.8"
+    },
+    {
+     "name": "WB8CRS Cincinnati",
+     "freqMHz": 146.88,
+     "mode": "nfm",
+     "notes": "Output 146.8800, offset -0.6 MHz (input 146.2800), tone 123.0. Hamilton Co. OH. RepeaterBook mode: FM/EchoLink. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "WB8CRS",
+     "location": "Cincinnati (Mobilcomm), OH",
+     "offsetMHz": -0.6,
+     "pl": "123.0"
+    },
+    {
+     "name": "K8SCH Cincinnati",
+     "freqMHz": 146.925,
+     "mode": "nfm",
+     "notes": "Output 146.9250, offset -0.6 MHz (input 146.3250), tone 123.0. Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "K8SCH",
+     "location": "Cincinnati, OH",
+     "offsetMHz": -0.6,
+     "pl": "123.0"
+    },
+    {
+     "name": "W8CCI Hamilton",
+     "freqMHz": 146.97,
+     "mode": "nfm",
+     "notes": "Output 146.9700, offset -0.6 MHz (input 146.3700), tone 118.8. Butler Co. OH. RepeaterBook mode: FM/Fusion. Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "W8CCI",
+     "location": "Hamilton, OH",
+     "offsetMHz": -0.6,
+     "pl": "118.8"
+    },
+    {
+     "name": "W8WRK Hamilton",
+     "freqMHz": 147.0,
+     "mode": "nfm",
+     "notes": "Output 147.0000, offset +0.6 MHz (input 147.6000), tone 123.0. Butler Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "W8WRK",
+     "location": "Hamilton, OH",
+     "offsetMHz": 0.6,
+     "pl": "123.0"
+    },
+    {
+     "name": "K4CO Edgewood",
+     "freqMHz": 147.03,
+     "mode": "nfm",
+     "notes": "Output 147.0300, offset +0.6 MHz (input 147.6300), tone 123.0. Kenton Co. KY. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=21&type=county&loc=Kenton",
+     "callsign": "K4CO",
+     "location": "Edgewood, KY",
+     "offsetMHz": 0.6,
+     "pl": "123.0"
+    },
+    {
+     "name": "W8YX Cincinnati",
+     "freqMHz": 147.06,
+     "mode": "nfm",
+     "notes": "Output 147.0600, offset +0.6 MHz (input 147.6600), tone 100.0. Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "W8YX",
+     "location": "Cincinnati (U of C), OH",
+     "offsetMHz": 0.6,
+     "pl": "100.0"
+    },
+    {
+     "name": "W8VND Cincinnati",
+     "freqMHz": 147.24,
+     "mode": "nfm",
+     "notes": "Output 147.2400, offset +0.6 MHz (input 147.8400), tone 123.0. Hamilton Co. OH. RepeaterBook mode: FM/EchoLink. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "W8VND",
+     "location": "Cincinnati, OH",
+     "offsetMHz": 0.6,
+     "pl": "123.0"
+    },
+    {
+     "name": "K4CO Edgewood",
+     "freqMHz": 147.255,
+     "mode": "nfm",
+     "notes": "Output 147.2550, offset +0.6 MHz (input 147.8550), tone 123.0. Kenton Co. KY. RepeaterBook mode: FM/P-25 (NAC 293). Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=21&type=county&loc=Kenton",
+     "callsign": "K4CO",
+     "location": "Edgewood, KY",
+     "offsetMHz": 0.6,
+     "pl": "123.0"
+    },
+    {
+     "name": "KB9GYO Lawrenceburg",
+     "freqMHz": 147.285,
+     "mode": "nfm",
+     "notes": "Output 147.2850, offset +0.6 MHz (input 147.8850), tone 146.2. Dearborn Co. IN. RepeaterBook mode: FM/AllStar/EchoLink. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Tone value parsed from listing column; verify.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=18&type=county&loc=Dearborn",
+     "callsign": "KB9GYO",
+     "location": "Lawrenceburg, IN",
+     "offsetMHz": 0.6,
+     "pl": "146.2"
+    },
+    {
+     "name": "W8JEU Middletown",
+     "freqMHz": 147.315,
+     "mode": "nfm",
+     "notes": "Output 147.3150, offset +0.6 MHz (input 147.9150), tone 77.0. Butler Co. OH. RepeaterBook mode: FM/Fusion. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "W8JEU",
+     "location": "Middletown, OH",
+     "offsetMHz": 0.6,
+     "pl": "77.0"
+    },
+    {
+     "name": "W8CCI Hamilton",
+     "freqMHz": 147.33,
+     "mode": "nfm",
+     "notes": "Output 147.3300, offset +0.6 MHz (input 147.9300), tone 118.8. Butler Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "W8CCI",
+     "location": "Hamilton, OH",
+     "offsetMHz": 0.6,
+     "pl": "118.8"
+    },
+    {
+     "name": "W8MRC Owensville",
+     "freqMHz": 147.345,
+     "mode": "nfm",
+     "notes": "Output 147.3450, offset +0.6 MHz (input 147.9450), tone 123.0. Clermont Co. OH. RepeaterBook mode: FM/AllStar/EchoLink. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Clermont",
+     "callsign": "W8MRC",
+     "location": "Owensville, OH",
+     "offsetMHz": 0.6,
+     "pl": "123.0"
+    },
+    {
+     "name": "K8DZ Springboro",
+     "freqMHz": 147.36,
+     "mode": "nfm",
+     "notes": "Output 147.3600, offset +0.6 MHz (input 147.9600), tone 77.0. Warren Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Warren",
+     "callsign": "K8DZ",
+     "location": "Springboro, OH",
+     "offsetMHz": 0.6,
+     "pl": "77.0"
+    },
+    {
+     "name": "K8BIG Walton",
+     "freqMHz": 147.375,
+     "mode": "nfm",
+     "notes": "Output 147.3750, offset +0.6 MHz (input 147.9750), tone 123.0. Boone Co. KY. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=21&type=county&loc=Boone",
+     "callsign": "K8BIG",
+     "location": "Walton, KY",
+     "offsetMHz": 0.6,
+     "pl": "123.0"
+    },
+    {
+     "name": "K8DZ Springboro",
+     "freqMHz": 223.82,
+     "mode": "nfm",
+     "notes": "Output 223.8200, offset -1.6 MHz (input 222.2200), tone 77.0. Warren Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Warren",
+     "callsign": "K8DZ",
+     "location": "Springboro, OH",
+     "offsetMHz": -1.6,
+     "pl": "77.0"
+    },
+    {
+     "name": "K8YOJ Batavia",
+     "freqMHz": 224.0,
+     "mode": "nfm",
+     "notes": "Output 224.0000, offset -1.6 MHz (input 222.4000), tone 123.0. Clermont Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Clermont",
+     "callsign": "K8YOJ",
+     "location": "Batavia (WOBO Tower), OH",
+     "offsetMHz": -1.6,
+     "pl": "123.0"
+    },
+    {
+     "name": "K8YOJ Cincinnati",
+     "freqMHz": 224.06,
+     "mode": "nfm",
+     "notes": "Output 224.0600, offset -1.6 MHz (input 222.4600), tone 100.0. Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "K8YOJ",
+     "location": "Cincinnati, OH",
+     "offsetMHz": -1.6,
+     "pl": "100.0"
+    },
+    {
+     "name": "N8RXL Springboro",
+     "freqMHz": 224.22,
+     "mode": "nfm",
+     "notes": "Output 224.2200, offset -1.6 MHz (input 222.6200), tone 100.0. Warren Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Warren",
+     "callsign": "N8RXL",
+     "location": "Springboro, OH",
+     "offsetMHz": -1.6,
+     "pl": "100.0"
+    },
+    {
+     "name": "N8ECH Oxford",
+     "freqMHz": 224.34,
+     "mode": "nfm",
+     "notes": "Output 224.3400, offset -1.6 MHz (input 222.7400), tone 77.0. Butler Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "N8ECH",
+     "location": "Oxford, OH",
+     "offsetMHz": -1.6,
+     "pl": "77.0"
+    },
+    {
+     "name": "WW4KY Walton",
+     "freqMHz": 224.4,
+     "mode": "nfm",
+     "notes": "Output 224.4000, offset -1.6 MHz (input 222.8000), tone 100.0. Boone Co. KY. RepeaterBook mode: FM/AllStar/EchoLink. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=21&type=county&loc=Boone",
+     "callsign": "WW4KY",
+     "location": "Walton, KY",
+     "offsetMHz": -1.6,
+     "pl": "100.0"
+    },
+    {
+     "name": "WB8TCB Hamilton",
+     "freqMHz": 224.54,
+     "mode": "nfm",
+     "notes": "Output 224.5400, offset -1.6 MHz (input 222.9400). Butler Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view). No tone listed.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "WB8TCB",
+     "location": "Hamilton, OH",
+     "offsetMHz": -1.6,
+     "pl": null
+    },
+    {
+     "name": "W8ESS Cincinnati",
+     "freqMHz": 224.62,
+     "mode": "nfm",
+     "notes": "Output 224.6200, offset -1.6 MHz (input 223.0200), tone 110.9. Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "W8ESS",
+     "location": "Cincinnati, OH",
+     "offsetMHz": -1.6,
+     "pl": "110.9"
+    },
+    {
+     "name": "KB9GYO Logan",
+     "freqMHz": 224.84,
+     "mode": "nfm",
+     "notes": "Output 224.8400, offset -1.6 MHz (input 223.2400), tone 146.2. Dearborn Co. IN. RepeaterBook mode: FM/AllStar/EchoLink. Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Tone value parsed from listing column; verify.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=18&type=county&loc=Dearborn",
+     "callsign": "KB9GYO",
+     "location": "Logan, IN",
+     "offsetMHz": -1.6,
+     "pl": "146.2"
+    },
+    {
+     "name": "W8AJT Hamilton",
+     "freqMHz": 224.88,
+     "mode": "nfm",
+     "notes": "Output 224.8800, offset -1.6 MHz (input 223.2800). Butler Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view). No tone listed.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "W8AJT",
+     "location": "Hamilton, OH",
+     "offsetMHz": -1.6,
+     "pl": null
+    },
+    {
+     "name": "WW4KY Walton",
+     "freqMHz": 441.8,
+     "mode": "nfm",
+     "notes": "Output 441.8000, offset +5 MHz (input 446.8000), tone 179.9. Boone Co. KY. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=21&type=county&loc=Boone",
+     "callsign": "WW4KY",
+     "location": "Walton, KY",
+     "offsetMHz": 5.0,
+     "pl": "179.9"
+    },
+    {
+     "name": "WC8RA West Chester",
+     "freqMHz": 442.325,
+     "mode": "nfm",
+     "notes": "Output 442.3250, offset +5 MHz (input 447.3250), tone 123.0. Butler Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "WC8RA",
+     "location": "West Chester, OH",
+     "offsetMHz": 5.0,
+     "pl": "123.0"
+    },
+    {
+     "name": "WE8N Franklin",
+     "freqMHz": 442.425,
+     "mode": "nfm",
+     "notes": "Output 442.4250, offset +5 MHz (input 447.4250), tone 77.0. Warren Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Warren",
+     "callsign": "WE8N",
+     "location": "Franklin, OH",
+     "offsetMHz": 5.0,
+     "pl": "77.0"
+    },
+    {
+     "name": "WA8MU Monroe",
+     "freqMHz": 442.55,
+     "mode": "nfm",
+     "notes": "Output 442.5500, offset +5 MHz (input 447.5500), tone 118.8. Butler Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "WA8MU",
+     "location": "Monroe, OH",
+     "offsetMHz": 5.0,
+     "pl": "118.8"
+    },
+    {
+     "name": "W8VVL West Chester",
+     "freqMHz": 442.7,
+     "mode": "nfm",
+     "notes": "Output 442.7000, offset +5 MHz (input 447.7000), tone 123.0. Butler Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "W8VVL",
+     "location": "West Chester, OH",
+     "offsetMHz": 5.0,
+     "pl": "123.0"
+    },
+    {
+     "name": "WD8KPU Loveland",
+     "freqMHz": 442.775,
+     "mode": "nfm",
+     "notes": "Output 442.7750, offset +5 MHz (input 447.7750), tone 114.8. Clermont Co. OH. RepeaterBook mode: FM/AllStar. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Clermont",
+     "callsign": "WD8KPU",
+     "location": "Loveland, OH",
+     "offsetMHz": 5.0,
+     "pl": "114.8"
+    },
+    {
+     "name": "W8WRK Hamilton",
+     "freqMHz": 443.3375,
+     "mode": "nfm",
+     "notes": "Output 443.3375, offset +5 MHz (input 448.3375). Butler Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). No tone listed.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "W8WRK",
+     "location": "Hamilton, OH",
+     "offsetMHz": 5.0,
+     "pl": null
+    },
+    {
+     "name": "K8DV Owensville",
+     "freqMHz": 443.45,
+     "mode": "nfm",
+     "notes": "Output 443.4500, offset +5 MHz (input 448.4500). Clermont Co. OH. RepeaterBook mode: FM (carrier squelch). Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Clermont",
+     "callsign": "K8DV",
+     "location": "Owensville, OH",
+     "offsetMHz": 5.0,
+     "pl": null
+    },
+    {
+     "name": "W8MUM Middletown",
+     "freqMHz": 443.5375,
+     "mode": "nfm",
+     "notes": "Output 443.5375, offset +5 MHz (input 448.5375), tone 94.8. Butler Co. OH. RepeaterBook mode: FM/Fusion. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "W8MUM",
+     "location": "Middletown, OH",
+     "offsetMHz": 5.0,
+     "pl": "94.8"
+    },
+    {
+     "name": "W8KJ Fairfield",
+     "freqMHz": 443.575,
+     "mode": "nfm",
+     "notes": "Output 443.5750, offset +5 MHz (input 448.5750). Hamilton Co. OH. RepeaterBook mode: FM/Fusion. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic. No tone listed.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "W8KJ",
+     "location": "Fairfield, OH",
+     "offsetMHz": 5.0,
+     "pl": null
+    },
+    {
+     "name": "WC8VOA West Chester",
+     "freqMHz": 443.65,
+     "mode": "nfm",
+     "notes": "Output 443.6500, offset +5 MHz (input 448.6500). Butler Co. OH. RepeaterBook mode: FM/Fusion. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic. No tone listed.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "WC8VOA",
+     "location": "West Chester (VOA Museum), OH",
+     "offsetMHz": 5.0,
+     "pl": null
+    },
+    {
+     "name": "W8NWS Cincinnati",
+     "freqMHz": 443.7,
+     "mode": "nfm",
+     "notes": "Output 443.7000, offset +5 MHz (input 448.7000). Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). No tone listed.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "W8NWS",
+     "location": "Cincinnati, OH",
+     "offsetMHz": 5.0,
+     "pl": null
+    },
+    {
+     "name": "WB8BFS Loveland",
+     "freqMHz": 443.8,
+     "mode": "nfm",
+     "notes": "Output 443.8000, offset +5 MHz (input 448.8000), tone 67.0. Hamilton Co. OH. RepeaterBook mode: FM/AllStar/EchoLink. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "WB8BFS",
+     "location": "Loveland, OH",
+     "offsetMHz": 5.0,
+     "pl": "67.0"
+    },
+    {
+     "name": "KB9GYO Lawrenceburg",
+     "freqMHz": 443.875,
+     "mode": "nfm",
+     "notes": "Output 443.8750, offset +5 MHz (input 448.8750), tone 146.2. Dearborn Co. IN. RepeaterBook mode: FM/AllStar/EchoLink. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Tone value parsed from listing column; verify.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=18&type=county&loc=Dearborn",
+     "callsign": "KB9GYO",
+     "location": "Lawrenceburg, IN",
+     "offsetMHz": 5.0,
+     "pl": "146.2"
+    },
+    {
+     "name": "K8BIG Cincinnati",
+     "freqMHz": 444.0,
+     "mode": "nfm",
+     "notes": "Output 444.0000, offset +5 MHz (input 449.0000), tone 123.0. Hamilton Co. OH. RepeaterBook mode: FMP-25 (NAC 293). Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "K8BIG",
+     "location": "Cincinnati, OH",
+     "offsetMHz": 5.0,
+     "pl": "123.0"
+    },
+    {
+     "name": "KB8SBN Cincinnati",
+     "freqMHz": 444.075,
+     "mode": "nfm",
+     "notes": "Output 444.0750, offset +5 MHz (input 449.0750), tone 110.9. Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Listed CLOSED (club/members) on RepeaterBook.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "KB8SBN",
+     "location": "Cincinnati, OH",
+     "offsetMHz": 5.0,
+     "pl": "110.9"
+    },
+    {
+     "name": "KD8EYB Hamilton",
+     "freqMHz": 444.1125,
+     "mode": "nfm",
+     "notes": "Output 444.1125, offset +5 MHz (input 449.1125), tone 118.8. Butler Co. OH. RepeaterBook mode: FM/Fusion. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "KD8EYB",
+     "location": "Hamilton, OH",
+     "offsetMHz": 5.0,
+     "pl": "118.8"
+    },
+    {
+     "name": "WC8EMA Lebanon",
+     "freqMHz": 444.1875,
+     "mode": "nfm",
+     "notes": "Output 444.1875, offset +5 MHz (input 449.1875), tone 118.8. Warren Co. OH. RepeaterBook mode: FM/P-25 (NAC 4A4). Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Warren",
+     "callsign": "WC8EMA",
+     "location": "Lebanon, OH",
+     "offsetMHz": 5.0,
+     "pl": "118.8"
+    },
+    {
+     "name": "W8ESS Cincinnati",
+     "freqMHz": 444.225,
+     "mode": "nfm",
+     "notes": "Output 444.2250, offset +5 MHz (input 449.2250), tone 123.0. Hamilton Co. OH. RepeaterBook mode: FMP-25 (NAC 293). Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "W8ESS",
+     "location": "Cincinnati, OH",
+     "offsetMHz": 5.0,
+     "pl": "123.0"
+    },
+    {
+     "name": "N8TVU Cincinnati",
+     "freqMHz": 444.3,
+     "mode": "nfm",
+     "notes": "Output 444.3000, offset +5 MHz (input 449.3000), tone 118.8. Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "N8TVU",
+     "location": "Cincinnati, OH",
+     "offsetMHz": 5.0,
+     "pl": "118.8"
+    },
+    {
+     "name": "K4CO Edgewood",
+     "freqMHz": 444.35,
+     "mode": "nfm",
+     "notes": "Output 444.3500, offset +5 MHz (input 449.3500), tone 123.0. Kenton Co. KY. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=21&type=county&loc=Kenton",
+     "callsign": "K4CO",
+     "location": "Edgewood, KY",
+     "offsetMHz": 5.0,
+     "pl": "123.0"
+    },
+    {
+     "name": "AG8Y Middletown",
+     "freqMHz": 444.475,
+     "mode": "nfm",
+     "notes": "Output 444.4750, offset +5 MHz (input 449.4750), tone 100.0. Butler Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "AG8Y",
+     "location": "Middletown, OH",
+     "offsetMHz": 5.0,
+     "pl": "100.0"
+    },
+    {
+     "name": "WU8S Loveland",
+     "freqMHz": 444.525,
+     "mode": "nfm",
+     "notes": "Output 444.5250, offset +5 MHz (input 449.5250), tone 100.0. Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "WU8S",
+     "location": "Loveland, OH",
+     "offsetMHz": 5.0,
+     "pl": "100.0"
+    },
+    {
+     "name": "K8KY Hamilton",
+     "freqMHz": 444.65,
+     "mode": "nfm",
+     "notes": "Output 444.6500, offset +5 MHz (input 449.6500), tone 123.0. Butler Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "K8KY",
+     "location": "Hamilton, OH",
+     "offsetMHz": 5.0,
+     "pl": "123.0"
+    },
+    {
+     "name": "N8SIM Withamsville",
+     "freqMHz": 444.75,
+     "mode": "nfm",
+     "notes": "Output 444.7500, offset +5 MHz (input 449.7500), tone 123.0. Clermont Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Clermont",
+     "callsign": "N8SIM",
+     "location": "Withamsville, OH",
+     "offsetMHz": 5.0,
+     "pl": "123.0"
+    },
+    {
+     "name": "W8BLV Middletown",
+     "freqMHz": 444.825,
+     "mode": "nfm",
+     "notes": "Output 444.8250, offset +5 MHz (input 449.8250), tone 77.0. Butler Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "W8BLV",
+     "location": "Middletown, OH",
+     "offsetMHz": 5.0,
+     "pl": "77.0"
+    },
+    {
+     "name": "K8CF Cincinnati",
+     "freqMHz": 444.925,
+     "mode": "nfm",
+     "notes": "Output 444.9250, offset +5 MHz (input 449.9250). Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). No tone listed.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "K8CF",
+     "location": "Cincinnati, OH",
+     "offsetMHz": 5.0,
+     "pl": null
+    },
+    {
+     "name": "W8GNT Lebanon",
+     "freqMHz": 444.95,
+     "mode": "nfm",
+     "notes": "Output 444.9500, offset +5 MHz (input 449.9500), tone 123.0. Warren Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Warren",
+     "callsign": "W8GNT",
+     "location": "Lebanon, OH",
+     "offsetMHz": 5.0,
+     "pl": "123.0"
+    },
+    {
+     "name": "KD8LBS West Chester",
+     "freqMHz": 444.975,
+     "mode": "nfm",
+     "notes": "Output 444.9750, offset +5 MHz (input 449.9750), tone D223. Butler Co. OH. RepeaterBook mode: FM (DCS 223). Offset sign '+' from listing; magnitude is band-standard (not shown in list view). DCS code, not CTCSS.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler",
+     "callsign": "KD8LBS",
+     "location": "West Chester, OH",
+     "offsetMHz": 5.0,
+     "pl": "D223"
+    },
+    {
+     "name": "K8BIG Cincinnati",
+     "freqMHz": 927.025,
+     "mode": "nfm",
+     "notes": "Output 927.0250, offset -25 MHz (input 902.0250), tone 123.0. Hamilton Co. OH. RepeaterBook mode: FMP-25 (NAC 293). Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+     "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+     "callsign": "K8BIG",
+     "location": "Cincinnati (Star Tower), OH",
+     "offsetMHz": -25.0,
+     "pl": "123.0"
+    }
+   ]
+  },
+  {
+   "id": "local_fm",
+   "name": "Cincinnati FM Stations",
+   "icon": "🎵",
+   "tier": 2,
+   "count": 29,
+   "entries": [
+    {
+     "name": "WAIF 88.3 (Community/variety)",
+     "freqMHz": 88.3,
+     "mode": "wfm",
+     "notes": "Community/variety; city of license Cincinnati",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WAIF"
+    },
+    {
+     "name": "WMWX 88.9 (Community/classic rock)",
+     "freqMHz": 88.9,
+     "mode": "wfm",
+     "notes": "Community/classic rock; city of license Miamitown",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WMWX"
+    },
+    {
+     "name": "WKCX 89.1 (Christian)",
+     "freqMHz": 89.1,
+     "mode": "wfm",
+     "notes": "Christian; city of license Crittenden, KY",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WKCX"
+    },
+    {
+     "name": "WMKV 89.3 (Adult standards/MOR)",
+     "freqMHz": 89.3,
+     "mode": "wfm",
+     "notes": "Adult standards/MOR; city of license Reading",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WMKV"
+    },
+    {
+     "name": "WYHH 89.7 (BBN)",
+     "freqMHz": 89.7,
+     "mode": "wfm",
+     "notes": "BBN; city of license Highland Heights, KY",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WYHH"
+    },
+    {
+     "name": "WLHS 89.9 (Adult standards/MOR)",
+     "freqMHz": 89.9,
+     "mode": "wfm",
+     "notes": "Adult standards/MOR; city of license West Chester",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WLHS"
+    },
+    {
+     "name": "WORI 90.1 (Air1)",
+     "freqMHz": 90.1,
+     "mode": "wfm",
+     "notes": "Air1; city of license Harrison",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WORI"
+    },
+    {
+     "name": "WGUC 90.9 (NPR/classical)",
+     "freqMHz": 90.9,
+     "mode": "wfm",
+     "notes": "NPR/classical; city of license Cincinnati; HD2 WGUC Jazz, HD1/HD3 variety streams listed",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WGUC"
+    },
+    {
+     "name": "WVXU 91.7 (NPR/talk)",
+     "freqMHz": 91.7,
+     "mode": "wfm",
+     "notes": "NPR/talk; city of license Cincinnati; HD2 Radio Artifact",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WVXU"
+    },
+    {
+     "name": "WOFX-FM 92.5 (Classic rock)",
+     "freqMHz": 92.5,
+     "mode": "wfm",
+     "notes": "Classic rock; city of license Cincinnati",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WOFX-FM"
+    },
+    {
+     "name": "WAKW 93.3 (Contemporary Christian)",
+     "freqMHz": 93.3,
+     "mode": "wfm",
+     "notes": "Contemporary Christian; city of license Cincinnati",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WAKW"
+    },
+    {
+     "name": "WNNF 94.1 (Country)",
+     "freqMHz": 94.1,
+     "mode": "wfm",
+     "notes": "Country; city of license Cincinnati",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WNNF"
+    },
+    {
+     "name": "WREW 94.9 (Adult contemporary)",
+     "freqMHz": 94.9,
+     "mode": "wfm",
+     "notes": "Adult contemporary; city of license Fairfield",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WREW"
+    },
+    {
+     "name": "WVQC-LP 95.7 (LPFM/variety)",
+     "freqMHz": 95.7,
+     "mode": "wfm",
+     "notes": "LPFM/variety; city of license Cincinnati",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WVQC-LP"
+    },
+    {
+     "name": "WFTK 96.5 (Active rock)",
+     "freqMHz": 96.5,
+     "mode": "wfm",
+     "notes": "Active rock; city of license Lebanon",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WFTK"
+    },
+    {
+     "name": "WYGY 97.3 (Country)",
+     "freqMHz": 97.3,
+     "mode": "wfm",
+     "notes": "Country; city of license Fort Thomas, KY",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WYGY"
+    },
+    {
+     "name": "WKRP-FM 97.7 (Adult hits)",
+     "freqMHz": 97.7,
+     "mode": "wfm",
+     "notes": "Adult hits; city of license Mason",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WKRP-FM"
+    },
+    {
+     "name": "WRRM 98.5 (Adult contemporary)",
+     "freqMHz": 98.5,
+     "mode": "wfm",
+     "notes": "Adult contemporary; city of license Cincinnati",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WRRM"
+    },
+    {
+     "name": "WHKO 99.1 (Country (Dayton market))",
+     "freqMHz": 99.1,
+     "mode": "wfm",
+     "notes": "Country (Dayton market); city of license Dayton",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WHKO"
+    },
+    {
+     "name": "WOSL 100.3 (Urban AC)",
+     "freqMHz": 100.3,
+     "mode": "wfm",
+     "notes": "Urban AC; city of license Norwood",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WOSL"
+    },
+    {
+     "name": "WIZF 101.1 (Mainstream urban)",
+     "freqMHz": 101.1,
+     "mode": "wfm",
+     "notes": "Mainstream urban; city of license Erlanger, KY",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WIZF"
+    },
+    {
+     "name": "WKRQ 101.9 (Contemporary hit radio)",
+     "freqMHz": 101.9,
+     "mode": "wfm",
+     "notes": "Contemporary hit radio; city of license Cincinnati",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WKRQ"
+    },
+    {
+     "name": "WEBN 102.7 (Mainstream rock)",
+     "freqMHz": 102.7,
+     "mode": "wfm",
+     "notes": "Mainstream rock; city of license Cincinnati",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WEBN"
+    },
+    {
+     "name": "WGRR 103.5 (Classic hits)",
+     "freqMHz": 103.5,
+     "mode": "wfm",
+     "notes": "Classic hits; city of license Hamilton",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WGRR"
+    },
+    {
+     "name": "WNLT 104.3 (K-Love)",
+     "freqMHz": 104.3,
+     "mode": "wfm",
+     "notes": "K-Love; city of license Delhi Hills",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WNLT"
+    },
+    {
+     "name": "WUBE-FM 105.1 (Country)",
+     "freqMHz": 105.1,
+     "mode": "wfm",
+     "notes": "Country; city of license Cincinnati",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WUBE-FM"
+    },
+    {
+     "name": "WNKN 105.9 (Classic country)",
+     "freqMHz": 105.9,
+     "mode": "wfm",
+     "notes": "Classic country; city of license Middletown",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WNKN"
+    },
+    {
+     "name": "WNKR 106.7 (Adult hits)",
+     "freqMHz": 106.7,
+     "mode": "wfm",
+     "notes": "Adult hits; city of license Williamstown, KY",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WNKR"
+    },
+    {
+     "name": "WKFS 107.1 (Contemporary hit radio)",
+     "freqMHz": 107.1,
+     "mode": "wfm",
+     "notes": "Contemporary hit radio; city of license Milford",
+     "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+     "callsign": "WKFS"
+    }
+   ]
+  },
+  {
+   "id": "local_air",
+   "name": "CVG + Lunken Airband",
+   "icon": "🛫",
+   "tier": 2,
+   "count": 20,
+   "entries": [
+    {
+     "name": "CVG ATIS (Arrival D-ATIS / ASOS)",
+     "freqMHz": 134.375,
+     "mode": "am",
+     "notes": "AirNav: D-ATIS 134.375 ARR; also WX ASOS",
+     "source": "https://www.airnav.com/airport/KCVG",
+     "airport": "KCVG"
+    },
+    {
+     "name": "CVG ATIS (Departure D-ATIS)",
+     "freqMHz": 135.3,
+     "mode": "am",
+     "notes": "AirNav: D-ATIS 135.3 DEP",
+     "source": "https://www.airnav.com/airport/KCVG",
+     "airport": "KCVG"
+    },
+    {
+     "name": "CVG Clearance Delivery",
+     "freqMHz": 120.4,
+     "mode": "am",
+     "notes": "",
+     "source": "https://www.airnav.com/airport/KCVG",
+     "airport": "KCVG"
+    },
+    {
+     "name": "CVG Ground",
+     "freqMHz": 121.7,
+     "mode": "am",
+     "notes": "",
+     "source": "https://www.airnav.com/airport/KCVG",
+     "airport": "KCVG"
+    },
+    {
+     "name": "CVG Tower (09/27, 18C/36C)",
+     "freqMHz": 118.3,
+     "mode": "am",
+     "notes": "",
+     "source": "https://www.airnav.com/airport/KCVG",
+     "airport": "KCVG"
+    },
+    {
+     "name": "CVG Tower (18L/36R)",
+     "freqMHz": 118.975,
+     "mode": "am",
+     "notes": "",
+     "source": "https://www.airnav.com/airport/KCVG",
+     "airport": "KCVG"
+    },
+    {
+     "name": "CVG Tower (18R/36L)",
+     "freqMHz": 133.325,
+     "mode": "am",
+     "notes": "",
+     "source": "https://www.airnav.com/airport/KCVG",
+     "airport": "KCVG"
+    },
+    {
+     "name": "CVG Approach (090-269)",
+     "freqMHz": 119.7,
+     "mode": "am",
+     "notes": "",
+     "source": "https://www.airnav.com/airport/KCVG",
+     "airport": "KCVG"
+    },
+    {
+     "name": "CVG Approach (270-089)",
+     "freqMHz": 123.875,
+     "mode": "am",
+     "notes": "",
+     "source": "https://www.airnav.com/airport/KCVG",
+     "airport": "KCVG"
+    },
+    {
+     "name": "CVG Departure (001-180)",
+     "freqMHz": 126.65,
+     "mode": "am",
+     "notes": "",
+     "source": "https://www.airnav.com/airport/KCVG",
+     "airport": "KCVG"
+    },
+    {
+     "name": "CVG Departure (181-360)",
+     "freqMHz": 128.7,
+     "mode": "am",
+     "notes": "",
+     "source": "https://www.airnav.com/airport/KCVG",
+     "airport": "KCVG"
+    },
+    {
+     "name": "CVG Class B (001-180)",
+     "freqMHz": 121.0,
+     "mode": "am",
+     "notes": "Class B frequency as listed by AirNav",
+     "source": "https://www.airnav.com/airport/KCVG",
+     "airport": "KCVG"
+    },
+    {
+     "name": "CVG UNICOM",
+     "freqMHz": 122.95,
+     "mode": "am",
+     "notes": "",
+     "source": "https://www.airnav.com/airport/KCVG",
+     "airport": "KCVG"
+    },
+    {
+     "name": "Guard / Emergency",
+     "freqMHz": 121.5,
+     "mode": "am",
+     "notes": "VHF emergency",
+     "source": "https://www.airnav.com/airport/KCVG",
+     "airport": "KCVG"
+    },
+    {
+     "name": "LUK ATIS",
+     "freqMHz": 123.6,
+     "mode": "am",
+     "notes": "",
+     "source": "https://www.airnav.com/airport/KLUK",
+     "airport": "KLUK"
+    },
+    {
+     "name": "LUK Tower / CTAF",
+     "freqMHz": 118.7,
+     "mode": "am",
+     "notes": "Tower 0700-2300; CTAF when closed",
+     "source": "https://www.airnav.com/airport/KLUK",
+     "airport": "KLUK"
+    },
+    {
+     "name": "LUK Ground",
+     "freqMHz": 121.9,
+     "mode": "am",
+     "notes": "0700-2300; also clearance when tower closed",
+     "source": "https://www.airnav.com/airport/KLUK",
+     "airport": "KLUK"
+    },
+    {
+     "name": "LUK Clearance Delivery",
+     "freqMHz": 124.9,
+     "mode": "am",
+     "notes": "",
+     "source": "https://www.airnav.com/airport/KLUK",
+     "airport": "KLUK"
+    },
+    {
+     "name": "LUK Approach/Departure",
+     "freqMHz": 121.0,
+     "mode": "am",
+     "notes": "Cincinnati Approach/Departure as listed",
+     "source": "https://www.airnav.com/airport/KLUK",
+     "airport": "KLUK"
+    },
+    {
+     "name": "LUK UNICOM",
+     "freqMHz": 122.95,
+     "mode": "am",
+     "notes": "",
+     "source": "https://www.airnav.com/airport/KLUK",
+     "airport": "KLUK"
+    }
+   ]
+  },
+  {
+   "id": "local_ps",
+   "name": "Hamilton Co. Public Safety",
+   "icon": "🚓",
+   "tier": 2,
+   "count": 68,
+   "entries": [
+    {
+     "name": "Blue Ash City Service Dept",
+     "freqMHz": 37.1,
+     "mode": "nfm",
+     "notes": "RR mode FM; tone 127.3 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Hamilton County Park District",
+     "freqMHz": 45.0,
+     "mode": "nfm",
+     "notes": "RR mode FM; tone 127.3 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "UC Air Care \"Victor\" (aircraft)",
+     "freqMHz": 123.075,
+     "mode": "am",
+     "notes": "RR mode AM; tone CSQ",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Hamilton County Engineers",
+     "freqMHz": 151.07,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone CSQ",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Anderson Twp Fire Tactical",
+     "freqMHz": 154.16,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 173.8 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Loveland-Symmes Fire/EMS Dispatch",
+     "freqMHz": 154.445,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone CSQ",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Mt. Healthy Police City Band",
+     "freqMHz": 154.98,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 054 DPL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Colerain Twp. Police City Band / Public Works",
+     "freqMHz": 155.04,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 107.2 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Winton Woods City Schools Buses",
+     "freqMHz": 155.22,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 072 DPL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Three Rivers LSD",
+     "freqMHz": 155.235,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 423 DPL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Hospital Disaster Net",
+     "freqMHz": 155.28,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone CSQ",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Police Intercity",
+     "freqMHz": 155.37,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone CSQ",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Harrison Police",
+     "freqMHz": 155.565,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 192.8 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Loveland Police",
+     "freqMHz": 155.715,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 114 DPL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "North College Hill Police City Band",
+     "freqMHz": 155.7375,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 412 DPL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Silverton Police Ch 2",
+     "freqMHz": 155.82,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone none",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Greenhills Police Tactical (license expired)",
+     "freqMHz": 155.85,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 606 DPL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Indian Hill Rangers (065 DPL); Reading Fire & Police (100.0 PL); Wyoming Fire",
+     "freqMHz": 158.76,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 065 DPL / 100.0 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Forest Park Police",
+     "freqMHz": 158.7825,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 466 DPL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Hamilton County Communications Center Admin/Paging",
+     "freqMHz": 158.805,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone none",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Hamilton County EMA Outdoor Warning Siren Activation",
+     "freqMHz": 158.82,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 141.3 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Reading/Deer Park PD Talkaround",
+     "freqMHz": 158.865,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone CSQ",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Wyoming Public Works",
+     "freqMHz": 159.135,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 023 DPL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Lockland Police Talkaround",
+     "freqMHz": 159.15,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone none",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Montgomery Fire",
+     "freqMHz": 453.075,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 79.7 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Deer Park/Silverton Fire Simulcast/Ops",
+     "freqMHz": 453.1625,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 218.1 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Hamilton County USAR portable repeater",
+     "freqMHz": 453.1875,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 110.9 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Hamilton County EMA",
+     "freqMHz": 453.375,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 131.8 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Sycamore Twp Fire Dispatch (analog; P25 NAC 293 ops also on this freq)",
+     "freqMHz": 453.55,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 110.9 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Sycamore Twp Sheriff Contract Patrol",
+     "freqMHz": 453.6875,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 110.9 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Norwood Public Works",
+     "freqMHz": 453.725,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone none",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Downtown Event Parking",
+     "freqMHz": 453.8375,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 526 DPL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Hamilton County All County Broadcast",
+     "freqMHz": 460.025,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 110.9 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Norwood Police",
+     "freqMHz": 460.075,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 141.3 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Hamilton County Justice Center (Jail)",
+     "freqMHz": 460.125,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone none",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Milford Police",
+     "freqMHz": 460.15,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 192.8 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Hamilton County Fire Paging West",
+     "freqMHz": 460.3,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone CSQ",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Milford Police Car to Car",
+     "freqMHz": 460.475,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 167.9 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Hamilton County Fire Paging East",
+     "freqMHz": 460.5,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone CSQ",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Norwood Fire",
+     "freqMHz": 460.575,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 107.2 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Emergency Support Services Z Units",
+     "freqMHz": 460.6,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 151.4 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Southwest Regional Water District Ops",
+     "freqMHz": 461.775,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 192.8 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Cincinnati Public Schools Transportation (First Student)",
+     "freqMHz": 461.8,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 114 DPL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Deer Park HS Operations",
+     "freqMHz": 461.8375,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 023 DPL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "UC Alliance Mobile Care Dispatch",
+     "freqMHz": 462.95,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 127.3 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "UC Air Care Dispatch/Ops",
+     "freqMHz": 462.975,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 127.3 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Mt Healthy Jr/Sr High",
+     "freqMHz": 463.2625,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone none",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Cincinnati Public Schools Buses (First Student)",
+     "freqMHz": 463.3,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 223 DPL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Emergency Support Services CRT",
+     "freqMHz": 463.725,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 632 DPL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Northwest High School Ch 1",
+     "freqMHz": 468.3375,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 155 DPL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Northwest High School Ch 2 Talkaround",
+     "freqMHz": 468.5875,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 466 DPL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Mount Healthy Jr/Sr High",
+     "freqMHz": 469.4375,
+     "mode": "nfm",
+     "notes": "RR mode FMN; tone 712 DPL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Cincinnati Fire High Rise Repeater 1",
+     "freqMHz": 857.2625,
+     "mode": "nfm",
+     "notes": "RR mode FM; tone none",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Cincinnati Fire High Rise Repeater 2",
+     "freqMHz": 858.2625,
+     "mode": "nfm",
+     "notes": "RR mode FM; tone none",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "City of Cincinnati Outdoor Warning Siren Activation",
+     "freqMHz": 860.9875,
+     "mode": "nfm",
+     "notes": "RR mode FM; tone 151.4 PL",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070"
+    },
+    {
+     "name": "Ohio MARCS-IP (Hamilton Co. police/fire/Cincinnati agencies)",
+     "freqMHz": null,
+     "mode": "nfm",
+     "notes": "Project 25 Phase I trunked; used by all county and municipal PDs and Cincinnati agencies. needs trunk-tracking (not tunable with rtl_fm)",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070",
+     "digital": true,
+     "mode_raw": "p25"
+    },
+    {
+     "name": "Mt. Healthy City Schools (DMR)",
+     "freqMHz": 152.3,
+     "mode": "nfm",
+     "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm); needs trunk-tracking (not tunable with rtl_fm)",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070",
+     "digital": true,
+     "mode_raw": "nfm"
+    },
+    {
+     "name": "Sycamore Schools Transportation (DMR)",
+     "freqMHz": 152.435,
+     "mode": "nfm",
+     "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm); needs trunk-tracking (not tunable with rtl_fm)",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070",
+     "digital": true,
+     "mode_raw": "nfm"
+    },
+    {
+     "name": "Southwest LSD Transportation (DMR)",
+     "freqMHz": 153.1175,
+     "mode": "nfm",
+     "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm); needs trunk-tracking (not tunable with rtl_fm)",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070",
+     "digital": true,
+     "mode_raw": "nfm"
+    },
+    {
+     "name": "Princeton MS Ops (DMR)",
+     "freqMHz": 153.2675,
+     "mode": "nfm",
+     "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm); needs trunk-tracking (not tunable with rtl_fm)",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070",
+     "digital": true,
+     "mode_raw": "nfm"
+    },
+    {
+     "name": "Oak Hills LSD Buses (DMR)",
+     "freqMHz": 153.3875,
+     "mode": "nfm",
+     "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm); needs trunk-tracking (not tunable with rtl_fm)",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070",
+     "digital": true,
+     "mode_raw": "nfm"
+    },
+    {
+     "name": "Princeton HS Ops (DMR)",
+     "freqMHz": 153.4775,
+     "mode": "nfm",
+     "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm); needs trunk-tracking (not tunable with rtl_fm)",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070",
+     "digital": true,
+     "mode_raw": "nfm"
+    },
+    {
+     "name": "Winton Woods Transportation (DMR)",
+     "freqMHz": 158.3625,
+     "mode": "nfm",
+     "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm); needs trunk-tracking (not tunable with rtl_fm)",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070",
+     "digital": true,
+     "mode_raw": "nfm"
+    },
+    {
+     "name": "Norwood City Schools (DMR)",
+     "freqMHz": 451.1625,
+     "mode": "nfm",
+     "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm); needs trunk-tracking (not tunable with rtl_fm)",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070",
+     "digital": true,
+     "mode_raw": "nfm"
+    },
+    {
+     "name": "Forest Hills LSD Transportation (DMR)",
+     "freqMHz": 452.375,
+     "mode": "nfm",
+     "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm); needs trunk-tracking (not tunable with rtl_fm)",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070",
+     "digital": true,
+     "mode_raw": "nfm"
+    },
+    {
+     "name": "Loveland City Schools Transportation (DMR)",
+     "freqMHz": 460.2125,
+     "mode": "nfm",
+     "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm); needs trunk-tracking (not tunable with rtl_fm)",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070",
+     "digital": true,
+     "mode_raw": "nfm"
+    },
+    {
+     "name": "Indian Hill Schools Busing (DMR)",
+     "freqMHz": 464.8125,
+     "mode": "nfm",
+     "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm); needs trunk-tracking (not tunable with rtl_fm)",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070",
+     "digital": true,
+     "mode_raw": "nfm"
+    },
+    {
+     "name": "Hamilton County weather sirens 800 MHz (P25 NAC 624)",
+     "freqMHz": 811.1875,
+     "mode": "nfm",
+     "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm); needs trunk-tracking (not tunable with rtl_fm)",
+     "source": "https://www.radioreference.com/db/browse/ctid/2070",
+     "digital": true,
+     "mode_raw": "nfm"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,1794 @@
+{
+ "ham_repeaters": [
+  {
+   "name": "W8ESS Cincinnati",
+   "freqMHz": 145.19,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": "123.0",
+   "callsign": "W8ESS",
+   "location": "Cincinnati, OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FMP-25 (NAC 293). Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "N8SIM Cincinnati",
+   "freqMHz": 145.31,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": "123.0",
+   "callsign": "N8SIM",
+   "location": "Cincinnati, OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "K8YOJ Cincinnati",
+   "freqMHz": 145.37,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": "123.0",
+   "callsign": "K8YOJ",
+   "location": "Cincinnati, OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FMP-25 (NAC 293). Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "W8MRC Cincinnati",
+   "freqMHz": 145.45,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": "123.0",
+   "callsign": "W8MRC",
+   "location": "Cincinnati, OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FM/Fusion/WIRES-X. Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "K8SCH Cincinnati",
+   "freqMHz": 146.67,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": "123.0",
+   "callsign": "K8SCH",
+   "location": "Cincinnati, OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "W8WRK Fairfield",
+   "freqMHz": 146.7,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": "123.0",
+   "callsign": "W8WRK",
+   "location": "Fairfield, OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "K8YOJ Cincinnati",
+   "freqMHz": 146.85,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": "123.0",
+   "callsign": "K8YOJ",
+   "location": "Cincinnati, OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FMP-25 (NAC 293). Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "WB8CRS Cincinnati",
+   "freqMHz": 146.88,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": "123.0",
+   "callsign": "WB8CRS",
+   "location": "Cincinnati (Mobilcomm), OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FM/EchoLink. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "K8SCH Cincinnati",
+   "freqMHz": 146.925,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": "123.0",
+   "callsign": "K8SCH",
+   "location": "Cincinnati, OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "W8YX Cincinnati",
+   "freqMHz": 147.06,
+   "mode": "nfm",
+   "offsetMHz": 0.6,
+   "pl": "100.0",
+   "callsign": "W8YX",
+   "location": "Cincinnati (U of C), OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "W8VND Cincinnati",
+   "freqMHz": 147.24,
+   "mode": "nfm",
+   "offsetMHz": 0.6,
+   "pl": "123.0",
+   "callsign": "W8VND",
+   "location": "Cincinnati, OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FM/EchoLink. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "K8YOJ Cincinnati",
+   "freqMHz": 224.06,
+   "mode": "nfm",
+   "offsetMHz": -1.6,
+   "pl": "100.0",
+   "callsign": "K8YOJ",
+   "location": "Cincinnati, OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "W8ESS Cincinnati",
+   "freqMHz": 224.62,
+   "mode": "nfm",
+   "offsetMHz": -1.6,
+   "pl": "110.9",
+   "callsign": "W8ESS",
+   "location": "Cincinnati, OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "W8KJ Fairfield",
+   "freqMHz": 443.575,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": null,
+   "callsign": "W8KJ",
+   "location": "Fairfield, OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FM/Fusion. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic. No tone listed.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "W8NWS Cincinnati",
+   "freqMHz": 443.7,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": null,
+   "callsign": "W8NWS",
+   "location": "Cincinnati, OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). No tone listed.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "WB8BFS Loveland",
+   "freqMHz": 443.8,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "67.0",
+   "callsign": "WB8BFS",
+   "location": "Loveland, OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FM/AllStar/EchoLink. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "K8BIG Cincinnati",
+   "freqMHz": 444.0,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "123.0",
+   "callsign": "K8BIG",
+   "location": "Cincinnati, OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FMP-25 (NAC 293). Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "KB8SBN Cincinnati",
+   "freqMHz": 444.075,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "110.9",
+   "callsign": "KB8SBN",
+   "location": "Cincinnati, OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Listed CLOSED (club/members) on RepeaterBook.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "W8ESS Cincinnati",
+   "freqMHz": 444.225,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "123.0",
+   "callsign": "W8ESS",
+   "location": "Cincinnati, OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FMP-25 (NAC 293). Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "N8TVU Cincinnati",
+   "freqMHz": 444.3,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "118.8",
+   "callsign": "N8TVU",
+   "location": "Cincinnati, OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "WU8S Loveland",
+   "freqMHz": 444.525,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "100.0",
+   "callsign": "WU8S",
+   "location": "Loveland, OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "K8CF Cincinnati",
+   "freqMHz": 444.925,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": null,
+   "callsign": "K8CF",
+   "location": "Cincinnati, OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). No tone listed.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "K8BIG Cincinnati",
+   "freqMHz": 927.025,
+   "mode": "nfm",
+   "offsetMHz": -25.0,
+   "pl": "123.0",
+   "callsign": "K8BIG",
+   "location": "Cincinnati (Star Tower), OH",
+   "notes": "Hamilton Co. OH. RepeaterBook mode: FMP-25 (NAC 293). Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton"
+  },
+  {
+   "name": "W8CCI Oxford",
+   "freqMHz": 145.21,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": "118.8",
+   "callsign": "W8CCI",
+   "location": "Oxford, OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "WC8VOA West Chester",
+   "freqMHz": 145.39,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": null,
+   "callsign": "WC8VOA",
+   "location": "West Chester (VOA museum), OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM/EchoLink/Fusion. Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic. No tone listed.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "W8BLV Middletown",
+   "freqMHz": 146.61,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": "77.0",
+   "callsign": "W8BLV",
+   "location": "Middletown, OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM/EchoLink. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "N8COZ Middletown",
+   "freqMHz": 146.715,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": null,
+   "callsign": "N8COZ",
+   "location": "Middletown, OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view). No tone listed.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "W8CCI Hamilton",
+   "freqMHz": 146.97,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": "118.8",
+   "callsign": "W8CCI",
+   "location": "Hamilton, OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM/Fusion. Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "W8WRK Hamilton",
+   "freqMHz": 147.0,
+   "mode": "nfm",
+   "offsetMHz": 0.6,
+   "pl": "123.0",
+   "callsign": "W8WRK",
+   "location": "Hamilton, OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "W8JEU Middletown",
+   "freqMHz": 147.315,
+   "mode": "nfm",
+   "offsetMHz": 0.6,
+   "pl": "77.0",
+   "callsign": "W8JEU",
+   "location": "Middletown, OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM/Fusion. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "W8CCI Hamilton",
+   "freqMHz": 147.33,
+   "mode": "nfm",
+   "offsetMHz": 0.6,
+   "pl": "118.8",
+   "callsign": "W8CCI",
+   "location": "Hamilton, OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "N8ECH Oxford",
+   "freqMHz": 224.34,
+   "mode": "nfm",
+   "offsetMHz": -1.6,
+   "pl": "77.0",
+   "callsign": "N8ECH",
+   "location": "Oxford, OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "WB8TCB Hamilton",
+   "freqMHz": 224.54,
+   "mode": "nfm",
+   "offsetMHz": -1.6,
+   "pl": null,
+   "callsign": "WB8TCB",
+   "location": "Hamilton, OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view). No tone listed.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "W8AJT Hamilton",
+   "freqMHz": 224.88,
+   "mode": "nfm",
+   "offsetMHz": -1.6,
+   "pl": null,
+   "callsign": "W8AJT",
+   "location": "Hamilton, OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view). No tone listed.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "WC8RA West Chester",
+   "freqMHz": 442.325,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "123.0",
+   "callsign": "WC8RA",
+   "location": "West Chester, OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "WA8MU Monroe",
+   "freqMHz": 442.55,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "118.8",
+   "callsign": "WA8MU",
+   "location": "Monroe, OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "W8VVL West Chester",
+   "freqMHz": 442.7,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "123.0",
+   "callsign": "W8VVL",
+   "location": "West Chester, OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "W8WRK Hamilton",
+   "freqMHz": 443.3375,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": null,
+   "callsign": "W8WRK",
+   "location": "Hamilton, OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). No tone listed.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "W8MUM Middletown",
+   "freqMHz": 443.5375,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "94.8",
+   "callsign": "W8MUM",
+   "location": "Middletown, OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM/Fusion. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "WC8VOA West Chester",
+   "freqMHz": 443.65,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": null,
+   "callsign": "WC8VOA",
+   "location": "West Chester (VOA Museum), OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM/Fusion. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic. No tone listed.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "KD8EYB Hamilton",
+   "freqMHz": 444.1125,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "118.8",
+   "callsign": "KD8EYB",
+   "location": "Hamilton, OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM/Fusion. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "AG8Y Middletown",
+   "freqMHz": 444.475,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "100.0",
+   "callsign": "AG8Y",
+   "location": "Middletown, OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "K8KY Hamilton",
+   "freqMHz": 444.65,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "123.0",
+   "callsign": "K8KY",
+   "location": "Hamilton, OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "W8BLV Middletown",
+   "freqMHz": 444.825,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "77.0",
+   "callsign": "W8BLV",
+   "location": "Middletown, OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "KD8LBS West Chester",
+   "freqMHz": 444.975,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "D223",
+   "callsign": "KD8LBS",
+   "location": "West Chester, OH",
+   "notes": "Butler Co. OH. RepeaterBook mode: FM (DCS 223). Offset sign '+' from listing; magnitude is band-standard (not shown in list view). DCS code, not CTCSS.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Butler"
+  },
+  {
+   "name": "W8EMA Felicity",
+   "freqMHz": 146.655,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": null,
+   "callsign": "W8EMA",
+   "location": "Felicity, OH",
+   "notes": "Clermont Co. OH. RepeaterBook mode: FM (carrier squelch). Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Clermont"
+  },
+  {
+   "name": "W8MRC Owensville",
+   "freqMHz": 147.345,
+   "mode": "nfm",
+   "offsetMHz": 0.6,
+   "pl": "123.0",
+   "callsign": "W8MRC",
+   "location": "Owensville, OH",
+   "notes": "Clermont Co. OH. RepeaterBook mode: FM/AllStar/EchoLink. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Clermont"
+  },
+  {
+   "name": "K8YOJ Batavia",
+   "freqMHz": 224.0,
+   "mode": "nfm",
+   "offsetMHz": -1.6,
+   "pl": "123.0",
+   "callsign": "K8YOJ",
+   "location": "Batavia (WOBO Tower), OH",
+   "notes": "Clermont Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Clermont"
+  },
+  {
+   "name": "WD8KPU Loveland",
+   "freqMHz": 442.775,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "114.8",
+   "callsign": "WD8KPU",
+   "location": "Loveland, OH",
+   "notes": "Clermont Co. OH. RepeaterBook mode: FM/AllStar. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Clermont"
+  },
+  {
+   "name": "K8DV Owensville",
+   "freqMHz": 443.45,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": null,
+   "callsign": "K8DV",
+   "location": "Owensville, OH",
+   "notes": "Clermont Co. OH. RepeaterBook mode: FM (carrier squelch). Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Clermont"
+  },
+  {
+   "name": "N8SIM Withamsville",
+   "freqMHz": 444.75,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "123.0",
+   "callsign": "N8SIM",
+   "location": "Withamsville, OH",
+   "notes": "Clermont Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Clermont"
+  },
+  {
+   "name": "W8BRQ Mason",
+   "freqMHz": 145.13,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": "123.0",
+   "callsign": "W8BRQ",
+   "location": "Mason, OH",
+   "notes": "Warren Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Warren"
+  },
+  {
+   "name": "WB8ZVL Franklin",
+   "freqMHz": 145.29,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": "118.8",
+   "callsign": "WB8ZVL",
+   "location": "Franklin, OH",
+   "notes": "Warren Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Warren"
+  },
+  {
+   "name": "W8CYE Springboro",
+   "freqMHz": 145.49,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": "123.0",
+   "callsign": "W8CYE",
+   "location": "Springboro, OH",
+   "notes": "Warren Co. OH. RepeaterBook mode: FM/EchoLink/Fusion. Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Warren"
+  },
+  {
+   "name": "WC8EMA Lebanon",
+   "freqMHz": 146.865,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": "118.8",
+   "callsign": "WC8EMA",
+   "location": "Lebanon, OH",
+   "notes": "Warren Co. OH. RepeaterBook mode: FM/AllStar. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Warren"
+  },
+  {
+   "name": "K8DZ Springboro",
+   "freqMHz": 147.36,
+   "mode": "nfm",
+   "offsetMHz": 0.6,
+   "pl": "77.0",
+   "callsign": "K8DZ",
+   "location": "Springboro, OH",
+   "notes": "Warren Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Warren"
+  },
+  {
+   "name": "K8DZ Springboro",
+   "freqMHz": 223.82,
+   "mode": "nfm",
+   "offsetMHz": -1.6,
+   "pl": "77.0",
+   "callsign": "K8DZ",
+   "location": "Springboro, OH",
+   "notes": "Warren Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Warren"
+  },
+  {
+   "name": "N8RXL Springboro",
+   "freqMHz": 224.22,
+   "mode": "nfm",
+   "offsetMHz": -1.6,
+   "pl": "100.0",
+   "callsign": "N8RXL",
+   "location": "Springboro, OH",
+   "notes": "Warren Co. OH. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Warren"
+  },
+  {
+   "name": "WE8N Franklin",
+   "freqMHz": 442.425,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "77.0",
+   "callsign": "WE8N",
+   "location": "Franklin, OH",
+   "notes": "Warren Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Warren"
+  },
+  {
+   "name": "WC8EMA Lebanon",
+   "freqMHz": 444.1875,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "118.8",
+   "callsign": "WC8EMA",
+   "location": "Lebanon, OH",
+   "notes": "Warren Co. OH. RepeaterBook mode: FM/P-25 (NAC 4A4). Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Warren"
+  },
+  {
+   "name": "W8GNT Lebanon",
+   "freqMHz": 444.95,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "123.0",
+   "callsign": "W8GNT",
+   "location": "Lebanon, OH",
+   "notes": "Warren Co. OH. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Warren"
+  },
+  {
+   "name": "WW4KY Walton",
+   "freqMHz": 145.42,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": null,
+   "callsign": "WW4KY",
+   "location": "Walton, KY",
+   "notes": "Boone Co. KY. RepeaterBook mode: FM/D-STAR mixed (carrier squelch). Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=21&type=county&loc=Boone"
+  },
+  {
+   "name": "K8BIG Walton",
+   "freqMHz": 147.375,
+   "mode": "nfm",
+   "offsetMHz": 0.6,
+   "pl": "123.0",
+   "callsign": "K8BIG",
+   "location": "Walton, KY",
+   "notes": "Boone Co. KY. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=21&type=county&loc=Boone"
+  },
+  {
+   "name": "WW4KY Walton",
+   "freqMHz": 224.4,
+   "mode": "nfm",
+   "offsetMHz": -1.6,
+   "pl": "100.0",
+   "callsign": "WW4KY",
+   "location": "Walton, KY",
+   "notes": "Boone Co. KY. RepeaterBook mode: FM/AllStar/EchoLink. Offset sign '-' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=21&type=county&loc=Boone"
+  },
+  {
+   "name": "WW4KY Walton",
+   "freqMHz": 441.8,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "179.9",
+   "callsign": "WW4KY",
+   "location": "Walton, KY",
+   "notes": "Boone Co. KY. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=21&type=county&loc=Boone"
+  },
+  {
+   "name": "K8SCH Edgewood",
+   "freqMHz": 146.625,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": "123.0",
+   "callsign": "K8SCH",
+   "location": "Edgewood (St Elizabeth Hospital South), KY",
+   "notes": "Kenton Co. KY. RepeaterBook mode: FM/Fusion. Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=21&type=county&loc=Kenton"
+  },
+  {
+   "name": "K4CO Edgewood",
+   "freqMHz": 147.03,
+   "mode": "nfm",
+   "offsetMHz": 0.6,
+   "pl": "123.0",
+   "callsign": "K4CO",
+   "location": "Edgewood, KY",
+   "notes": "Kenton Co. KY. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=21&type=county&loc=Kenton"
+  },
+  {
+   "name": "K4CO Edgewood",
+   "freqMHz": 147.255,
+   "mode": "nfm",
+   "offsetMHz": 0.6,
+   "pl": "123.0",
+   "callsign": "K4CO",
+   "location": "Edgewood, KY",
+   "notes": "Kenton Co. KY. RepeaterBook mode: FM/P-25 (NAC 293). Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Mixed-mode: analog FM only when not carrying digital traffic.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=21&type=county&loc=Kenton"
+  },
+  {
+   "name": "K4CO Edgewood",
+   "freqMHz": 444.35,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "123.0",
+   "callsign": "K4CO",
+   "location": "Edgewood, KY",
+   "notes": "Kenton Co. KY. RepeaterBook mode: FM. Offset sign '+' from listing; magnitude is band-standard (not shown in list view).",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=21&type=county&loc=Kenton"
+  },
+  {
+   "name": "WW4KY Highland Heights",
+   "freqMHz": 53.33,
+   "mode": "nfm",
+   "offsetMHz": null,
+   "pl": "123.0",
+   "callsign": "WW4KY",
+   "location": "Highland Heights, KY",
+   "notes": "Campbell Co. KY. RepeaterBook mode: FM (6m). Offset sign '-' from listing; magnitude is band-standard (not shown in list view). 6m offset magnitude not verified. Tone value parsed from listing column; verify.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=21&type=county&loc=Campbell"
+  },
+  {
+   "name": "WB4VOA Taylor Mill",
+   "freqMHz": 146.79,
+   "mode": "nfm",
+   "offsetMHz": -0.6,
+   "pl": "123.0",
+   "callsign": "WB4VOA",
+   "location": "Taylor Mill, KY",
+   "notes": "Campbell Co. KY. RepeaterBook mode: FM. Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Tone value parsed from listing column; verify.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=21&type=county&loc=Campbell"
+  },
+  {
+   "name": "KB9GYO Lawrenceburg",
+   "freqMHz": 147.285,
+   "mode": "nfm",
+   "offsetMHz": 0.6,
+   "pl": "146.2",
+   "callsign": "KB9GYO",
+   "location": "Lawrenceburg, IN",
+   "notes": "Dearborn Co. IN. RepeaterBook mode: FM/AllStar/EchoLink. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Tone value parsed from listing column; verify.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=18&type=county&loc=Dearborn"
+  },
+  {
+   "name": "KB9GYO Logan",
+   "freqMHz": 224.84,
+   "mode": "nfm",
+   "offsetMHz": -1.6,
+   "pl": "146.2",
+   "callsign": "KB9GYO",
+   "location": "Logan, IN",
+   "notes": "Dearborn Co. IN. RepeaterBook mode: FM/AllStar/EchoLink. Offset sign '-' from listing; magnitude is band-standard (not shown in list view). Tone value parsed from listing column; verify.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=18&type=county&loc=Dearborn"
+  },
+  {
+   "name": "KB9GYO Lawrenceburg",
+   "freqMHz": 443.875,
+   "mode": "nfm",
+   "offsetMHz": 5.0,
+   "pl": "146.2",
+   "callsign": "KB9GYO",
+   "location": "Lawrenceburg, IN",
+   "notes": "Dearborn Co. IN. RepeaterBook mode: FM/AllStar/EchoLink. Offset sign '+' from listing; magnitude is band-standard (not shown in list view). Tone value parsed from listing column; verify.",
+   "source": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=18&type=county&loc=Dearborn"
+  }
+ ],
+ "fm_broadcast": [
+  {
+   "name": "WAIF 88.3 (Community/variety)",
+   "freqMHz": 88.3,
+   "mode": "wfm",
+   "callsign": "WAIF",
+   "notes": "Community/variety; city of license Cincinnati",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WMWX 88.9 (Community/classic rock)",
+   "freqMHz": 88.9,
+   "mode": "wfm",
+   "callsign": "WMWX",
+   "notes": "Community/classic rock; city of license Miamitown",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WKCX 89.1 (Christian)",
+   "freqMHz": 89.1,
+   "mode": "wfm",
+   "callsign": "WKCX",
+   "notes": "Christian; city of license Crittenden, KY",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WMKV 89.3 (Adult standards/MOR)",
+   "freqMHz": 89.3,
+   "mode": "wfm",
+   "callsign": "WMKV",
+   "notes": "Adult standards/MOR; city of license Reading",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WYHH 89.7 (BBN)",
+   "freqMHz": 89.7,
+   "mode": "wfm",
+   "callsign": "WYHH",
+   "notes": "BBN; city of license Highland Heights, KY",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WLHS 89.9 (Adult standards/MOR)",
+   "freqMHz": 89.9,
+   "mode": "wfm",
+   "callsign": "WLHS",
+   "notes": "Adult standards/MOR; city of license West Chester",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WORI 90.1 (Air1)",
+   "freqMHz": 90.1,
+   "mode": "wfm",
+   "callsign": "WORI",
+   "notes": "Air1; city of license Harrison",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WGUC 90.9 (NPR/classical)",
+   "freqMHz": 90.9,
+   "mode": "wfm",
+   "callsign": "WGUC",
+   "notes": "NPR/classical; city of license Cincinnati; HD2 WGUC Jazz, HD1/HD3 variety streams listed",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WVXU 91.7 (NPR/talk)",
+   "freqMHz": 91.7,
+   "mode": "wfm",
+   "callsign": "WVXU",
+   "notes": "NPR/talk; city of license Cincinnati; HD2 Radio Artifact",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WOFX-FM 92.5 (Classic rock)",
+   "freqMHz": 92.5,
+   "mode": "wfm",
+   "callsign": "WOFX-FM",
+   "notes": "Classic rock; city of license Cincinnati",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WAKW 93.3 (Contemporary Christian)",
+   "freqMHz": 93.3,
+   "mode": "wfm",
+   "callsign": "WAKW",
+   "notes": "Contemporary Christian; city of license Cincinnati",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WNNF 94.1 (Country)",
+   "freqMHz": 94.1,
+   "mode": "wfm",
+   "callsign": "WNNF",
+   "notes": "Country; city of license Cincinnati",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WREW 94.9 (Adult contemporary)",
+   "freqMHz": 94.9,
+   "mode": "wfm",
+   "callsign": "WREW",
+   "notes": "Adult contemporary; city of license Fairfield",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WVQC-LP 95.7 (LPFM/variety)",
+   "freqMHz": 95.7,
+   "mode": "wfm",
+   "callsign": "WVQC-LP",
+   "notes": "LPFM/variety; city of license Cincinnati",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WFTK 96.5 (Active rock)",
+   "freqMHz": 96.5,
+   "mode": "wfm",
+   "callsign": "WFTK",
+   "notes": "Active rock; city of license Lebanon",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WYGY 97.3 (Country)",
+   "freqMHz": 97.3,
+   "mode": "wfm",
+   "callsign": "WYGY",
+   "notes": "Country; city of license Fort Thomas, KY",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WKRP-FM 97.7 (Adult hits)",
+   "freqMHz": 97.7,
+   "mode": "wfm",
+   "callsign": "WKRP-FM",
+   "notes": "Adult hits; city of license Mason",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WRRM 98.5 (Adult contemporary)",
+   "freqMHz": 98.5,
+   "mode": "wfm",
+   "callsign": "WRRM",
+   "notes": "Adult contemporary; city of license Cincinnati",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WHKO 99.1 (Country (Dayton market))",
+   "freqMHz": 99.1,
+   "mode": "wfm",
+   "callsign": "WHKO",
+   "notes": "Country (Dayton market); city of license Dayton",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WOSL 100.3 (Urban AC)",
+   "freqMHz": 100.3,
+   "mode": "wfm",
+   "callsign": "WOSL",
+   "notes": "Urban AC; city of license Norwood",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WIZF 101.1 (Mainstream urban)",
+   "freqMHz": 101.1,
+   "mode": "wfm",
+   "callsign": "WIZF",
+   "notes": "Mainstream urban; city of license Erlanger, KY",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WKRQ 101.9 (Contemporary hit radio)",
+   "freqMHz": 101.9,
+   "mode": "wfm",
+   "callsign": "WKRQ",
+   "notes": "Contemporary hit radio; city of license Cincinnati",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WEBN 102.7 (Mainstream rock)",
+   "freqMHz": 102.7,
+   "mode": "wfm",
+   "callsign": "WEBN",
+   "notes": "Mainstream rock; city of license Cincinnati",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WGRR 103.5 (Classic hits)",
+   "freqMHz": 103.5,
+   "mode": "wfm",
+   "callsign": "WGRR",
+   "notes": "Classic hits; city of license Hamilton",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WNLT 104.3 (K-Love)",
+   "freqMHz": 104.3,
+   "mode": "wfm",
+   "callsign": "WNLT",
+   "notes": "K-Love; city of license Delhi Hills",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WUBE-FM 105.1 (Country)",
+   "freqMHz": 105.1,
+   "mode": "wfm",
+   "callsign": "WUBE-FM",
+   "notes": "Country; city of license Cincinnati",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WNKN 105.9 (Classic country)",
+   "freqMHz": 105.9,
+   "mode": "wfm",
+   "callsign": "WNKN",
+   "notes": "Classic country; city of license Middletown",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WNKR 106.7 (Adult hits)",
+   "freqMHz": 106.7,
+   "mode": "wfm",
+   "callsign": "WNKR",
+   "notes": "Adult hits; city of license Williamstown, KY",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  },
+  {
+   "name": "WKFS 107.1 (Contemporary hit radio)",
+   "freqMHz": 107.1,
+   "mode": "wfm",
+   "callsign": "WKFS",
+   "notes": "Contemporary hit radio; city of license Milford",
+   "source": "https://en.wikipedia.org/wiki/Media_in_Cincinnati"
+  }
+ ],
+ "airband": [
+  {
+   "name": "CVG ATIS (Arrival D-ATIS / ASOS)",
+   "freqMHz": 134.375,
+   "mode": "am",
+   "airport": "KCVG",
+   "notes": "AirNav: D-ATIS 134.375 ARR; also WX ASOS",
+   "source": "https://www.airnav.com/airport/KCVG"
+  },
+  {
+   "name": "CVG ATIS (Departure D-ATIS)",
+   "freqMHz": 135.3,
+   "mode": "am",
+   "airport": "KCVG",
+   "notes": "AirNav: D-ATIS 135.3 DEP",
+   "source": "https://www.airnav.com/airport/KCVG"
+  },
+  {
+   "name": "CVG Clearance Delivery",
+   "freqMHz": 120.4,
+   "mode": "am",
+   "airport": "KCVG",
+   "notes": "",
+   "source": "https://www.airnav.com/airport/KCVG"
+  },
+  {
+   "name": "CVG Ground",
+   "freqMHz": 121.7,
+   "mode": "am",
+   "airport": "KCVG",
+   "notes": "",
+   "source": "https://www.airnav.com/airport/KCVG"
+  },
+  {
+   "name": "CVG Tower (09/27, 18C/36C)",
+   "freqMHz": 118.3,
+   "mode": "am",
+   "airport": "KCVG",
+   "notes": "",
+   "source": "https://www.airnav.com/airport/KCVG"
+  },
+  {
+   "name": "CVG Tower (18L/36R)",
+   "freqMHz": 118.975,
+   "mode": "am",
+   "airport": "KCVG",
+   "notes": "",
+   "source": "https://www.airnav.com/airport/KCVG"
+  },
+  {
+   "name": "CVG Tower (18R/36L)",
+   "freqMHz": 133.325,
+   "mode": "am",
+   "airport": "KCVG",
+   "notes": "",
+   "source": "https://www.airnav.com/airport/KCVG"
+  },
+  {
+   "name": "CVG Approach (090-269)",
+   "freqMHz": 119.7,
+   "mode": "am",
+   "airport": "KCVG",
+   "notes": "",
+   "source": "https://www.airnav.com/airport/KCVG"
+  },
+  {
+   "name": "CVG Approach (270-089)",
+   "freqMHz": 123.875,
+   "mode": "am",
+   "airport": "KCVG",
+   "notes": "",
+   "source": "https://www.airnav.com/airport/KCVG"
+  },
+  {
+   "name": "CVG Departure (001-180)",
+   "freqMHz": 126.65,
+   "mode": "am",
+   "airport": "KCVG",
+   "notes": "",
+   "source": "https://www.airnav.com/airport/KCVG"
+  },
+  {
+   "name": "CVG Departure (181-360)",
+   "freqMHz": 128.7,
+   "mode": "am",
+   "airport": "KCVG",
+   "notes": "",
+   "source": "https://www.airnav.com/airport/KCVG"
+  },
+  {
+   "name": "CVG Class B (001-180)",
+   "freqMHz": 121.0,
+   "mode": "am",
+   "airport": "KCVG",
+   "notes": "Class B frequency as listed by AirNav",
+   "source": "https://www.airnav.com/airport/KCVG"
+  },
+  {
+   "name": "CVG UNICOM",
+   "freqMHz": 122.95,
+   "mode": "am",
+   "airport": "KCVG",
+   "notes": "",
+   "source": "https://www.airnav.com/airport/KCVG"
+  },
+  {
+   "name": "Guard / Emergency",
+   "freqMHz": 121.5,
+   "mode": "am",
+   "airport": "KCVG",
+   "notes": "VHF emergency",
+   "source": "https://www.airnav.com/airport/KCVG"
+  },
+  {
+   "name": "LUK ATIS",
+   "freqMHz": 123.6,
+   "mode": "am",
+   "airport": "KLUK",
+   "notes": "",
+   "source": "https://www.airnav.com/airport/KLUK"
+  },
+  {
+   "name": "LUK Tower / CTAF",
+   "freqMHz": 118.7,
+   "mode": "am",
+   "airport": "KLUK",
+   "notes": "Tower 0700-2300; CTAF when closed",
+   "source": "https://www.airnav.com/airport/KLUK"
+  },
+  {
+   "name": "LUK Ground",
+   "freqMHz": 121.9,
+   "mode": "am",
+   "airport": "KLUK",
+   "notes": "0700-2300; also clearance when tower closed",
+   "source": "https://www.airnav.com/airport/KLUK"
+  },
+  {
+   "name": "LUK Clearance Delivery",
+   "freqMHz": 124.9,
+   "mode": "am",
+   "airport": "KLUK",
+   "notes": "",
+   "source": "https://www.airnav.com/airport/KLUK"
+  },
+  {
+   "name": "LUK Approach/Departure",
+   "freqMHz": 121.0,
+   "mode": "am",
+   "airport": "KLUK",
+   "notes": "Cincinnati Approach/Departure as listed",
+   "source": "https://www.airnav.com/airport/KLUK"
+  },
+  {
+   "name": "LUK UNICOM",
+   "freqMHz": 122.95,
+   "mode": "am",
+   "airport": "KLUK",
+   "notes": "",
+   "source": "https://www.airnav.com/airport/KLUK"
+  }
+ ],
+ "public_safety": [
+  {
+   "name": "Ohio MARCS-IP (Hamilton Co. police/fire/Cincinnati agencies)",
+   "freqMHz": null,
+   "mode": "p25",
+   "digital": true,
+   "notes": "Project 25 Phase I trunked; used by all county and municipal PDs and Cincinnati agencies. needs trunk-tracking (not tunable with rtl_fm)",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Mt. Healthy Police City Band",
+   "freqMHz": 154.98,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 054 DPL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Colerain Twp. Police City Band / Public Works",
+   "freqMHz": 155.04,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 107.2 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Police Intercity",
+   "freqMHz": 155.37,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone CSQ",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Harrison Police",
+   "freqMHz": 155.565,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 192.8 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Loveland Police",
+   "freqMHz": 155.715,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 114 DPL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "North College Hill Police City Band",
+   "freqMHz": 155.7375,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 412 DPL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Silverton Police Ch 2",
+   "freqMHz": 155.82,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone none",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Greenhills Police Tactical (license expired)",
+   "freqMHz": 155.85,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 606 DPL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Indian Hill Rangers (065 DPL); Reading Fire & Police (100.0 PL); Wyoming Fire",
+   "freqMHz": 158.76,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 065 DPL / 100.0 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Forest Park Police",
+   "freqMHz": 158.7825,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 466 DPL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Reading/Deer Park PD Talkaround",
+   "freqMHz": 158.865,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone CSQ",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Lockland Police Talkaround",
+   "freqMHz": 159.15,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone none",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Sycamore Twp Sheriff Contract Patrol",
+   "freqMHz": 453.6875,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 110.9 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Hamilton County All County Broadcast",
+   "freqMHz": 460.025,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 110.9 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Norwood Police",
+   "freqMHz": 460.075,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 141.3 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Hamilton County Justice Center (Jail)",
+   "freqMHz": 460.125,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone none",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Milford Police",
+   "freqMHz": 460.15,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 192.8 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Milford Police Car to Car",
+   "freqMHz": 460.475,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 167.9 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Hamilton County Fire Paging West",
+   "freqMHz": 460.3,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone CSQ",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Hamilton County Fire Paging East",
+   "freqMHz": 460.5,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone CSQ",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Anderson Twp Fire Tactical",
+   "freqMHz": 154.16,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 173.8 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Loveland-Symmes Fire/EMS Dispatch",
+   "freqMHz": 154.445,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone CSQ",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Montgomery Fire",
+   "freqMHz": 453.075,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 79.7 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Deer Park/Silverton Fire Simulcast/Ops",
+   "freqMHz": 453.1625,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 218.1 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Sycamore Twp Fire Dispatch (analog; P25 NAC 293 ops also on this freq)",
+   "freqMHz": 453.55,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 110.9 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Norwood Fire",
+   "freqMHz": 460.575,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 107.2 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "UC Air Care \"Victor\" (aircraft)",
+   "freqMHz": 123.075,
+   "mode": "am",
+   "digital": false,
+   "notes": "RR mode AM; tone CSQ",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "UC Alliance Mobile Care Dispatch",
+   "freqMHz": 462.95,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 127.3 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "UC Air Care Dispatch/Ops",
+   "freqMHz": 462.975,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 127.3 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Hamilton County EMA Outdoor Warning Siren Activation",
+   "freqMHz": 158.82,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 141.3 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Hamilton County USAR portable repeater",
+   "freqMHz": 453.1875,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 110.9 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Emergency Support Services Z Units",
+   "freqMHz": 460.6,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 151.4 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Emergency Support Services CRT",
+   "freqMHz": 463.725,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 632 DPL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "City of Cincinnati Outdoor Warning Siren Activation",
+   "freqMHz": 860.9875,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FM; tone 151.4 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Blue Ash City Service Dept",
+   "freqMHz": 37.1,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FM; tone 127.3 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Hamilton County Park District",
+   "freqMHz": 45.0,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FM; tone 127.3 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Hamilton County Engineers",
+   "freqMHz": 151.07,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone CSQ",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Hospital Disaster Net",
+   "freqMHz": 155.28,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone CSQ",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Hamilton County Communications Center Admin/Paging",
+   "freqMHz": 158.805,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone none",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Wyoming Public Works",
+   "freqMHz": 159.135,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 023 DPL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Hamilton County EMA",
+   "freqMHz": 453.375,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 131.8 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Norwood Public Works",
+   "freqMHz": 453.725,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone none",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Downtown Event Parking",
+   "freqMHz": 453.8375,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 526 DPL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Winton Woods City Schools Buses",
+   "freqMHz": 155.22,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 072 DPL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Three Rivers LSD",
+   "freqMHz": 155.235,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 423 DPL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Cincinnati Public Schools Transportation (First Student)",
+   "freqMHz": 461.8,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 114 DPL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Deer Park HS Operations",
+   "freqMHz": 461.8375,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 023 DPL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Mt Healthy Jr/Sr High",
+   "freqMHz": 463.2625,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone none",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Cincinnati Public Schools Buses (First Student)",
+   "freqMHz": 463.3,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 223 DPL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Northwest High School Ch 1",
+   "freqMHz": 468.3375,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 155 DPL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Northwest High School Ch 2 Talkaround",
+   "freqMHz": 468.5875,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 466 DPL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Mount Healthy Jr/Sr High",
+   "freqMHz": 469.4375,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 712 DPL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Cincinnati Fire High Rise Repeater 1",
+   "freqMHz": 857.2625,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FM; tone none",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Cincinnati Fire High Rise Repeater 2",
+   "freqMHz": 858.2625,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FM; tone none",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Southwest Regional Water District Ops",
+   "freqMHz": 461.775,
+   "mode": "nfm",
+   "digital": false,
+   "notes": "RR mode FMN; tone 192.8 PL",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Hamilton County weather sirens 800 MHz (P25 NAC 624)",
+   "freqMHz": 811.1875,
+   "mode": "nfm",
+   "digital": true,
+   "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm)",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Mt. Healthy City Schools (DMR)",
+   "freqMHz": 152.3,
+   "mode": "nfm",
+   "digital": true,
+   "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm)",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Sycamore Schools Transportation (DMR)",
+   "freqMHz": 152.435,
+   "mode": "nfm",
+   "digital": true,
+   "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm)",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Southwest LSD Transportation (DMR)",
+   "freqMHz": 153.1175,
+   "mode": "nfm",
+   "digital": true,
+   "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm)",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Princeton MS Ops (DMR)",
+   "freqMHz": 153.2675,
+   "mode": "nfm",
+   "digital": true,
+   "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm)",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Oak Hills LSD Buses (DMR)",
+   "freqMHz": 153.3875,
+   "mode": "nfm",
+   "digital": true,
+   "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm)",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Princeton HS Ops (DMR)",
+   "freqMHz": 153.4775,
+   "mode": "nfm",
+   "digital": true,
+   "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm)",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Winton Woods Transportation (DMR)",
+   "freqMHz": 158.3625,
+   "mode": "nfm",
+   "digital": true,
+   "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm)",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Norwood City Schools (DMR)",
+   "freqMHz": 451.1625,
+   "mode": "nfm",
+   "digital": true,
+   "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm)",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Forest Hills LSD Transportation (DMR)",
+   "freqMHz": 452.375,
+   "mode": "nfm",
+   "digital": true,
+   "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm)",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Loveland City Schools Transportation (DMR)",
+   "freqMHz": 460.2125,
+   "mode": "nfm",
+   "digital": true,
+   "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm)",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  },
+  {
+   "name": "Indian Hill Schools Busing (DMR)",
+   "freqMHz": 464.8125,
+   "mode": "nfm",
+   "digital": true,
+   "notes": "Digital conventional (DMR/P25); needs digital decoder (not audible with rtl_fm)",
+   "source": "https://www.radioreference.com/db/browse/ctid/2070"
+  }
+ ],
+ "sources": [
+  {
+   "title": "RepeaterBook county lists (Hamilton, Butler, Clermont, Warren OH; Boone, Kenton, Campbell KY; Dearborn IN)",
+   "url": "https://www.repeaterbook.com/repeaters/location_search.php?state_id=39&type=county&loc=Hamilton",
+   "accessed": "2026-09-21",
+   "covers": "ham repeaters (one URL per county, loc= and state_id= vary: OH=39, KY=21, IN=18)"
+  },
+  {
+   "title": "Media in Cincinnati - Wikipedia",
+   "url": "https://en.wikipedia.org/wiki/Media_in_Cincinnati",
+   "accessed": "2026-09-21",
+   "covers": "FM broadcast"
+  },
+  {
+   "title": "AirNav KCVG",
+   "url": "https://www.airnav.com/airport/KCVG",
+   "accessed": "2026-09-21",
+   "covers": "CVG airband"
+  },
+  {
+   "title": "AirNav KLUK",
+   "url": "https://www.airnav.com/airport/KLUK",
+   "accessed": "2026-09-21",
+   "covers": "Lunken airband"
+  },
+  {
+   "title": "RadioReference Hamilton County OH",
+   "url": "https://www.radioreference.com/db/browse/ctid/2070",
+   "accessed": "2026-09-21",
+   "covers": "public safety / services, MARCS"
+  }
+ ],
+ "gaps": "Repeater offsets: RepeaterBook list view shows only +/- sign; magnitudes filled with band-standard (0.6/1.6/5/25 MHz), 6m offset left null. Campbell KY and Dearborn IN tone columns were ambiguous in the fetched text (146.2 and 123.0 appeared in offset column) - verify. Pure DMR/D-STAR/P25/Fusion-only repeaters skipped (e.g. K8BIG 145.35 D-STAR, 147.09 P25, 443.9 DMR; WB8CRS 443.4 DMR; N8MFN 442.65 D-STAR; KD8VLU 442.9625 DMR; W8BLV 444.3625 DMR; WB8ZVL 443.15 P25; 444.425 Fusion; KA4OBT 442.7625 DMR; K4TCD 440.6 DMR). FM: radio-locator returned only the search form; FCC FM Query not fetched; Wikipedia 'List of radio stations in Ohio' extraction was unreliable so it was not used - list is from Media_in_Cincinnati only (formats may be dated). Airband: military UHF (360.85, 363.15, 254.25, 257.8, 243.0) omitted (outside typical usage/AM UHF); FAA chart supplement and LiveATC not checked. Public safety: RadioReference county page fetched OK; Cincinnati police/fire/county dispatch are on MARCS-IP P25 (one entry). Individual MARCS talkgroups/site freqs not listed. Northern KY (Kenton/Boone/Campbell) public safety not researched. RR data was extracted by a summarizer; spot-check tones.",
+ "accessed": "2026-09-21"
+}
