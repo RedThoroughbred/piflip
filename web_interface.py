@@ -38,6 +38,22 @@ from rf_power_tools import RFPowerTools
 
 app = Flask(__name__)
 
+# --- PiFlip Radio (RTL-SDR streaming) + single-dongle arbiter ---
+import radio as radio_mod
+app.register_blueprint(radio_mod.bp)
+
+_RTL_EXACT = {'/api/scan433', '/api/tpms', '/api/weather', '/api/waterfall/spectrum',
+              '/api/waterfall/stream', '/api/spectrum/scan', '/api/spectrum/waterfall',
+              '/api/spectrum/detect', '/api/spectrum/reset'}
+
+@app.before_request
+def _radio_dongle_arbiter():
+    """Any other RTL job claims the dongle: stop the radio first."""
+    p = request.path
+    if p in _RTL_EXACT or (p == '/api/capture' and request.method == 'POST'):
+        if radio_mod.radio.is_running():
+            radio_mod.radio.stop('dongle claimed by ' + p)
+
 # --- Global Controllers ---
 pn532_controller = None
 nfc_enhanced = None
@@ -90,8 +106,9 @@ class CC1101Controller:
         self.write_register(0x3E, 0xC0)  # PATABLE
 
     def get_version_info(self):
-        partnum = self.read_register(0x30)
-        version = self.read_register(0x31)
+        # status registers (0x30-0x3D) need the burst bit too, so header = address | 0xC0
+        partnum = self.read_register(0x30 | 0x40)
+        version = self.read_register(0x31 | 0x40)
         return f"Part: 0x{partnum:02X}, Version: 0x{version:02X}"
 
     def cleanup(self):
@@ -194,9 +211,12 @@ def status():
 
     # Check RTL-SDR (check if device is present)
     try:
-        result = subprocess.run(['rtl_test', '-t'], capture_output=True,
-                              text=True, timeout=2)
-        status_info['rtl_sdr'] = 'Found' in result.stdout
+        if radio_mod.radio.is_running():
+            status_info['rtl_sdr'] = True  # radio is using it right now
+        else:
+            result = subprocess.run(['rtl_test', '-t'], capture_output=True,
+                                  text=True, timeout=2)
+            status_info['rtl_sdr'] = 'Found' in (result.stdout + result.stderr)
     except:
         status_info['rtl_sdr'] = False
 
@@ -1447,14 +1467,17 @@ def hardware_status():
 
     try:
         # Check RTL-SDR with quick timeout
-        result = subprocess.run(
-            ['rtl_test', '-t'],
-            capture_output=True,
-            text=True,
-            timeout=2
-        )
-        if 'Found 1 device' in result.stdout or 'Found 1 device' in result.stderr:
-            status['rtl_sdr'] = True
+        if radio_mod.radio.is_running():
+            status['rtl_sdr'] = True  # radio is using it right now
+        else:
+            result = subprocess.run(
+                ['rtl_test', '-t'],
+                capture_output=True,
+                text=True,
+                timeout=2
+            )
+            if 'Found 1 device' in result.stdout or 'Found 1 device' in result.stderr:
+                status['rtl_sdr'] = True
     except:
         pass
 

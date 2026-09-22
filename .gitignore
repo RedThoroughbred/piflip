@@ -88,3 +88,6 @@ piflip-wifi.service
 gemini_helper.py
 gemini_simple.py
 install_upgrades.sh
+*.bak
+*.bak-*
+config/

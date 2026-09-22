@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0e13">
+<title>PiFlip Radio</title>
+<style>
+:root{
+  --bg:#0b0e13; --panel:#13181f; --panel2:#1a212b; --line:#252d39;
+  --text:#e6ebf2; --muted:#9aa7b8; --amber:#ffb347; --amber2:#ff9a1f;
+  --green:#5ee39a; --red:#ff6b6b; --blue:#6cb8ff; --sky:#3aa0ff;
+  --lcd:#0e1a14; --lcdt:#8cffc4;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);
+  font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+body{padding:0 16px;padding-top:env(safe-area-inset-top,0);padding-bottom:calc(28px + env(safe-area-inset-bottom,0))}
+.wrap{max-width:560px;margin:0 auto}
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 0 10px}
+header a{color:var(--muted);text-decoration:none;font-size:14px}
+header h1{margin:0;font-size:17px;letter-spacing:.06em;text-transform:uppercase;color:var(--amber)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px}
+/* now playing */
+.lcd{background:var(--lcd);border:1px solid #1d3327;border-radius:14px;padding:14px 16px 12px;
+  box-shadow:inset 0 0 24px rgba(0,0,0,.55)}
+.lcd .tuned{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#4d8f74}
+.lcd .freq{font:600 clamp(44px,15vw,68px)/1.05 ui-monospace,"SF Mono",Menlo,monospace;color:var(--lcdt);
+  text-shadow:0 0 14px rgba(140,255,196,.35);letter-spacing:.02em}
+.lcd .freq small{font-size:.38em;color:#4d8f74;margin-left:6px;letter-spacing:.06em}
+.lcd .name{color:var(--lcdt);font-size:16px;min-height:22px;opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lcd .row{display:flex;align-items:center;justify-content:space-between;margin-top:8px;gap:10px;flex-wrap:wrap}
+.chip{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.08em;padding:3px 9px;border-radius:999px;
+  border:1px solid #2c5a45;color:var(--lcdt);background:#0b2117}
+.sig{display:flex;align-items:flex-end;gap:3px;height:20px}
+.sig i{display:block;width:8px;background:#173626;border-radius:2px}
+.sig i:nth-child(1){height:6px}.sig i:nth-child(2){height:10px}.sig i:nth-child(3){height:14px}
+.sig i:nth-child(4){height:18px}.sig i:nth-child(5){height:22px}
+.sig i.on{background:var(--lcdt);box-shadow:0 0 6px rgba(140,255,196,.5)}
+.sigl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#4d8f74;margin-right:8px}
+.meter{height:5px;background:#10261b;border-radius:3px;margin-top:10px;overflow:hidden}
+.meter b{display:block;height:100%;width:0;background:linear-gradient(90deg,#3ecf8e,var(--lcdt));transition:width .3s}
+.status{margin-top:10px;font-size:13px;color:var(--muted);min-height:20px}
+.status.err{color:var(--red)}
+/* play */
+.playwrap{display:flex;justify-content:center;margin:18px 0 6px}
+#play{width:112px;height:112px;border-radius:50%;border:0;cursor:pointer;color:#1a1204;
+  background:radial-gradient(circle at 35% 30%,#ffd28a,var(--amber2));
+  box-shadow:0 8px 28px rgba(255,154,31,.28),inset 0 -6px 12px rgba(0,0,0,.18);
+  font-size:15px;font-weight:800;letter-spacing:.1em;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+#play svg{width:38px;height:38px;fill:currentColor}
+#play:active{transform:scale(.96)}
+#play.on{background:radial-gradient(circle at 35% 30%,#ff9b9b,var(--red));color:#2b0808;
+  box-shadow:0 8px 28px rgba(255,107,107,.28),inset 0 -6px 12px rgba(0,0,0,.18)}
+#play.busy{opacity:.7}
+/* tuner */
+.tuner{display:grid;grid-template-columns:52px 1fr 52px;gap:8px;margin-top:6px}
+.btn{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:12px;
+  font-size:20px;padding:10px 0;cursor:pointer;min-height:48px}
+.btn:active{background:#222c39}
+input,select{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--text);
+  border-radius:12px;padding:12px;font-size:17px;min-height:48px;font-family:inherit}
+input:focus,select:focus{outline:2px solid var(--sky);outline-offset:0}
+.freqbox{position:relative}
+.freqbox span{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.seg button{background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:12px;
+  padding:11px 0;font-weight:700;letter-spacing:.06em;cursor:pointer;min-height:46px;font-size:14px}
+.seg button.sel{border-color:var(--amber);color:var(--amber);background:#221b0d}
+.tunego{margin-top:10px}
+.tunego button{width:100%;font-size:15px;font-weight:700;color:var(--sky);border-color:#1f3a55}
+.hint{font-size:12px;color:var(--muted);margin-top:8px}
+/* presets */
+h2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:22px 2px 8px;
+  display:flex;justify-content:space-between;align-items:center}
+h2 button{background:none;border:0;color:var(--sky);font-size:13px;cursor:pointer;letter-spacing:.04em;text-transform:none;padding:4px 2px}
+.grp{margin:14px 2px 6px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#6b7a8d}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.tile{position:relative;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  padding:12px 12px 10px;cursor:pointer;color:var(--text);min-height:74px;font-family:inherit}
+.tile:active{background:var(--panel2)}
+.tile .n{font-weight:600;font-size:14px;line-height:1.2;padding-right:22px}
+.tile .f{font:13px ui-monospace,Menlo,monospace;color:var(--amber);margin-top:6px}
+.tile .m{position:absolute;right:10px;top:10px;font-size:10px;letter-spacing:.08em;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 5px}
+.tile.cur{border-color:var(--green);box-shadow:0 0 0 1px var(--green) inset}
+.tile.unset .f{color:var(--muted)}
+.editing .tile{border-style:dashed;border-color:#3a4658}
+.tile .x{display:none;position:absolute;right:6px;bottom:6px;font-size:12px;color:var(--sky)}
+.editing .tile .x{display:block}
+.editing .tile .m{display:none}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(3,6,10,.72);display:none;align-items:flex-end;justify-content:center;z-index:9;padding:0 12px}
+.modal.show{display:flex}
+.sheet{width:100%;max-width:520px;background:var(--panel);border:1px solid var(--line);border-radius:20px 20px 0 0;
+  padding:18px 16px calc(18px + env(safe-area-inset-bottom,0));}
+.sheet h3{margin:0 0 12px;font-size:16px}
+.sheet label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px;letter-spacing:.06em;text-transform:uppercase}
+.sheet .acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+.sheet .acts .btn{font-size:15px;font-weight:700}
+.btn.pri{background:var(--amber2);color:#1a1204;border-color:var(--amber2)}
+.btn.del{color:var(--red);border-color:#4a2a2f}
+.foot{margin-top:24px;font-size:12px;color:var(--muted);text-align:center;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a href="/">&larr; PiFlip</a>
+    <h1>Radio</h1>
+    <span style="width:52px"></span>
+  </header>
+
+  <div class="card">
+    <div class="lcd">
+      <div class="tuned">Tuned to</div>
+      <div class="freq"><span id="freq">---.-</span><small>MHz</small></div>
+      <div class="name" id="name">&nbsp;</div>
+      <div class="row">
+        <span class="chip" id="modechip">WFM</span>
+        <span style="display:flex;align-items:center"><span class="sigl">Signal</span>
+          <span class="sig" id="sig"><i></i><i></i><i></i><i></i><i></i></span></span>
+      </div>
+      <div class="meter"><b id="lvl"></b></div>
+    </div>
+    <div class="status" id="status">Stopped</div>
+
+    <div class="playwrap">
+      <button id="play" aria-label="Play">
+        <svg viewBox="0 0 24 24" id="playico"><path d="M8 5v14l11-7z"/></svg>
+        <span id="playtxt">PLAY</span>
+      </button>
+    </div>
+
+    <div class="tuner">
+      <button class="btn" id="dn" aria-label="Tune down">&minus;</button>
+      <div class="freqbox"><input id="fin" inputmode="decimal" autocomplete="off" placeholder="e.g. 146.94"><span>MHz</span></div>
+      <button class="btn" id="up" aria-label="Tune up">+</button>
+    </div>
+    <div class="seg" id="seg">
+      <button data-m="wfm">WFM<br><small style="font-weight:400;letter-spacing:0">broadcast</small></button>
+      <button data-m="nfm">NFM<br><small style="font-weight:400;letter-spacing:0">weather / ham</small></button>
+      <button data-m="am">AM<br><small style="font-weight:400;letter-spacing:0">airband</small></button>
+    </div>
+    <div class="tunego"><button class="btn" id="tune">Tune to this frequency</button></div>
+    <div class="hint" id="nudgehint">Nudge steps: 0.2 MHz (WFM) / 0.025 MHz (NFM, AM).</div>
+  </div>
+
+  <h2><span>Favorites</span><span><button id="add">+ Add</button> <button id="edit">Edit</button></span></h2>
+  <div id="presets"></div>
+
+  <div class="foot">One radio, one dongle. Playing here pauses scans and captures; running a scan stops the radio.</div>
+</div>
+
+<audio id="aud" preload="none" playsinline></audio>
+
+<div class="modal" id="modal">
+  <div class="sheet">
+    <h3 id="mtitle">Preset</h3>
+    <label>Name</label><input id="p_name" maxlength="40" placeholder="Station name">
+    <label>Frequency (MHz)</label><input id="p_freq" inputmode="decimal" placeholder="e.g. 118.300 (blank = set later)">
+    <label>Mode</label>
+    <select id="p_mode"><option value="wfm">WFM &middot; broadcast FM</option><option value="nfm">NFM &middot; narrow FM (weather, ham)</option><option value="am">AM &middot; airband</option></select>
+    <label>Group</label>
+    <select id="p_group"><option>Weather</option><option>FM</option><option>Airband</option><option>Ham</option><option>Other</option></select>
+    <label>Squelch (0 = off)</label><input id="p_sq" inputmode="numeric" placeholder="0">
+    <div class="acts">
+      <button class="btn" id="m_cancel">Cancel</button>
+      <button class="btn pri" id="m_save">Save</button>
+    </div>
+    <div class="acts" id="m_delrow" style="grid-template-columns:1fr">
+      <button class="btn del" id="m_del">Delete preset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+const $ = id => document.getElementById(id);
+const aud = $('aud');
+let presets = [], editing = false, mode = 'wfm', playing = false, busy = false, editId = null;
+let lastStatus = null, curName = '', epoch = 0;
+
+const STEP = {wfm:0.2, nfm:0.025, am:0.025};
+const MODELBL = {wfm:'WFM', nfm:'NFM', am:'AM'};
+const GROUPS = ['Weather','FM','Airband','Ham','Other'];
+
+function fmtFreq(f){ return f==null ? '---.-' : (f>=100 ? f.toFixed(3) : f.toFixed(3)).replace(/0$/,'') ; }
+function fmtF(f){ return f==null ? '---.---' : f.toFixed(3); }
+function toast(t, err){ const s=$('status'); s.textContent=t; s.className='status'+(err?' err':''); }
+
+async function api(path, body){
+  const r = await fetch(path, body===undefined ? {} :
+    {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+  const j = await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(j.error || ('HTTP '+r.status));
+  return j;
+}
+
+function setMode(m){
+  mode = m;
+  document.querySelectorAll('#seg button').forEach(b=>b.classList.toggle('sel', b.dataset.m===m));
+  $('modechip').textContent = MODELBL[m];
+}
+function curFreq(){
+  const v = parseFloat($('fin').value.replace(',','.'));
+  return isFinite(v) ? v : null;
+}
+
+/* ---------- transport ---------- */
+function newNonce(){ return Math.random().toString(36).slice(2)+Date.now().toString(36); }
+
+async function startTuned(freq, m, name, squelch){
+  if(freq==null){ toast('Enter a frequency first', true); return; }
+  if(busy) return; busy = true; epoch++; $('play').classList.add('busy');
+  const nonce = newNonce();
+  curName = name || '';
+  try{
+    // Point the <audio> at the stream inside the user gesture (iOS autoplay rules);
+    // the server holds the request until this exact start is live.
+    aud.src = '/radio/stream.mp3?g='+nonce;
+    const p = aud.play(); if(p && p.catch) p.catch(()=>{});
+    toast('Tuning…');
+    $('freq').textContent = fmtF(freq); $('name').textContent = curName || ''; setMode(m);
+    const st = await api('/api/radio/start', {freq, mode:m, name:curName, squelch:squelch||0, nonce});
+    playing = true; render(st);
+    if('mediaSession' in navigator){
+      navigator.mediaSession.metadata = new MediaMetadata({title: (curName||fmtF(freq)+' MHz'),
+        artist: fmtF(freq)+' MHz · '+MODELBL[m], album:'PiFlip Radio'});
+    }
+  }catch(e){
+    playing = false; aud.pause(); aud.removeAttribute('src'); aud.load();
+    toast(e.message, true);
+  }finally{ busy=false; epoch++; $('play').classList.remove('busy'); refresh(); }
+}
+
+async function stopRadio(){
+  if(busy) return; busy = true; epoch++;
+  try{ aud.pause(); aud.removeAttribute('src'); aud.load(); playing=false; render(await api('/api/radio/stop', {})); }
+  catch(e){ toast(e.message, true); }
+  finally{ busy=false; epoch++; refresh(); }
+}
+
+$('play').onclick = ()=>{
+  if(playing || (lastStatus && lastStatus.running)) return stopRadio();
+  const f = curFreq(); startTuned(f, mode, curName, 0);
+};
+$('tune').onclick = ()=>{ const f=curFreq(); curName=''; startTuned(f, mode, '', 0); };
+$('fin').addEventListener('keydown', e=>{ if(e.key==='Enter'){ $('tune').click(); }});
+function nudge(dir){
+  let f = curFreq(); if(f==null) f = lastStatus && lastStatus.freq || 100.0;
+  f = Math.round((f + dir*STEP[mode])*1000)/1000;
+  $('fin').value = f.toFixed(3).replace(/0+$/,'').replace(/\.$/,'.0');
+  $('freq').textContent = fmtF(f);
+  if(playing || (lastStatus && lastStatus.running)) startTuned(f, mode, '', 0);
+}
+$('up').onclick = ()=>nudge(1); $('dn').onclick = ()=>nudge(-1);
+document.querySelectorAll('#seg button').forEach(b=> b.onclick = ()=>{
+  setMode(b.dataset.m);
+  if(playing || (lastStatus && lastStatus.running)){ const f=curFreq(); if(f!=null) startTuned(f, mode, '', 0); }
+});
+
+/* ---------- display ---------- */
+function render(st){
+  if(!st) return; lastStatus = st;
+  const on = st.running;
+  $('play').classList.toggle('on', on);
+  $('playtxt').textContent = on ? 'STOP' : 'PLAY';
+  $('playico').innerHTML = on ? '<path d="M6 6h12v12H6z"/>' : '<path d="M8 5v14l11-7z"/>';
+  $('play').setAttribute('aria-label', on ? 'Stop' : 'Play');
+  if(on){
+    $('freq').textContent = fmtF(st.freq);
+    $('name').textContent = st.name && st.name !== (st.freq.toFixed(3)+' MHz') ? st.name : '';
+    setMode(st.mode);
+    if(document.activeElement !== $('fin')) $('fin').value = String(st.freq);
+    const bars = st.signal||0;
+    document.querySelectorAll('#sig i').forEach((el,i)=>el.classList.toggle('on', i<bars));
+    $('lvl').style.width = Math.round((st.level||0)*100)+'%';
+    $('status').className = 'status';
+    $('status').textContent = st.state==='starting' ? 'Tuning…' :
+      'Playing · '+MODELBL[st.mode]+' · '+(bars>=4?'strong':bars>=2?'fair':bars>=1?'weak':'no signal')+
+      (st.listeners>1 ? ' · '+st.listeners+' listeners' : '');
+  }else{
+    document.querySelectorAll('#sig i').forEach(el=>el.classList.remove('on'));
+    $('lvl').style.width = '0';
+    if(st.error){ toast(st.error, true); }
+    else if(!busy){ toast(st.stopped_reason && st.stopped_reason!=='stopped by user' && st.stopped_reason!=='retune'
+                      ? 'Stopped — '+st.stopped_reason : 'Stopped'); }
+    playing = false;
+  }
+  document.querySelectorAll('.tile').forEach(t=>{
+    const p = presets.find(x=>x.id===t.dataset.id);
+    t.classList.toggle('cur', !!(on && p && p.freq!=null && Math.abs(p.freq-st.freq)<0.0005 && p.mode===st.mode));
+  });
+}
+async function refresh(){
+  try{
+    const ep = epoch;
+    const st = await api('/api/radio/status');
+    if(ep !== epoch || busy) return;
+    // stream dropped while the server is still up (e.g. server-side stop): resync audio
+    if(playing && !st.running){ aud.pause(); aud.removeAttribute('src'); aud.load(); }
+    render(st);
+  }catch(e){}
+}
+setInterval(refresh, 1200);
+aud.addEventListener('error', ()=>{ if(playing && !busy) setTimeout(refresh, 300); });
+
+/* ---------- presets ---------- */
+async function loadPresets(){
+  const j = await api('/api/radio/presets'); presets = j.presets; drawPresets();
+}
+async function savePresets(){
+  const j = await api('/api/radio/presets', {presets}); presets = j.presets; drawPresets();
+}
+function drawPresets(){
+  const box = $('presets'); box.innerHTML=''; box.className = editing ? 'editing' : '';
+  const order = GROUPS.concat(presets.map(p=>p.group).filter(g=>!GROUPS.includes(g)));
+  [...new Set(order)].forEach(g=>{
+    const list = presets.filter(p=>p.group===g); if(!list.length) return;
+    const h = document.createElement('div'); h.className='grp'; h.textContent=g; box.appendChild(h);
+    const grid = document.createElement('div'); grid.className='tiles';
+    list.forEach(p=>{
+      const t = document.createElement('button'); t.className='tile'+(p.freq==null?' unset':''); t.dataset.id=p.id;
+      t.innerHTML = '<div class="n"></div><div class="f"></div><div class="m"></div><div class="x">edit ✎</div>';
+      t.querySelector('.n').textContent = p.name;
+      t.querySelector('.f').textContent = p.freq==null ? 'tap to set' : fmtF(p.freq)+' MHz';
+      t.querySelector('.m').textContent = MODELBL[p.mode];
+      t.onclick = ()=>{
+        if(editing || p.freq==null) return openEditor(p.id);
+        $('fin').value = String(p.freq); curName = p.name;
+        startTuned(p.freq, p.mode, p.name, p.squelch);
+      };
+      grid.appendChild(t);
+    });
+    box.appendChild(grid);
+  });
+  if(lastStatus) render(lastStatus);
+}
+$('edit').onclick = ()=>{ editing=!editing; $('edit').textContent = editing?'Done':'Edit'; drawPresets(); };
+$('add').onclick = ()=>{
+  const f = curFreq();
+  openEditor(null, {name:'', freq:f, mode:mode, group: mode==='wfm'?'FM':mode==='am'?'Airband':'Other', squelch:0});
+};
+function openEditor(id, seed){
+  editId = id;
+  const p = id ? presets.find(x=>x.id===id) : (seed||{});
+  $('mtitle').textContent = id ? 'Edit preset' : 'New preset';
+  $('p_name').value = p.name||''; $('p_freq').value = p.freq==null ? '' : p.freq;
+  $('p_mode').value = p.mode||'wfm'; $('p_group').value = p.group||'Other'; $('p_sq').value = p.squelch||0;
+  $('m_delrow').style.display = id ? '' : 'none';
+  $('modal').classList.add('show');
+}
+function closeEditor(){ $('modal').classList.remove('show'); }
+$('m_cancel').onclick = closeEditor;
+$('modal').addEventListener('click', e=>{ if(e.target===$('modal')) closeEditor(); });
+$('m_save').onclick = async ()=>{
+  const fv = $('p_freq').value.trim().replace(',','.');
+  const obj = {name:$('p_name').value.trim(), freq: fv===''?null:parseFloat(fv), mode:$('p_mode').value,
+               group:$('p_group').value, squelch: parseInt($('p_sq').value||'0',10)||0};
+  if(fv!=='' && !isFinite(obj.freq)){ alert('Frequency must be a number'); return; }
+  try{
+    if(editId){ presets = presets.map(x=>x.id===editId ? Object.assign({}, x, obj) : x); }
+    else presets.push(obj);
+    await savePresets(); closeEditor();
+  }catch(e){ alert(e.message); await loadPresets(); }
+};
+$('m_del').onclick = async ()=>{
+  if(!confirm('Delete this preset?')) return;
+  presets = presets.filter(x=>x.id!==editId); await savePresets(); closeEditor();
+};
+
+loadPresets().then(refresh);
+})();
+</script>
+</body>
+</html>

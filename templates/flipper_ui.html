@@ -491,6 +491,17 @@
                 <span class="menu-arrow">›</span>
             </div>
 
+            <div class="menu-item" onclick="window.location.href='/radio'" id="radio-menu-item" style="display: none;">
+                <div class="menu-item-left">
+                    <span class="menu-icon">🎧</span>
+                    <div class="menu-text">
+                        <span class="menu-title">Radio</span>
+                        <span class="menu-subtitle">Listen: FM, weather, airband</span>
+                    </div>
+                </div>
+                <span class="menu-arrow">›</span>
+            </div>
+
             <div class="menu-item" onclick="showSubMenu('rtl-sdr-menu')" id="rtl-sdr-menu-item" style="display: none;">
                 <div class="menu-item-left">
                     <span class="menu-icon">📻</span>
@@ -3805,10 +3816,12 @@ Loading emulation options...`);
                     rtlEl.innerHTML = '📻 RTL-SDR: <span style="color: #0f0;">✅ Ready</span>';
                     // Show RTL-SDR menu item
                     document.getElementById('rtl-sdr-menu-item').style.display = 'flex';
+                    document.getElementById('radio-menu-item').style.display = 'flex';
                 } else {
                     rtlEl.innerHTML = '📻 RTL-SDR: <span style="color: #ff0;">⚠️ Not connected (optional)</span>';
                     // Hide RTL-SDR menu item
                     document.getElementById('rtl-sdr-menu-item').style.display = 'none';
+                    document.getElementById('radio-menu-item').style.display = 'none';
                 }
 
             } catch (error) {
