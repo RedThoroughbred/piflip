@@ -42,17 +42,22 @@ app = Flask(__name__)
 import radio as radio_mod
 app.register_blueprint(radio_mod.bp)
 
+import dongle
+import frequency_catalog
+from rtl433_stream import streamer as rtl433_streamer, BANDS as RTL433_BANDS
+from spectrum_analyzer import BAND_PRESETS, band_range
+
+# One-shot RTL jobs. /api/waterfall/stream claims inside its route (it keeps a token);
+# /api/spectrum/detect is pure computation and never touches the dongle.
 _RTL_EXACT = {'/api/scan433', '/api/tpms', '/api/weather', '/api/waterfall/spectrum',
-              '/api/waterfall/stream', '/api/spectrum/scan', '/api/spectrum/waterfall',
-              '/api/spectrum/detect', '/api/spectrum/reset'}
+              '/api/spectrum/scan', '/api/spectrum/waterfall', '/api/spectrum/reset'}
 
 @app.before_request
 def _radio_dongle_arbiter():
-    """Any other RTL job claims the dongle: stop the radio first."""
+    """Any other RTL job claims the dongle: stops radio, scanner and rtl_433 first."""
     p = request.path
     if p in _RTL_EXACT or (p == '/api/capture' and request.method == 'POST'):
-        if radio_mod.radio.is_running():
-            radio_mod.radio.stop('dongle claimed by ' + p)
+        dongle.claim('rtl-job')
 
 # --- Global Controllers ---
 pn532_controller = None
@@ -1003,47 +1008,114 @@ def waterfall_spectrum():
 
 @app.route('/api/waterfall/stream')
 def waterfall_stream():
-    """Server-sent events stream for continuous waterfall updates"""
+    """Server-sent events stream for continuous waterfall updates.
+    ?band=<BAND_PRESETS key> or ?start=&end= (Hz) [&step= Hz]. Default 433-434 MHz."""
+    # request args must be read here: the generator runs after the request context is gone
+    band = request.args.get('band')
+    try:
+        if band and band in BAND_PRESETS:
+            start_hz, end_hz, step_hz = band_range(band)
+        else:
+            start_hz = float(request.args.get('start', '433000000'))
+            end_hz = float(request.args.get('end', '434000000'))
+            step_hz = float(request.args.get('step', '1000000'))
+            band_range(None, start_hz / 1e6, end_hz / 1e6, step_hz)   # validate
+    except (TypeError, ValueError) as e:
+        return jsonify({'error': str(e)}), 400
+    token = dongle.claim('spectrum')
+
     def generate():
-        import time
-        start_freq = request.args.get('start', '433000000')
-        end_freq = request.args.get('end', '434000000')
-
-        while True:
-            try:
-                # Quick spectrum scan
-                result = subprocess.run(
-                    ['rtl_power', '-f', f'{start_freq}:{end_freq}:1M', '-i', '0.05', '-1', '-'],
-                    capture_output=True,
-                    text=True,
-                    timeout=1
-                )
-
-                if result.returncode == 0:
-                    lines = [l for l in result.stdout.strip().split('\n') if l]
-                    if lines:
-                        parts = lines[-1].split(',')
-                        if len(parts) >= 7:
-                            db_values = [float(x) for x in parts[6:]]
-                            freq_low = float(parts[2])
-                            freq_high = float(parts[3])
-                            freq_step = (freq_high - freq_low) / len(db_values)
-
-                            spectrum = []
-                            for i, db in enumerate(db_values):
-                                freq = freq_low + (i * freq_step)
-                                spectrum.append([freq / 1e6, db])
-
-                            data = json.dumps({'spectrum': spectrum, 'timestamp': time.time()})
-                            yield f"data: {data}\n\n"
-
-                time.sleep(0.2)  # 5 updates per second
-
-            except:
+        yield 'retry: 3000\n\n'
+        while dongle.is_current(token):
+            spec = SpectrumAnalyzer.sweep(start_hz, end_hz, step_hz, interval=0.05)
+            if not dongle.is_current(token):
+                break
+            if spec:
+                data = json.dumps({'spectrum': [[p['frequency'], p['power']] for p in spec],
+                                   'freq_range': [start_hz / 1e6, end_hz / 1e6],
+                                   'band': band, 'timestamp': time.time()})
+                yield f"data: {data}\n\n"
+                time.sleep(0.2)  # ~5 updates per second on narrow bands
+            else:
+                yield 'event: busy\ndata: {}\n\n'
                 time.sleep(0.5)
-                continue
+        yield 'event: released\ndata: {"owner": %s}\n\n' % json.dumps(dongle.active())
 
-    return Response(generate(), mimetype='text/event-stream')
+    return Response(generate(), mimetype='text/event-stream',
+                    headers={'Cache-Control': 'no-cache', 'X-Accel-Buffering': 'no'})
+
+@app.route('/api/waterfall/bands')
+def waterfall_bands():
+    return jsonify({'bands': BAND_PRESETS})
+
+# --- rtl_433 live decoder ---
+
+@app.route('/api/rtl433/start', methods=['POST'])
+def rtl433_start():
+    d = request.get_json(silent=True) or {}
+    band = d.get('band', '433.92M')
+    if band not in RTL433_BANDS:
+        return jsonify({'error': 'band must be one of ' + ', '.join(RTL433_BANDS)}), 400
+    try:
+        return jsonify(rtl433_streamer.start(band, d.get('gain', 40)))
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/rtl433/stop', methods=['POST'])
+def rtl433_stop():
+    return jsonify(rtl433_streamer.stop('stopped by user'))
+
+@app.route('/api/rtl433/status')
+def rtl433_status():
+    return jsonify(rtl433_streamer.snapshot()[1])
+
+@app.route('/api/rtl433/stream')
+def rtl433_stream():
+    """SSE: device rollup + recent decodes, pushed on change (and every 2s for 'ago' ticks)."""
+    def generate():
+        last, last_sent = -1, 0.0
+        while True:
+            ver, snap = rtl433_streamer.snapshot()
+            if ver != last or time.time() - last_sent >= 2.0:
+                last, last_sent = ver, time.time()
+                yield f"data: {json.dumps(snap, default=str)}\n\n"
+            time.sleep(0.3)
+
+    return Response(generate(), mimetype='text/event-stream',
+                    headers={'Cache-Control': 'no-cache', 'X-Accel-Buffering': 'no'})
+
+@app.route('/api/rtl433/history')
+def rtl433_history():
+    """?model=<exact model>&since=<unix ts, or negative = seconds ago>&limit=N"""
+    try:
+        since = request.args.get('since')
+        since = float(since) if since not in (None, '') else None
+        if since is not None and since < 0:
+            since = time.time() + since
+        rows = rtl433_streamer.log.query(request.args.get('model') or None, since,
+                                         int(request.args.get('limit', 200)))
+        return jsonify({'decodes': rows, 'count': len(rows)})
+    except (TypeError, ValueError) as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# --- Frequency catalog (offline, frequencies.json) ---
+
+@app.route('/api/frequencies')
+def frequencies_index():
+    return jsonify(frequency_catalog.summary())
+
+@app.route('/api/frequencies/<type_id>')
+def frequencies_type(type_id):
+    t = frequency_catalog.get_type(type_id)
+    if not t:
+        return jsonify({'error': 'unknown type'}), 404
+    return jsonify(t)
+
+@app.route('/api/dongle')
+def dongle_status():
+    return jsonify(dongle.status())
 
 # --- Dashboard API Routes ---
 
@@ -1398,7 +1470,9 @@ def spectrum_waterfall():
         span = data.get('span', 2.0)
         duration = data.get('duration', 10)
         interval = data.get('interval', 0.2)
-        result = analyzer.waterfall_scan(center_freq, span, duration, interval)
+        result = analyzer.waterfall_scan(center_freq, span, duration, interval,
+                                         start_mhz=data.get('start_mhz'), stop_mhz=data.get('stop_mhz'),
+                                         step_hz=data.get('step_hz'), band=data.get('band'))
         return jsonify(result)
     except Exception as e:
         return jsonify({'error': str(e)}), 500

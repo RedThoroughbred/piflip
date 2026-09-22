@@ -11,8 +11,74 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+# Waterfall band presets: start/stop in MHz, step in Hz (~500-1000 bins per sweep).
+# 'mode' is the demod the radio should use when a point in the band is tapped.
+BAND_PRESETS = {
+    'ism433':  {'name': '433 ISM',            'start': 433.0,  'stop': 434.0,  'step': 2000,  'mode': 'nfm'},
+    'fm':      {'name': 'FM Broadcast',       'start': 88.0,   'stop': 108.0,  'step': 25000, 'mode': 'wfm'},
+    'air':     {'name': 'Airband',            'start': 118.0,  'stop': 137.0,  'step': 25000, 'mode': 'am'},
+    'ham2m':   {'name': '2m Ham',             'start': 144.0,  'stop': 148.0,  'step': 5000,  'mode': 'nfm'},
+    'ham70cm': {'name': '70cm Ham',           'start': 420.0,  'stop': 450.0,  'step': 25000, 'mode': 'nfm'},
+    'ism900':  {'name': '900 ISM',            'start': 902.0,  'stop': 928.0,  'step': 25000, 'mode': 'nfm'},
+    'adsb':    {'name': 'ADS-B vicinity',     'start': 1085.0, 'stop': 1095.0, 'step': 10000, 'mode': 'am'},
+}
+
+
+def band_range(band=None, start_mhz=None, stop_mhz=None, step_hz=None):
+    """Resolve a preset name and/or explicit edges to (start_hz, stop_hz, step_hz)."""
+    b = BAND_PRESETS.get(band or '', {})
+    start = float(start_mhz if start_mhz is not None else b.get('start', 433.0))
+    stop = float(stop_mhz if stop_mhz is not None else b.get('stop', 434.0))
+    if stop <= start:
+        raise ValueError('stop must be above start')
+    if not (24.0 <= start and stop <= 1766.0) or stop - start > 100.0:
+        raise ValueError('band must be within 24-1766 MHz and at most 100 MHz wide')
+    step = float(step_hz if step_hz is not None else b.get('step', max(1000, (stop - start) * 1e6 / 512)))
+    step = max(1.0, min(step, 2.8e6))
+    return start * 1e6, stop * 1e6, step
+
+
 class SpectrumAnalyzer:
     """RTL-SDR based spectrum analyzer with waterfall"""
+
+    @staticmethod
+    def sweep(start_hz, stop_hz, step_hz=1e6, interval=0.1, gain=None, timeout=None):
+        """One rtl_power pass over [start_hz, stop_hz]. Wide ranges come back as
+        several hop lines; they are merged and sorted. Returns a list of
+        {'frequency': MHz, 'power': dB} or None if the dongle is busy/failed."""
+        span = stop_hz - start_hz
+        hops = max(1, int(span / 2.0e6) + 1)
+        if timeout is None:
+            timeout = 3 + hops * (float(interval) + 0.15)
+        cmd = ['rtl_power', '-f', '%d:%d:%d' % (int(start_hz), int(stop_hz), int(step_hz)),
+               '-i', str(interval), '-1']
+        if gain:
+            cmd += ['-g', str(gain)]
+        cmd.append('-')
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+        except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
+            return None
+        if result.returncode != 0:
+            return None
+        rows = {}
+        for line in result.stdout.splitlines():
+            parts = line.split(',')
+            if len(parts) < 7:
+                continue
+            try:
+                lo, hi = float(parts[2]), float(parts[3])
+                dbs = [float(x) for x in parts[6:] if x.strip() not in ('', 'nan', '-nan')]
+            except ValueError:
+                continue
+            if not dbs:
+                continue
+            st = (hi - lo) / len(dbs)
+            for i, db in enumerate(dbs):
+                rows[round(lo + i * st)] = db
+        if not rows:
+            return None
+        return [{'frequency': f / 1e6, 'power': rows[f]} for f in sorted(rows)]
 
     def __init__(self):
         self.scan_history = []
@@ -96,7 +162,8 @@ class SpectrumAnalyzer:
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
-    def waterfall_scan(self, center_freq=433.92, span=2.0, duration=10, interval=0.2):
+    def waterfall_scan(self, center_freq=433.92, span=2.0, duration=10, interval=0.2,
+                       start_mhz=None, stop_mhz=None, step_hz=None, band=None):
         """
         Continuous waterfall scan
 
@@ -105,51 +172,48 @@ class SpectrumAnalyzer:
             span: Frequency span in MHz
             duration: Scan duration in seconds
             interval: Time between scans in seconds
+            start_mhz/stop_mhz: explicit band edges (override center/span)
+            step_hz: rtl_power bin size (default 1 MHz, as before)
+            band: a BAND_PRESETS key (fills start/stop/step)
         """
-        start_freq = (center_freq - span/2) * 1e6
-        end_freq = (center_freq + span/2) * 1e6
+        if band or start_mhz is not None or stop_mhz is not None:
+            start_freq, end_freq, step = band_range(band, start_mhz, stop_mhz, step_hz)
+            center_freq = (start_freq + end_freq) / 2e6
+            span = (end_freq - start_freq) / 1e6
+        else:
+            start_freq = (center_freq - span/2) * 1e6
+            end_freq = (center_freq + span/2) * 1e6
+            step = step_hz or 1e6
+        hops = max(1, int((end_freq - start_freq) / 2.0e6) + 1)
 
         waterfall_data = []
+        frequencies = None
         start_time = time.time()
 
         try:
             while time.time() - start_time < duration:
                 # Quick scan
-                result = subprocess.run(
-                    ['rtl_power', '-f', f'{int(start_freq)}:{int(end_freq)}:1M',
-                     '-i', str(interval), '-1', '-'],
-                    capture_output=True,
-                    text=True,
-                    timeout=max(3, interval + 2)  # At least 3 seconds
-                )
-
-                if result.returncode == 0:
-                    lines = [l for l in result.stdout.strip().split('\n') if l]
-                    if lines:
-                        parts = lines[-1].split(',')
-                        if len(parts) >= 7:
-                            db_values = [float(x) for x in parts[6:]]
-                            waterfall_data.append({
-                                'timestamp': time.time(),
-                                'powers': db_values
-                            })
+                spec = self.sweep(start_freq, end_freq, step, interval,
+                                  timeout=max(3, 2 + hops * (interval + 0.15)))
+                if spec:
+                    if frequencies is None:
+                        frequencies = [p['frequency'] for p in spec]
+                    if len(spec) == len(frequencies):
+                        waterfall_data.append({
+                            'timestamp': time.time(),
+                            'powers': [p['power'] for p in spec]
+                        })
 
                 time.sleep(max(0, interval - 0.1))
 
-            # Calculate frequency bins (same for all scans)
-            if waterfall_data and lines:
-                parts = lines[-1].split(',')
-                freq_low = float(parts[2])
-                freq_high = float(parts[3])
-                num_bins = len(waterfall_data[0]['powers'])
-                freq_step = (freq_high - freq_low) / num_bins
-
-                frequencies = [freq_low + i * freq_step for i in range(num_bins)]
-
+            if waterfall_data:
                 return {
                     'status': 'success',
                     'waterfall': waterfall_data,
-                    'frequencies': [f / 1e6 for f in frequencies],  # MHz
+                    'frequencies': frequencies,  # MHz
+                    'start_mhz': start_freq / 1e6,
+                    'stop_mhz': end_freq / 1e6,
+                    'step_hz': step,
                     'center_freq': center_freq,
                     'span': span,
                     'duration': duration,
@@ -231,7 +295,7 @@ class SpectrumAnalyzer:
         signal_freqs = []
         signal_powers = []
 
-        for point in spectrum:
+        for point in list(spectrum) + [{'frequency': None, 'power': float('-inf')}]:
             freq = point['frequency']
             power = point['power']
 
