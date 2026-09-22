@@ -21,6 +21,8 @@ from pathlib import Path
 
 from flask import Blueprint, Response, jsonify, render_template, request
 
+import dongle
+
 try:
     import numpy as np
 except Exception:  # pragma: no cover
@@ -116,33 +118,12 @@ def save_presets(presets):
 
 
 # --------------------------------------------------------------------------- pipeline
-def _pkill(names):
-    for n in names:
-        try:
-            subprocess.run(['pkill', '-x', n], timeout=3,
-                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        except Exception:
-            pass
+_pkill = dongle.pkill
+_wait_dead = dongle.wait_dead
 
 
-def _wait_dead(names, secs=3.0):
-    end = time.time() + secs
-    while time.time() < end:
-        alive = False
-        for n in names:
-            r = subprocess.run(['pgrep', '-x', n], stdout=subprocess.DEVNULL)
-            if r.returncode == 0:
-                alive = True
-        if not alive:
-            return True
-        time.sleep(0.1)
-    for n in names:
-        try:
-            subprocess.run(['pkill', '-9', '-x', n], timeout=3)
-        except Exception:
-            pass
-    time.sleep(0.3)
-    return False
+class DongleLost(RuntimeError):
+    pass
 
 
 def measure(s, rate, noise_d=0.0):
@@ -211,7 +192,9 @@ class Radio:
             }
 
     # -- start / stop --------------------------------------------------------
-    def start(self, freq, mode, name=None, squelch=0, nonce=None, gain=40):
+    def start(self, freq, mode, name=None, squelch=0, nonce=None, gain=40, token=None):
+        """token: a dongle.claim() token held by the caller (e.g. the scanner).
+        Without one the radio claims the dongle itself."""
         mode = str(mode).lower()
         if mode not in MODES:
             raise ValueError('mode must be wfm, nfm or am')
@@ -225,11 +208,14 @@ class Radio:
         if not 0 <= gain <= 50:
             raise ValueError('gain must be 0 (auto) to 50 dB')
         cfg = MODES[mode]
+        if token is None:
+            # single-dongle arbiter: stop other owners + evict other RTL jobs
+            # (taken before self.lock: dongle lock always comes first)
+            token = dongle.claim('radio', kill=COMPETING)
         with self.lock:
+            if not dongle.is_current(token):
+                raise DongleLost('dongle was claimed by ' + str(dongle.active()))
             self._stop_locked('retune')
-            # single-dongle arbiter: evict any other RTL job
-            _pkill(COMPETING)
-            _wait_dead(COMPETING, 2.0)
             self.gen += 1
             gen = self.gen
             self.error = None
@@ -407,6 +393,7 @@ class Radio:
 
 
 radio = Radio()
+dongle.register('radio', lambda reason: radio.stop(reason))
 
 
 def _cleanup_at_exit():
@@ -493,3 +480,4 @@ def stream():
     return Response(gen(), mimetype='audio/mpeg', headers={
         'Cache-Control': 'no-cache, no-store', 'X-Accel-Buffering': 'no',
         'Connection': 'close', 'icy-name': 'PiFlip Radio'})
+
